@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+<h2>Search Results</h2>
+<hr>
+{% if error_message != "" %}
+<h4>Error: {{ error_message }}</h4>
+{% else %}
+    <!-- display book results -->
+    {% if books %}
+        <h4>Book results:</h4>
+        <ul>
+            {% for book in books %}
+                <li><a href="">{{ book.title }}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <!-- display lore results -->
+    {% if lore_results %}
+        <h4>Lore results:</h4>
+        <ul>
+            {% for lore in lore_results %}
+                <li><a href="">{{ lore.name }}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endif %}

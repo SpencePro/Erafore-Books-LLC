@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+404 Error
+{% endblock %}
+
+{% block body %}
+
+<h2>404 Error</h2>
+<hr>
+<h4>That page could not be found</h4>
+<p>Please go back to the previous page.</p>
+{{ request.path }}
+<a href="{% url 'back' request.path %}">Back</a>
+
+{% endblock %}

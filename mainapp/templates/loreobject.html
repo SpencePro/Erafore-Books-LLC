@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+Lore Object
+{% endblock %}
+
+{% block body %}
+<h2>Lore Object {{ object.name }}</h2>
+<div class="vert">
+    <img src="#" alt="{{ object.name }} Image">
+
+    <div class="hori">
+        <label for="object-series">Series:</label>
+        <p id="object-series">{{ object.series }}</p>
+    </div>
+    <div class="hori">
+        <label for="object-world">World:</label>
+        <p id="object-world">{{ object.world }}</p>
+    </div>
+    <div class="hori">
+        <label for="object-type">Type:</label>
+        <p id="object-type">{{ object.type }}</p>
+    </div>
+    <div class="hori">
+        <label for="object-desc">Description:</label>
+        <p id="object-desc">{{ object.description }}</p>
+    </div>
+
+</div>
+{% endblock %}

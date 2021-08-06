@@ -1,0 +1,79 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+Lore
+{% endblock %}
+
+{% block body %}
+<h2>Lore Page</h2>
+<!-- user can choose from one or more lists -->
+<form action="{% url 'lore_page' %}" method="POST" class="hori">
+    {% csrf_token %}
+
+    <div class="vert">
+        <label for="series">Series:</label>
+        <select name="series" id="series">
+            <option value="" selected></option>
+            {% for series in series_list %}
+            <option value="{{ series.name }}">{{ series.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="vert">
+        <label for="world">World:</label>
+        <select name="world" id="world">
+            <option value="" selected></option>
+            {% for world in world_list %}
+            <option value="{{ world }}">{{ world }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="vert">
+        <label for="type">Type:</label>
+        <select name="type" id="type">
+            <option value="" selected></option>
+            {% for type in type_list %}
+            <option value="{{ type }}">{{ type }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <button type="button">Filter</button>
+
+    {% if error_message != "" %}
+    <h4>{{ error_message }}</h4>
+    {% endif %}
+    <!-- use JS to check for valid inputs before making AJAX call; display error message -->
+</form>
+
+<div class="lore-objects vert">
+    {% for object in lore_objects %}
+    <div class="lore-item hori">
+        <div class="vert">
+            <img src="#" alt="{{ object.name }}">
+            <h4><a href="{% url 'lore_object' object.id %}"></a>{{ object.name }}</h4>
+        </div>
+        <div class="lore-item-description vert">
+            <div class="hori">
+                <label for="object-series-{{ object.name }}">Series:</label>
+                <p id="object-series-{{ object.name }}">{{ object.series }}</p>
+            </div>
+            <div class="hori">
+                <label for="object-world-{{ object.name }}">World:</label>
+                <p id="object-world-{{ object.name }}">{{ object.world }}</p>
+            </div>
+            <div class="hori">
+                <label for="object-type-{{ object.name }}">Type:</label>
+                <p id="object-type-{{ object.name }}">{{ object.type }}</p>
+            </div>
+            <div class="hori">
+                <label for="object-desc-{{ object.name }}">Description:</label>
+                <p id="object-desc-{{ object.name }}">{{ object.description }}</p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

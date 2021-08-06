@@ -1,0 +1,47 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Erafore Books, LLC - {% block head %}{% endblock %}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="{% static 'mainapp/style.css' %}">
+        <script src="{% static 'mainapp/javascript.js' %}"></script>
+    </head>
+
+    <body>
+        <header>
+            <h2>Erafore Books, LLC</h2>
+            <h4>Created by Ian Rodgers</h4>
+            <div class="navbar navbar-expand-lg">
+                <nav><a href="{% url 'index' %}">Home</a></nav>
+                <nav><a href="{% url 'all_books' %}">Buy Now</a></nav>
+                <nav><a href="{% url 'lore_page' %}">Lore</a></nav>
+                <nav><a href="{% url 'contact' %}">Contact</a></nav>
+                {% if user.is_authenticated %}
+                    <nav><a href="{% url 'profile' user.id %}">My Profile</a></nav>
+                {% else %}
+                    <nav><a href="{% url 'login' %}">Login</a></nav>
+                    <nav><a href="{% url 'register' %}">Register</a></nav>
+                {% endif %}
+                <nav><a href="{% url 'random' %}">Random Book</a></nav>
+                <form class="form-inline" action="search" method="GET">
+                    <input type="text" name="search" id="searchbox" autocomplete="off" placeholder="Search">
+                    <button class="btn btn-primary btn-sm" type="submit">Search</button>
+                </form>
+            </div>
+        </header>
+        <main>
+            {% block body %}
+            {% endblock %}
+        </main>
+        <footer>
+            <p>Erafore Books, LLC &copy;2021</p>
+            <p>All rights reserved</p>
+        </footer>
+    </body>
+
+</html>

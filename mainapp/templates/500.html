@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+500 Error
+{% endblock %}
+
+{% block body %}
+
+<h2>500 Error</h2>
+<hr>
+<h4>There was an error in the server, we apologize for the inconvenience</h4>
+<p>Please go back to the previous page and try again. If the error persists, please contact us at ____.</p>
+<a href="{% url 'back' request.path %}">Back</a>
+
+{% endblock %}
