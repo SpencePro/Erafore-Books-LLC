@@ -15,10 +15,11 @@ class Book(models.Model):
     title = models.CharField(max_length=255)
     synopsis = models.TextField()
     series = models.ForeignKey(Series, on_delete=models.CASCADE)
-    cover_artist = models.CharField(max_length=255)
+    cover_artist = models.CharField(max_length=255, null=True, blank=True)
     date_released = models.DateField()
     image = models.CharField(max_length=255, null=True, blank=True)
-    amazon_link = models.URLField(max_length=255, blank=True, null=True)
+    amazon_link = models.URLField(max_length=255, null=True, blank=True)
+    world = models.CharField(max_length=255, null=True, blank=True)
 
 
 class LoreObject(models.Model):

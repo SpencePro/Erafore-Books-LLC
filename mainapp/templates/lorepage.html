@@ -7,10 +7,10 @@ Lore
 {% block body %}
 <h2>Lore Page</h2>
 <!-- user can choose from one or more lists -->
-<form action="{% url 'lore_page' %}" method="POST" class="hori">
+<form action="{% url 'lore_page' %}" method="POST" class="lore-search hori">
     {% csrf_token %}
 
-    <div class="vert">
+    <div class="filter-option vert">
         <label for="series">Series:</label>
         <select name="series" id="series">
             <option value="" selected></option>
@@ -20,7 +20,7 @@ Lore
         </select>
     </div>
 
-    <div class="vert">
+    <div class="filter-option vert">
         <label for="world">World:</label>
         <select name="world" id="world">
             <option value="" selected></option>
@@ -30,7 +30,7 @@ Lore
         </select>
     </div>
 
-    <div class="vert">
+    <div class="filter-option vert">
         <label for="type">Type:</label>
         <select name="type" id="type">
             <option value="" selected></option>
@@ -39,11 +39,11 @@ Lore
             {% endfor %}
         </select>
     </div>
-
-    <button type="button">Filter</button>
+    <br>
+    <button type="button" id="filter-btn">Filter</button>
 
     {% if error_message != "" %}
-    <h4>{{ error_message }}</h4>
+    <p id="error-message">{{ error_message }}</p>
     {% endif %}
     <!-- use JS to check for valid inputs before making AJAX call; display error message -->
 </form>

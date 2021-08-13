@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+Login
+{% endblock %}
+
+{% block body %}
+
+<div class="login-form vert">
+    <h4>Login</h4>
+    <form id="login-form" action="{% url 'login' %}" method="POST">
+        {% csrf_token %}
+        <input type="text" name="username" id="username" autocomplete="off" placeholder="Username">
+        <input type="password" name="password" id="password" autocomplete="off" placeholder="Password">
+        <button type="submit" id="login-btn">Log In</button>
+    </form>
+    {% if message %}
+        <p class="error-message">{{ message }}</p>
+        <!-- reset password button/form -->
+        <h4>Reset Your Password</h4>
+        <p>You can reset your password by entering your username and email address in the form below; a code to reset your password will be sent to you</p>
+        <div class="forgot-password vert">
+            <form action="{% url 'reset' %}" method="POST">
+                {% csrf_token %}
+                <input type="text" name="username" id="username" placeholder="Username" autocomplete="off">
+                <input type="text" name="email" id="email" placeholder="Email Address" autocomplete="off">
+                <button type="submit">Send Email</button>
+            </form>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

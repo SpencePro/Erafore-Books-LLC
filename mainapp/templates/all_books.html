@@ -5,27 +5,58 @@ Books
 {% endblock %}
 
 {% block body %}
-<h2>All Books</h2>
+<h2>Books</h2>
 <div class="series-list">
-    <ul class="dropdown">
-        <!-- selecting a series initiates a POST request via AJAX -->
-        {% for series in series_list %}
-            <li>
-                <form action="{% url 'all_books' %}" method="POST">
-                    {% csrf_token %}
-                    <input type="text" name="series-name" id="id-{{ series.name }}" value="{{ series.name }}" hidden>
-                    <button type="button" value="{{ series.name }}">
-                </form>
-            </li>
-        {% endfor %}
-    </ul>
+    <div class="filter-option vert">
+
+        <form action="{% url 'all_books' %}" method="POST" class="filter-form hori">
+            {% csrf_token %}
+            <div class="hori">
+                <label for="series">Series</label>
+                <select name="series" id="series-filter" style="width:12rem;">
+                    <option value="" selected></option>
+                    {% for series in series_list %}
+                    <option value="{{ series.id }}">{{ series.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <br>
+            <div class="hori">
+                <label for="world">World</label>
+                <select name="world" id="world-filter" style="width:12rem;">
+                    <option value="" selected></option>
+                    {% for world in worlds %}
+                    <option value="{{ world }}">{{ world }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <br>
+            <button type="submit">Filter</button>
+        </form>
+
+    </div>
 </div>
 
 {% if selected_series != "" %}
-    <div class="series">
+    <div class="selected-series vert">
         <h4>Series: {{ selected_series.name }}</h4>
-        <p>{{ selected_series.description }}Lorem ipsum dolor sit, amet consectetur adipisicing elit. Et, ipsa. Quo totam similique nesciunt iste voluptates vero recusandae? Maxime officia asperiores ad quo nesciunt temporibus beatae eos doloremque unde deleniti!</p>
+        <p>{{ series.id }}</p>
+        <p id="description">{{ selected_series.description }}</p>
     </div>
+{% endif %}
+
+{% if selected_world != "" %}
+    <div class="selected-world vert">
+        <h4>World: {{ selected_world }}</h4>
+    </div>
+{% endif %}
+
+{% if selected_series != "" or selected_world != "" %}
+<a class="clear-filter vert" href="{% url 'all_books' %}">Clear Filter</a>
+{% endif %}
+
+{% if num == 0 %}
+<h4>No books match the filters</h4>
 {% endif %}
 
 <div class="booklist vert container">
@@ -34,12 +65,12 @@ Books
             <div class="vert">
                 <img src="" alt="{{ book.title }} Cover">
                 <p><a href="{% url 'book' book.id %}">{{ book.title }}</a></p>
-                <p>Published {{ book.publish_date }}</p>
+                <p>Published {{ book.date_released }}</p>
             </div>
             <div class="vert">
                 <div class="hori">
                     <label for="book-series">Series:</label>
-                    <p id="book-series-{{ book.title }}">{{ book.series }}</p>
+                    <p id="book-series-{{ book.title }}">{{ book.series.name }}</p>
                 </div>
                 <div class="hori">
                     <label for="book-world">World:</label>
@@ -47,8 +78,7 @@ Books
                 </div>
                 <div class="hori">
                     <label for="book-synopsis">Synopsis:</label>
-                    <p id="book-synopsis">{{ book.synopsis }} Lorem ipsum dolor sit amet consectetur, adipisicing elit. Suscipit illum
-                        cum...<button id="see-more-{{ book.id }}" type="button">See more</button></p>
+                    <p id="book-synopsis">{{ book.synopsis }}<button id="see-more-{{ book.id }}" type="button">See more</button></p>
                     <!-- only show first 100 characters, trail off, see more via JS -->
                 </div>
             </div>

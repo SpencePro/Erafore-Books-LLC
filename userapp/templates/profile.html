@@ -1,0 +1,110 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+Profile
+{% endblock %}
+
+{% block body %}
+{% if current_user != user %}
+<div class="access-denied vert">
+    <h2>Oops!</h2>
+    <h4>It looks like you do not have permission to access this page.</h4>
+    <h4>Click here to go back:</h4>
+    <form action="{% url 'back' %}" method="GET">
+        <button>Go back</button>
+    </form>
+</div>
+{% else %}
+<h2>User Profile for {{ current_user.username }}</h2>
+<div class="container hori">
+    <div class="user-info vert">
+        <div class="vert" id="edit-div">
+            <form action="{% url 'edit' %}" method="POST" class="hidden">
+                {% csrf_token %}
+                <input type="checkbox" name="new-books" id="new-books" value="true" 
+                {% if current_user.can_send_new %} checked="true" {% endif %}>
+                <label for="new-books">We can notify you when new books are released</label>
+                <br>
+                <input type="checkbox" name="follow-updates" id="follow-updates" value="true" 
+                {% if current_user.can_send_updates %} checked="true" {% endif %}>
+                <label for="follow-updates">We can notify you when series you follow are updated</label>
+                <br>
+                <input type="checkbox" name="sales" id="sales" value="true" 
+                {% if current_user.can_send_sales %} checked="true" {% endif %}>
+                <label for="sales">We can notify you of all sales</label>
+                <br>
+                <input type="checkbox" name="wish-sales" id="wish-sales" value="true" 
+                {% if current_user.can_send_wish_sales %} checked="true" {% endif%}>
+                <label for="sales">We can notify you when books on your wishlist go on sale</label>
+                <br>
+                <input type="checkbox" name="all-notifications" id="all-notifications">
+                <label for="all-notifications">Disable all email notifications</label>
+                <br>
+                <button type="submit" id="edit-btn">Update Preferences</button>
+            </form>
+            <!-- use JS to show form when button below is clicked; also, change button text below to 'Cancel' -->
+            <!-- use JS to uncheck all boxes when Disable all notifications is checked -->
+            <button id="show-preference-form">Change Email Preferences</button>
+        </div>
+
+        <div class="vert hidden" id="delete-account-div">
+            <div id="deletion-message vert" >
+                <p>This will delete your username, password, and email in our system, as well as delete your wishlist
+                    and un-follow all series. This action cannot be undone.</p>
+                <p>Are you sure you want to delete your account?</p>
+            </div>
+            <form id="delete-account-form" action="{% url 'delete' current_user.id %}" method="POST" >
+                {% csrf_token %}
+                <input type="password" name="password" id="delete-password" autocomplete="off"
+                placeholder="Password">
+                <input type="password" name="confirmation" id="confirmation" autocomplete="off"                 placeholder="Confirmation">
+                <button type="submit">Delete Account</button>
+            </form>
+            <!-- use AJAX for this part -->
+            <p id="delete-error-message"></p>
+        </div>
+        <!-- use JS to show form and deletion message, and change button text below to 'Cancel'; show popup to confirm user choice -->
+        <button id="delete-account-btn">Delete Account</button>
+    </div>
+
+    <div class="wishlist vert">
+        <h4>Wishlist</h4>
+        {% if wishlist %}
+        <ul>
+            {% for wish in wishlist %}
+            <li><a href="{% url 'book' wish.book.id %}">{{ wish.book.title }}</a>
+                <form action="{% url 'add' wish.book.id %}" method="POST">
+                    {% csrf_token %}
+                    <input type="text" name="page" value="profile" class="hidden">
+                    <button type="submit" id="wish-btn-{{ wish.book.id }}">Remove</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>You have no books yet in your wishlist</p>
+        {% endif %}
+    </div>
+
+    <div class="following vert">
+        <h4>Series Followed</h4>
+        {% if series_followed %}
+        <ul>
+            {% for series in series_followed %}
+            <li>{{ series.series.name }}
+                <form action="{% url 'follow' series.series.id %}" method="POST">
+                    {% csrf_token %}
+                    <input type="text" name="page" value="profile" class="hidden">
+                    <button type="submit" id="follow-btn-{{ series.series.id }}">Unfollow</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>You are not following any series right now</p>
+        {% endif %}
+    </div>
+
+</div>
+{% endif %}
+{% endblock %}

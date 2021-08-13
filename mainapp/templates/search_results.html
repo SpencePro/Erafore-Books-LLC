@@ -1,26 +1,33 @@
 {% extends 'layout.html' %}
 
-<h2>Search Results</h2>
+{% block head %}
+Search Results
+{% endblock %}
+
+{% block body %}
+<h2>Search Results for "{{ query }}"</h2>
 <hr>
 {% if error_message != "" %}
 <h4>Error: {{ error_message }}</h4>
 {% else %}
     <!-- display book results -->
-    {% if books %}
+    {% if book_num > 0 %}
         <h4>Book results:</h4>
         <ul>
             {% for book in books %}
-                <li><a href="">{{ book.title }}</a></li>
+                <li><a href="{% url 'book' book.id %}">{{ book.title }}</a></li>
             {% endfor %}
         </ul>
     {% endif %}
     <!-- display lore results -->
-    {% if lore_results %}
+    {% if lore_num > 0 %}
         <h4>Lore results:</h4>
         <ul>
             {% for lore in lore_results %}
-                <li><a href="">{{ lore.name }}</a></li>
+                <li><a href="{% url 'book' lore.id %}">{{ lore.name }}</a></li>
             {% endfor %}
         </ul>
     {% endif %}
 {% endif %}
+
+{% endblock %}

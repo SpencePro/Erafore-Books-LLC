@@ -16,20 +16,23 @@
         <header>
             <h2>Erafore Books, LLC</h2>
             <h4>Created by Ian Rodgers</h4>
-            <div class="navbar navbar-expand-lg">
+            <div class="navbar">
                 <nav><a href="{% url 'index' %}">Home</a></nav>
                 <nav><a href="{% url 'all_books' %}">Buy Now</a></nav>
                 <nav><a href="{% url 'lore_page' %}">Lore</a></nav>
                 <nav><a href="{% url 'contact' %}">Contact</a></nav>
+                
                 {% if user.is_authenticated %}
                     <nav><a href="{% url 'profile' user.id %}">My Profile</a></nav>
+                    <nav><a href="{% url 'logout' %}">Logout</a></nav>
                 {% else %}
                     <nav><a href="{% url 'login' %}">Login</a></nav>
                     <nav><a href="{% url 'register' %}">Register</a></nav>
                 {% endif %}
+                
                 <nav><a href="{% url 'random' %}">Random Book</a></nav>
-                <form class="form-inline" action="search" method="GET">
-                    <input type="text" name="search" id="searchbox" autocomplete="off" placeholder="Search">
+                <form class="form-inline" action="{% url 'search' %}" method="GET">
+                    <input type="text" name="q" id="searchbox" autocomplete="off" placeholder="Search">
                     <button class="btn btn-primary btn-sm" type="submit">Search</button>
                 </form>
             </div>

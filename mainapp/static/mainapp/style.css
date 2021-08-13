@@ -1,0 +1,114 @@
+html {
+    height: 100%;
+    width: 100%;
+    border: 0;
+    margin: 0;
+}
+
+.vert {
+    display: flex;
+    flex-direction: column;
+}
+
+.hori {
+    display: flex;
+    flex-direction: row;
+}
+
+h4, h2 {
+    text-align: center;
+}
+
+label {
+    font-weight: bold;
+    margin-right: 0.5rem;
+}
+
+select, input {
+    margin-right: 0.5rem;
+}
+
+.hidden {
+    display: none;
+}
+
+/* HEADER */
+
+header {
+    text-align: center;
+}
+
+.navbar {
+    padding: 0.5rem 6rem;
+}
+
+/* BODY */
+
+main {
+    margin: 0.5rem 1rem;
+}
+
+/* Home Page */
+
+/* Books */
+
+.filter-option {
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+#description {
+    text-align: center;
+}
+
+.clear-filter {
+    text-align: center;
+}
+
+.filter-form {
+    flex-wrap: wrap;
+    align-content: space-between;
+}
+
+/* Lore */
+
+.lore-search {
+    justify-content: center;
+}
+
+/* Login */
+
+#login-form {
+    text-align: center;
+}
+
+/* Registration */
+
+.registration-content {
+    width: 100%;
+}
+
+.registration-instructions .registration-form {
+    flex: 1;
+}
+
+/* Contact */
+
+.social-media {
+    display: table;
+    margin: 0 auto;
+    padding: 0;
+    text-align: center;
+}
+
+.social-media li {
+    list-style: none;
+}
+
+/* Profile */
+
+/* FOOTER */
+
+footer {
+    text-align: center;
+}

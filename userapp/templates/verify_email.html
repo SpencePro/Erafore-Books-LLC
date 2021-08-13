@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+Verify Email
+{% endblock %}
+
+{% block body %}
+
+    <h2>Verify your Email Address</h2>
+    <p>We have sent an email to the address given. In it, you will see a passcode; enter that in the form below and press 'Submit'. If it is correct, you will be directed to the login page; if it is not, you will be redirected to the registration page to try again.</p>
+    <form action="{% url 'verify_registration' %}" method="POST">
+        {% csrf_token %}
+        <input type="text" name="passcode" id="passcode" placeholder="Passcode" autocomplete="off">
+        <button type="submit">Submit</button>
+    </form>
+
+{% endblock %}

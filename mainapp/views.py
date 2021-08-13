@@ -1,6 +1,6 @@
 from django import http
 from django.http.response import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.urls import reverse
 from django.db.models import Q
@@ -10,6 +10,7 @@ import re
 import string
 
 from mainapp.models import Series, Book, LoreObject
+from userapp.models import Wish, Follow
 
 
 def index(request):
@@ -18,22 +19,45 @@ def index(request):
 
 
 def all_books_view(request):
-    # GET request views all books, POST displays books from series/world that was selected, use AJAX
+    # GET request shows all, POST request shows specified series
     # show first 10, use infinite scroll to show more 
     series_list = Series.objects.all()
     selected_series = ""
+    selected_world = ""
+    worlds = ["Erafore", "Messy Earth", "Terra", "Standalone", ""]
 
     if request.method == "POST":
-        selected_series = request.POST["series-name"]
-        book_list = Book.objects.filter(series=selected_series).order_by("-date_released")
+        series_id = request.POST["series"]
+        world = request.POST["world"]
+        if series_id == "" and world == "":
+            return HttpResponseRedirect(reverse("all_books"))
+            # use AJAX to send error message
+        elif world not in worlds:
+            return HttpResponseRedirect(reverse("all_books"))
+            # use AJAX to send error message
+        else:
+            def filter_without_none(**kwargs):
+                return Q(**{k: v for k, v in kwargs.items() if v is not None and v != ""})
+
+            books = Book.objects.filter(
+                filter_without_none(series=series_id, world=world) #, type=type)
+            ).order_by("-date_released")
+            
+            if series_id != "":
+                selected_series = Series.objects.get(pk=series_id)
+            
+            selected_world = world
 
     else:
-        book_list = Book.objects.all().order_by("-date_released")
-        
+        books = Book.objects.all().order_by("-date_released")
+    
     context = {
+        "num": len(books),
         "selected_series": selected_series,
+        "selected_world": selected_world,
         "series_list": series_list,
-        "books": book_list
+        "worlds": worlds[:-1],
+        "books": books
     }
     return render(request, "all_books.html", context)
 
@@ -41,9 +65,21 @@ def all_books_view(request):
 def book_view(request, id):
     # GET request
     book = Book.objects.get(pk=id)
+    series = book.series
+    follow = Follow.objects.filter(follower=request.user, series=series)
+    wishlist = Wish.objects.filter(user=request.user, book=book)
+    print(follow)
+    print(wishlist)
+
+    if len(follow) == 0:
+        follow = ""
+    if len(wishlist) == 0:
+        wishlist = ""
 
     context = {
-        "book": book
+        "book": book,
+        "following": follow,
+        "wishlist": wishlist
     }
     return render(request, "book.html", context)
 
@@ -57,7 +93,7 @@ def lore_view(request):
     # GET request displays the default page, POST request displays the page with selected filters
     series_list = Series.objects.all()
     error_message = ""
-    world_list = []
+    world_list = ["Erafore", "Messy Earth", "Terra", "Standalone"]
     type_list = []
 
     if request.method == "POST":
@@ -80,22 +116,6 @@ def lore_view(request):
             lore_objects = LoreObject.objects.filter(
                 filter_without_none(series=series, world=world, type=type)
             )
-            '''
-            if series == "" and world == "" and type != "":
-                lore_objects = LoreObject.objects.filter(type=type)
-            elif series == "" and world != "" and type != "":
-                lore_objects = LoreObject.objects.filter(world=world, type=type)
-            elif series != "" and world != "" and type != "":
-                lore_objects = LoreObject.objects.filter(series=series, world=world, type=type)
-            elif series != "" and world != "" and type == "":
-                lore_objects = LoreObject.objects.filter(series=series, world=world)
-            elif series != "" and world == "" and type == "":
-                lore_objects = LoreObject.objects.filter(series=series)
-            elif series != "" and world == "" and type != "":
-                lore_objects = LoreObject.objects.filter(series=series, type=type)
-            elif series == "" and world != "" and type == "":
-                lore_objects = LoreObject.objects.filter(world=world)
-            '''
                     
     else:
         lore_objects = LoreObject.objects.all()
@@ -121,12 +141,13 @@ def lore_object_view(request, id):
 
 def search_view(request):
     # GET request; find books, series, lore items
-    query = request.POST["search"]
+    query = request.GET["q"]
+    original_query = query
     books = Book.objects.all()
-    lore_objects = LoreObject.objects.all()
+    #lore_objects = LoreObject.objects.all()
     series_list = Series.objects.all()
     book_matches = []
-    lore_matches = []
+    #lore_matches = []
     error_message = ""
     punct = string.punctuation
 
@@ -146,9 +167,9 @@ def search_view(request):
         else:
             match_title = r.search(book_title)
             if match_title:
-                book_matches.append(book.title)
+                book_matches.append(book)
     
-    for object in lore_objects:
+    '''for object in lore_objects:
         object_name = object.name.lower()
         for o in object_name:
             if o in punct or o == " ":
@@ -158,7 +179,7 @@ def search_view(request):
         else:
             match = r.search(object_name)
             if match:
-                lore_matches.append(object.name)
+                lore_matches.append(object)'''
     
     for series in series_list:
         series_name = series.name.lower()
@@ -169,22 +190,26 @@ def search_view(request):
             # find books that are part of the series, append to book_matches
             book_results = Book.objects.filter(series=series)
             for book in book_results:
-                book_matches.append(book.title)
+                book_matches.append(book)
             break
         else:
             match = r.search(series_name)
             if match:
-                book_results = Book.object.filter(series=series)
+                book_results = Book.objects.filter(series=series)
                 for book in book_results:
-                    if book.title not in book_matches:
-                        book_matches.append(book.title)
-            
-    if len(book_matches) == 0 and len(lore_matches) == 0:
+                    if book not in book_matches:
+                        book_matches.append(book)
+    print(book_matches)
+    print(len(book_matches))
+    if len(book_matches) == 0: # and len(lore_matches) == 0:
         error_message = "There are no results for your search"
 
     context = {
+        "query": original_query,
+        "book_num": len(book_matches),
         "books": book_matches,
-        "lore_results": lore_matches,
+        # "lore_num": len(lore_matches),
+        #"lore_results": lore_matches,
         "error_message": error_message
     }
     return render(request, "search_results.html", context)
@@ -212,8 +237,7 @@ def error_500(request, exception, template_name="500.html"):
 
 
 # add once debug=False
-def back_page(request, path):
+def back_page(request):
     # GET request
-    path = str(path)
-    return HttpResponseRedirect(reverse())
-
+    # return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return

@@ -15,19 +15,34 @@
         
         <form action="{% url 'add' book.id %}" method="POST">
             {% csrf_token %}
-            <button type="submit" id="wish-btn">Add to wishlist</button>
+            <input type="text" name="page" value="book-page" class="hidden">
+            {% if wishlist == "" %}
+                <button type="submit" class="wish-btn">Add to wishlist</button>
+            {% else %}
+                <p>This book is in your wishlist</p>
+                <button type="submit" class="wish-btn">Remove from wishlist</button>
+            {% endif %}
+            <!-- use AJAX to show 'Remove from wishlist'/'Add to wishlist' when form submitted -->
         </form>
 
-        <p>Published {{ book.publish_date }}</p>
+        <p>Published {{ book.date_released }}</p>
         
         <div class="hori">
             <label for="book-series">Series:</label>
-            <p id="book-series">{{ book.series }}</p>
+            <p id="book-series">{{ book.series.name }}</p>
         </div>
 
         <form action="{% url 'follow' book.series.id %}" method="POST">
             {% csrf_token %}
-            <button type="submit" id="follow-btn">Follow Series</button>
+            <input type="text" name="page" value="book-page" class="hidden">
+            <input type="text" name="book" value="{{ book.id }}" class="hidden">
+            {% if following == "" %}
+                <button type="submit" class="follow-btn">Follow Series</button>
+            {% else %}
+                <p>You are following this series</p>
+                <button type="submit" class="follow-btn">Unfollow Series</button>
+            {% endif %}
+            <!-- use AJAX to show 'Unfollow series'/'Follow series' when form submitted -->
         </form>
         
         <div class="hori">
@@ -37,10 +52,7 @@
 
         <div class="hori">
             <label for="book-synopsis">Synopsis:</label>
-            <p id="book-synopsis">{{ book.synopsis }} Lorem, ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis
-                voluptate
-                distinctio consectetur, eius officia necessitatibus reprehenderit dignissimos dolorum placeat, fugiat incidunt,
-                totam ex repellendus modi error eveniet sed iusto! Doloremque?
+            <p id="book-synopsis">{{ book.synopsis }}
             </p>
         </div>
     </div>

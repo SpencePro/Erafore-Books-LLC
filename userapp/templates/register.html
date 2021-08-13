@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+Register
+{% endblock %}
+
+{% block body %}
+
+<div class="registration-content hori">
+    <div class="registration-instructions vert">
+        <h4>Registration Requirements</h4>
+        <ul>
+            <li>Usernames must be at least 6 characters long</li>
+            <li>Usernames must be unique</li>
+            <li>Passwords must be at least 8 characters long</li>
+            <li>Passwords must contain at least 1 of each of the following: special character, uppercase letter, number
+            </li>
+            <li>Your username cannot be the same as your password</li>
+        </ul>
+    </div>
+    <div class="registration-form vert">
+        <h4>Register</h4>
+        <form action="{% url 'register' %}" method="POST">
+            {% csrf_token %}
+            <input type="text" name="username" id="username" autocomplete="off" placeholder="Username"><br>
+            <input type="text" name="email" id="email" autocomplete="off" placeholder="Email"><br>
+            <input type="password" name="password" id="password" autocomplete="off" placeholder="Password"><br>
+            <input type="password" name="confirmation" id="confirmation" autocomplete="off"
+                placeholder="Confirmation"><br>
+            <button type="submit" id="register-btn">Register</button>
+        </form>
+        {% if error_message != "" %}
+        <h5 id="error_message">{{ error_message }}</h5>
+        {% endif %}
+        <p style="font-size: small;">Your email address will be used solely to send you notifications of book sales and
+            new releases, and to confirm your account information; your information will never be sold to third parties. You can update your email permissions in your profile page at any time.</p>
+    </div>
+</div>
+
+{% endblock %}
