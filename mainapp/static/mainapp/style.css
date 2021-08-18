@@ -40,6 +40,8 @@ header {
 
 .navbar {
     padding: 0.5rem 6rem;
+    border-top: solid 1px;
+    border-bottom: solid 1px;
 }
 
 /* BODY */
@@ -106,6 +108,13 @@ main {
 }
 
 /* Profile */
+
+
+/* Search Results */
+
+.search-results {
+    align-items: center;
+}
 
 /* FOOTER */
 

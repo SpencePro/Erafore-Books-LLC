@@ -20,6 +20,7 @@ class Book(models.Model):
     image = models.CharField(max_length=255, null=True, blank=True)
     amazon_link = models.URLField(max_length=255, null=True, blank=True)
     world = models.CharField(max_length=255, null=True, blank=True)
+    on_sale = models.BooleanField(default=False)
 
 
 class LoreObject(models.Model):

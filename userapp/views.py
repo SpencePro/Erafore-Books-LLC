@@ -134,35 +134,6 @@ def verify_reset(request):
         if validate != None:
             return render(request, "change_password.html", context={"error_message": validate})
 
-        '''# Check password length
-        if len(password) < 8:
-            error_message = "Invalid password"
-            return render(request, "change_password.html", context={"error_message": error_message})
-        # Check that password == confirmation
-        if password != confirmation:
-            error_message = "Password and confirmation do not match"
-            return render(request, "change_password.html", context={"error_message": error_message})
-        # password must contain at least 1 special character, 1 number and 1 capital letter
-        upper_count = 0
-        special_count = 0
-        num_count = 0
-
-        for character in password:
-            if character.isupper():
-                upper_count += 1
-            elif not character.isalnum():
-                special_count += 1
-            elif character.isdigit():
-                num_count += 1
-
-        if upper_count == 0 or num_count == 0 or special_count == 0:
-            error_message = "Invalid password"
-            return render(request, "change_password.html", context={"error_message": error_message})
-        # Verify username
-        if username == password:
-            error_message = "Invalid password"
-            return render(request, "change_password.html", context={"error_message": error_message})'''
-
         # Verify user's passcode
         if user_submission == passcode:
             user = User.objects.get(username=username, email=email)

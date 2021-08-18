@@ -15,7 +15,8 @@ from userapp.models import Wish, Follow
 
 def index(request):
     # GET request
-    return render(request, "index.html")
+    sales = Book.objects.filter(on_sale=True)
+    return render(request, "index.html", context={"sales": sales})
 
 
 def all_books_view(request):
@@ -66,15 +67,16 @@ def book_view(request, id):
     # GET request
     book = Book.objects.get(pk=id)
     series = book.series
-    follow = Follow.objects.filter(follower=request.user, series=series)
-    wishlist = Wish.objects.filter(user=request.user, book=book)
-    print(follow)
-    print(wishlist)
+    follow = ""
+    wishlist = ""
+    if request.user.is_authenticated:
+        follow = Follow.objects.filter(follower=request.user, series=series)
+        wishlist = Wish.objects.filter(user=request.user, book=book)
 
-    if len(follow) == 0:
-        follow = ""
-    if len(wishlist) == 0:
-        wishlist = ""
+        if len(follow) == 0:
+            follow = ""
+        if len(wishlist) == 0:
+            wishlist = ""
 
     context = {
         "book": book,
@@ -199,8 +201,7 @@ def search_view(request):
                 for book in book_results:
                     if book not in book_matches:
                         book_matches.append(book)
-    print(book_matches)
-    print(len(book_matches))
+
     if len(book_matches) == 0: # and len(lore_matches) == 0:
         error_message = "There are no results for your search"
 

@@ -13,7 +13,7 @@ Search Results
     <!-- display book results -->
     {% if book_num > 0 %}
         <h4>Book results:</h4>
-        <ul>
+        <ul class="search-results vert">
             {% for book in books %}
                 <li><a href="{% url 'book' book.id %}">{{ book.title }}</a></li>
             {% endfor %}

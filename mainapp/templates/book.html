@@ -12,18 +12,20 @@
     </div>
     <div class="vert">
         <a href="{{ book.amazon_link }}" target="_blank" rel="noreferrer noopener">Purchase on Amazon</a>
-        
-        <form action="{% url 'add' book.id %}" method="POST">
-            {% csrf_token %}
-            <input type="text" name="page" value="book-page" class="hidden">
-            {% if wishlist == "" %}
-                <button type="submit" class="wish-btn">Add to wishlist</button>
-            {% else %}
-                <p>This book is in your wishlist</p>
-                <button type="submit" class="wish-btn">Remove from wishlist</button>
-            {% endif %}
-            <!-- use AJAX to show 'Remove from wishlist'/'Add to wishlist' when form submitted -->
-        </form>
+            
+        {% if user.is_authenticated %}
+            <form action="{% url 'add' book.id %}" method="POST">
+                {% csrf_token %}
+                <input type="text" name="page" value="book-page" class="hidden">
+                {% if wishlist == "" %}
+                    <button type="submit" class="wish-btn">Add to wishlist</button>
+                {% else %}
+                    <p>This book is in your wishlist</p>
+                    <button type="submit" class="wish-btn">Remove from wishlist</button>
+                {% endif %}
+                <!-- use AJAX to show 'Remove from wishlist'/'Add to wishlist' when form submitted -->
+            </form>
+        {% endif %}
 
         <p>Published {{ book.date_released }}</p>
         
@@ -31,19 +33,20 @@
             <label for="book-series">Series:</label>
             <p id="book-series">{{ book.series.name }}</p>
         </div>
-
-        <form action="{% url 'follow' book.series.id %}" method="POST">
-            {% csrf_token %}
-            <input type="text" name="page" value="book-page" class="hidden">
-            <input type="text" name="book" value="{{ book.id }}" class="hidden">
-            {% if following == "" %}
-                <button type="submit" class="follow-btn">Follow Series</button>
-            {% else %}
-                <p>You are following this series</p>
-                <button type="submit" class="follow-btn">Unfollow Series</button>
-            {% endif %}
-            <!-- use AJAX to show 'Unfollow series'/'Follow series' when form submitted -->
-        </form>
+        {% if user.is_authenticated %}
+            <form action="{% url 'follow' book.series.id %}" method="POST">
+                {% csrf_token %}
+                <input type="text" name="page" value="book-page" class="hidden">
+                <input type="text" name="book" value="{{ book.id }}" class="hidden">
+                {% if following == "" %}
+                    <button type="submit" class="follow-btn">Follow Series</button>
+                {% else %}
+                    <p>You are following this series</p>
+                    <button type="submit" class="follow-btn">Unfollow Series</button>
+                {% endif %}
+                <!-- use AJAX to show 'Unfollow series'/'Follow series' when form submitted -->
+            </form>
+        {% endif %}
         
         <div class="hori">
             <label for="book-world">World:</label>

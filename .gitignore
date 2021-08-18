@@ -2,4 +2,10 @@
 .env
 
 # Unused Database
-.sqlite3
+*.sqlite3
+
+# Image Files
+*.avif
+*.png
+*.jpg
+*.webp

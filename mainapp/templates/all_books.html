@@ -63,7 +63,7 @@ Books
     {% for book in books %}
         <div class="book_listing hori">
             <div class="vert">
-                <img src="" alt="{{ book.title }} Cover">
+                <img src="#" alt="{{ book.title }} Cover">
                 <p><a href="{% url 'book' book.id %}">{{ book.title }}</a></p>
                 <p>Published {{ book.date_released }}</p>
             </div>
