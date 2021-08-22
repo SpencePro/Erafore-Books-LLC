@@ -10,6 +10,7 @@
             integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="{% static 'mainapp/style.css' %}">
         <script src="{% static 'mainapp/javascript.js' %}"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
 
     <body>
@@ -33,15 +34,21 @@
                 <nav><a href="{% url 'random' %}">Random Book</a></nav>
                 <form class="form-inline" action="{% url 'search' %}" method="GET">
                     <input type="text" name="q" id="searchbox" autocomplete="off" placeholder="Search">
-                    <button class="btn btn-primary btn-sm" type="submit">Search</button>
+                    <button id="search-btn" class="btn btn-primary btn-sm" type="button">Search</button>
                 </form>
             </div>
         </header>
+
         <main>
             {% block body %}
             {% endblock %}
         </main>
-        <footer>
+
+        <script type="text/javascript">
+            document.getElementById("searchbox").addEventListener("input", makeClickable);
+        </script>
+
+        <footer class="center">
             <p>Erafore Books, LLC &copy;2021</p>
             <p>All rights reserved</p>
         </footer>

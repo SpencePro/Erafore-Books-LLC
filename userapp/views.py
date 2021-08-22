@@ -54,7 +54,7 @@ def register_view(request):
             return render(request, "register.html", context={"error_message": error_message})
 
         # validate password
-        validate = validate_pword(password, confirmation, username)
+        validate = validate_pword(password, confirmation, username, email)
         if validate != None:
             return render(request, "register.html", context={"error_message": validate})
 

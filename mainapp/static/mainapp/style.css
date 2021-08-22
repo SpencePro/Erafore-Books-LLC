@@ -15,6 +15,11 @@ html {
     flex-direction: row;
 }
 
+.center {
+    text-align: center;
+    justify-content: center;
+}
+
 h4, h2 {
     text-align: center;
 }
@@ -32,11 +37,17 @@ select, input {
     display: none;
 }
 
+.show-password {
+    padding: 1rem;
+    justify-content: center;
+}
+
+#eye {
+    padding-bottom: 3px;
+}
+
 /* HEADER */
 
-header {
-    text-align: center;
-}
 
 .navbar {
     padding: 0.5rem 6rem;
@@ -59,13 +70,6 @@ main {
     margin-bottom: 1rem;
 }
 
-#description {
-    text-align: center;
-}
-
-.clear-filter {
-    text-align: center;
-}
 
 .filter-form {
     flex-wrap: wrap;
@@ -74,20 +78,18 @@ main {
 
 /* Lore */
 
-.lore-search {
-    justify-content: center;
-}
 
 /* Login */
 
-#login-form {
-    text-align: center;
-}
 
 /* Registration */
 
 .registration-content {
     width: 100%;
+}
+
+.registration-instructions {
+    margin-right: 3rem;
 }
 
 .registration-instructions .registration-form {
@@ -109,15 +111,13 @@ main {
 
 /* Profile */
 
+.checkbox-option {
+    align-items: baseline;
+}
 
 /* Search Results */
 
-.search-results {
-    align-items: center;
-}
 
 /* FOOTER */
 
-footer {
-    text-align: center;
-}
+

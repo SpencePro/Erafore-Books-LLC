@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('mainapp.urls')),
@@ -26,3 +28,5 @@ urlpatterns = [
 
 error_404 = 'mainapp.views.error_404'
 error_500 = 'mainapp.views.error_500'
+
+urlpatterns += staticfiles_urlpatterns()

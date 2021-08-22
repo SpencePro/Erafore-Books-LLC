@@ -1,4 +1,5 @@
 {% extends 'layout.html' %}
+{% load static %}
 
 {% block head %}
 Home
@@ -19,7 +20,7 @@ Home
         <div class="on-sale hori">
             {% for sale in sales %}
             <div class="sale-item vert">
-                <img src="#" alt="{{ sale.title }}">
+                <img src="{% static sale.image %}.avif" alt="{{ sale.title }} Cover" width="150px" height="200px">
                 <p><a href="{% url 'book' sale.id %}">{{ sale.title }}</a></p>
             </div>
             {% endfor %}

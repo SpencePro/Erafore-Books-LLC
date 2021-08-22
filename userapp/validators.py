@@ -1,4 +1,4 @@
-def validate_pword(password, confirmation, username):
+def validate_pword(password, confirmation, username, email):
     if len(password) < 8:
         return "Invalid Password"
     
@@ -6,7 +6,13 @@ def validate_pword(password, confirmation, username):
         return "Invalid Password"
     
     if username == password:
-        return "Invalid password"
+        return "Invalid Password"
+
+    if email == password:
+        return "Invalid Password"
+    
+    if email == username:
+        return "Invalid Username"
     
     upper_count = 0
     special_count = 0

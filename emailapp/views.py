@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.core.mail import send_mail, send_mass_mail
 from django.core.signals import request_finished
 from django.dispatch import receiver
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
+from django.core.signals import request_finished
 import datetime
 
 from userapp.models import User, Follow, Wish
@@ -113,78 +114,59 @@ def send_sales_notification(sender, **kwargs):
     )'''
 
 
-# function to send notification of all sales, and for wishlist
-# figure out how to ignore this if sales email was already sent for this book
 @receiver(post_save, sender=Book)
-def send_sales_notification(sender, **kwargs):
-    # get all books on sale
-    books = Book.objects.filter(on_sale=True)
-    if len(books) < 1:
+def send_sales_notification(sender, instance, **kwargs):
+    # check if instance of model that was saved was set to true; if not, no need to send notifications, end function
+    book = Book.objects.get(id=instance.id)
+    if book.on_sale == False:
         return
-    # get all users who have each book in their wishlist
-    all_users = {} 
-    for book in books:
+    else:
+        # get all users who have that book in their wishlist
+        all_users = {}
         wishes = Wish.objects.filter(book=book)
-        if len(wishes) < 1:
-            continue
         for wish in wishes:
-            if wish.user not in all_users:
-                all_users[wish.user] = [wish.book]
-            else:
-                all_users[wish.user].append(wish.book)
-    if len(all_users) < 1:
-        return
-    list_users = [*all_users]
-    email_arr = []
-    already_sent = []
+            all_users[wish.user] = wish.book
 
-    # get all users who allow sales emails
-    sales_users = User.objects.filter(can_send_sales=True)
-    if len(sales_users) < 1:
-        return
-    
-    # send email to all users who consent to notifications when a book in their wishlist goes on sale
-    for user in list_users:
-        if user.can_send_wish_sales == True:
-            book_count = all_users[user]
-            if len(book_count) == 1:
-                book_title = book_count[0].title
-                book_link = book_count[0].amazon_link
-                synopsis = book_count[0].synopsis
-            else:
-                book_title = ", ".join([book.title for book in book_count])
-                book_link = "\n".join([book.amazon_link for book in book_count])
-                synopsis = "\n\n".join([book.synopsis for book in book_count])
-            
-            subject = f"On sale now: {book_title} - {user.username}"
-            email_body = f"On sale now from Erafore Books: {book_title}\n\n'{synopsis}'\n\nClick here to purchase on Amazon:\n{book_link}\n\nYou have consented to receive notifications of book sales from Erafore Books, LLC. You can edit email permissions in your account anytime at **link to website**"
-            
-            user_message = (subject, email_body, "", [user.email])
-            email_arr.append(user_message)
-            already_sent.append(user)
-            print(user.username)
-    # send email to all other users who consent to all sales notifications, except for those who have been emailed already
-    for user in sales_users:
-        if user not in already_sent:
-            if len(books) == 1:
-                book_title = books[0].title
-                book_link = books[0].amazon_link
-                synopsis = books[0].synopsis
-            else:
-                book_title = ", ".join([book.title for book in books])
-                book_link = "\n".join([book.amazon_link for book in books])
-                synopsis = "\n\n".join([book.synopsis for book in books])
-            
-            subject = f"On sale now: {book_title} - {user.username}"
-            email_body = f"On sale now from Erafore Books: {book_title}\n\n'{synopsis}'\n\nClick here to purchase on Amazon:\n{book_link}\n\nYou have consented to receive notifications of book sales from Erafore Books, LLC. You can edit email permissions in your account anytime at **link to website**"
-            
-            user_message = (subject, email_body, "", [user.email])
-            email_arr.append(user_message)
-            print(user.username)
-    email_tuple = tuple(email_arr)
-    send_mass_mail(
-        email_tuple, fail_silently=True
-    )
+        wish_users = [*all_users]
+        email_arr = []
+        already_sent = []
+
+        # get all users who allow sales emails
+        sales_users = User.objects.filter(can_send_sales=True)
+        if len(sales_users) < 1:
+            return
+
+        # send email to all users who consent to notifications when a book in their wishlist goes on sale
+        for user in wish_users:
+            if user.can_send_wish_sales == True:
+                book_title = book.title
+                book_link = book.amazon_link
+                synopsis = book.synopsis
+
+                subject = f"On sale now: {book_title} - {user.username}"
+                email_body = f"On sale now from Erafore Books: {book_title}\n\n'{synopsis}'\n\nClick here to purchase on Amazon:\n{book_link}\n\nYou have consented to receive notifications of book sales from Erafore Books, LLC for books in your wishlist. You can edit email permissions in your account anytime at **link to website**"
+
+                user_message = (subject, email_body, "", [user.email])
+                email_arr.append(user_message)
+                already_sent.append(user)
+
+        # send email to all users who consent to all sales notifications, except for those who have been emailed already
+        for user in sales_users:
+            if user not in already_sent:
+                book_title = book.title
+                book_link = book.amazon_link
+                synopsis = book.synopsis
+
+                subject = f"On sale now: {book_title} - {user.username}"
+                email_body = f"On sale now from Erafore Books: {book_title}\n\n'{synopsis}'\n\nClick here to purchase on Amazon:\n{book_link}\n\nYou have consented to receive notifications of book sales from Erafore Books, LLC. You can edit email permissions in your account anytime at **link to website**"
+
+                user_message = (subject, email_body, "", [user.email])
+                email_arr.append(user_message)
+
+        email_tuple = tuple(email_arr)
+        send_mass_mail(
+            email_tuple, fail_silently=True
+        )
 
 
 # function to send email to user to verify their email address/password for account creation

@@ -19,31 +19,30 @@ Profile
 <div class="container hori">
     <div class="user-info vert">
         <div class="vert" id="edit-div">
-            <form action="{% url 'edit' %}" method="POST" class="hidden">
+            <form action="{% url 'edit' %}" method="POST" id="edit-preference-form" class="hidden">
                 {% csrf_token %}
-                <input type="checkbox" name="new-books" id="new-books" value="true" 
-                {% if current_user.can_send_new %} checked="true" {% endif %}>
-                <label for="new-books">We can notify you when new books are released</label>
-                <br>
-                <input type="checkbox" name="follow-updates" id="follow-updates" value="true" 
-                {% if current_user.can_send_updates %} checked="true" {% endif %}>
-                <label for="follow-updates">We can notify you when series you follow are updated</label>
-                <br>
-                <input type="checkbox" name="sales" id="sales" value="true" 
-                {% if current_user.can_send_sales %} checked="true" {% endif %}>
-                <label for="sales">We can notify you of all sales</label>
-                <br>
-                <input type="checkbox" name="wish-sales" id="wish-sales" value="true" 
-                {% if current_user.can_send_wish_sales %} checked="true" {% endif%}>
-                <label for="sales">We can notify you when books on your wishlist go on sale</label>
-                <br>
-                <input type="checkbox" name="all-notifications" id="all-notifications">
-                <label for="all-notifications">Disable all email notifications</label>
-                <br>
+                <div class="hori checkbox-option">
+                    <input type="checkbox" name="new-books" id="new-books" class="checkbox" value="true" {% if current_user.can_send_new %} checked="true" {%endif %}>
+                    <label for="new-books">We can notify you when new books are released</label>
+                </div>
+                <div class="hori checkbox-option">
+                    <input type="checkbox" name="follow-updates" id="follow-updates" class="checkbox" value="true" {% if current_user.can_send_updates %} checked="true" {% endif %}>
+                    <label for="follow-updates">We can notify you when series you follow are updated</label>
+                </div>
+                <div class="hori checkbox-option">
+                    <input type="checkbox" name="sales" id="sales" class="checkbox" value="true" {% if current_user.can_send_sales %} checked="true" {% endif %}>
+                    <label for="sales">We can notify you of all sales</label>
+                </div>
+                <div class="hori checkbox-option">
+                    <input type="checkbox" name="wish-sales" id="wish-sales" class="checkbox" value="true" {% if current_user.can_send_wish_sales %} checked="true" {% endif%}>
+                    <label for="wish-sales">We can notify you when books on your wishlist go on sale</label>
+                </div>
+                <div class="hori checkbox-option">
+                    <input type="checkbox" name="all-notifications" id="all-notifications">
+                    <label for="all-notifications">Disable all email notifications</label>
+                </div>
                 <button type="submit" id="edit-btn">Update Preferences</button>
             </form>
-            <!-- use JS to show form when button below is clicked; also, change button text below to 'Cancel' -->
-            <!-- use JS to uncheck all boxes when Disable all notifications is checked -->
             <button id="show-preference-form">Change Email Preferences</button>
         </div>
 
@@ -58,7 +57,7 @@ Profile
                 <input type="password" name="password" id="delete-password" autocomplete="off"
                 placeholder="Password">
                 <input type="password" name="confirmation" id="confirmation" autocomplete="off"                 placeholder="Confirmation">
-                <button type="submit">Delete Account</button>
+                <button type="button">Delete Account</button>
             </form>
             <!-- use AJAX for this part -->
             <p id="delete-error-message"></p>
@@ -107,4 +106,12 @@ Profile
 
 </div>
 {% endif %}
+
+<script type="text/javascript">
+    document.getElementById("show-preference-form").addEventListener("click", editPreferences);
+    document.getElementById("all-notifications").addEventListener("change", uncheckAll);
+    document.getElementById("delete-account-btn").addEventListener("click", deleteAccount);
+</script>
+
+
 {% endblock %}

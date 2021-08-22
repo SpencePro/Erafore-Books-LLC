@@ -1,4 +1,5 @@
 {% extends 'layout.html' %}
+{% load static %}
 
 {% block head %}
 Books
@@ -9,7 +10,7 @@ Books
 <div class="series-list">
     <div class="filter-option vert">
 
-        <form action="{% url 'all_books' %}" method="POST" class="filter-form hori">
+        <form action="{% url 'all_books' %}" method="POST" id="filter-form" class="filter-form hori">
             {% csrf_token %}
             <div class="hori">
                 <label for="series">Series</label>
@@ -31,58 +32,66 @@ Books
                 </select>
             </div>
             <br>
-            <button type="submit">Filter</button>
+            <button type="button" id="submit-filter">Filter</button>
         </form>
 
     </div>
 </div>
 
-{% if selected_series != "" %}
-    <div class="selected-series vert">
-        <h4>Series: {{ selected_series.name }}</h4>
-        <p>{{ series.id }}</p>
-        <p id="description">{{ selected_series.description }}</p>
+<!-- use AJAX for these; build with JS -->
+<div id="selected-series" class="selected-series vert center hidden">
+    <div class="hori center" style="align-items: baseline;">
+        <label style="font-size: large;" for="series-name">Series:</label>
+        <h5 id="series-name"></h5>
     </div>
-{% endif %}
+    <p id="series-description"></p>
+</div>
 
-{% if selected_world != "" %}
-    <div class="selected-world vert">
-        <h4>World: {{ selected_world }}</h4>
-    </div>
-{% endif %}
+<div id="selected-world" class="selected-world hori center hidden">
+    <label style="font-size: large;" for="world-name">World:</label>
+    <h5 id="world-name"></h5>
+</div>
 
-{% if selected_series != "" or selected_world != "" %}
-<a class="clear-filter vert" href="{% url 'all_books' %}">Clear Filter</a>
-{% endif %}
+<h5 id="error-message" class="hidden center"></h5>
 
-{% if num == 0 %}
-<h4>No books match the filters</h4>
-{% endif %}
+<div id="clear-filter" class="center hidden">
+    <a href="{% url 'all_books' %}">Clear Filter</a>
+</div>
 
-<div class="booklist vert container">
+<p id="pagenum" class="hidden">{{ pagenum }}</p>
+
+<div id="booklist-container" class="booklist vert container">
     {% for book in books %}
-        <div class="book_listing hori">
+        <div class="book-listing hori">
             <div class="vert">
-                <img src="#" alt="{{ book.title }} Cover">
+                <img src="{% static book.image %}_small.avif" alt="{{ book.title }} Cover" width="150px" height="200px">
                 <p><a href="{% url 'book' book.id %}">{{ book.title }}</a></p>
-                <p>Published {{ book.date_released }}</p>
             </div>
             <div class="vert">
+                <p>Published {{ book.date_released }}</p>
                 <div class="hori">
-                    <label for="book-series">Series:</label>
+                    <label for="book-series-{{ book.title }}">Series:</label>
                     <p id="book-series-{{ book.title }}">{{ book.series.name }}</p>
                 </div>
                 <div class="hori">
-                    <label for="book-world">World:</label>
+                    <label for="book-world-{{ book.title }}">World:</label>
                     <p id="book-world-{{ book.title }}">{{ book.world }}</p>
                 </div>
                 <div class="hori">
-                    <label for="book-synopsis">Synopsis:</label>
-                    <p id="book-synopsis">{{ book.synopsis }}<button id="see-more-{{ book.id }}" type="button">See more</button></p>
-                    <!-- only show first 100 characters, trail off, see more via JS -->
+                    <label for="book-synopsis-{{ book.id }}">Synopsis:</label>
+                    <p id="book-synopsis-{{ book.id }}">{{ book.synopsis|truncatewords:50 }}<a id="see-more-{{ book.id }}" href="{% url 'book' book.id %}">See more</a>
+                    <!-- only show first 50 words, trail off, see more via JS -->
                 </div>
             </div>
         </div>
     {% endfor %}
 </div>
+
+
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", infiniteScroll);
+    document.getElementById("submit-filter").addEventListener("click", displayFilters);
+</script>
+
+
 {% endblock %}

@@ -1,10 +1,11 @@
 from django import http
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.urls import reverse
 from django.db.models import Q
 from django.template import RequestContext
+from django.core import serializers
 import random
 import re
 import string
@@ -26,41 +27,70 @@ def all_books_view(request):
     selected_series = ""
     selected_world = ""
     worlds = ["Erafore", "Messy Earth", "Terra", "Standalone", ""]
+    pagenum = 1
 
     if request.method == "POST":
         series_id = request.POST["series"]
         world = request.POST["world"]
         if series_id == "" and world == "":
-            return HttpResponseRedirect(reverse("all_books"))
-            # use AJAX to send error message
+            return JsonResponse({"error": "Please enter at least one search filter"})
         elif world not in worlds:
-            return HttpResponseRedirect(reverse("all_books"))
-            # use AJAX to send error message
+            return JsonResponse({"error": "Invalid world"})
         else:
             def filter_without_none(**kwargs):
                 return Q(**{k: v for k, v in kwargs.items() if v is not None and v != ""})
 
             books = Book.objects.filter(
-                filter_without_none(series=series_id, world=world) #, type=type)
-            ).order_by("-date_released")
+                filter_without_none(series=series_id, world=world)
+            ).order_by("-date_released") #[(pagenum-1)*8:pagenum*8]
+            
+            books_data = list(books.values())
+            if len(books_data) < 1:
+                return JsonResponse({"error": "No books match the filters"})
             
             if series_id != "":
                 selected_series = Series.objects.get(pk=series_id)
-            
+                selected_series_name = selected_series.name
+                selected_series_description = selected_series.description
+            else:
+                selected_series_name = None
+                selected_series_description = None
+                
             selected_world = world
 
+            return JsonResponse({
+                "selected_world": selected_world, 
+                "selected_series_name": selected_series_name,
+                "selected_series_description": selected_series_description,
+                "books": books_data,
+            })
+
     else:
-        books = Book.objects.all().order_by("-date_released")
-    
+        # get pagenum from AJAX; 
+        # pagenum = 1
+        books = Book.objects.all().order_by("-date_released")[(pagenum-1)*8:pagenum*8]
+
+        # books = Book.objects.all().order_by("-date_released")[:pagenum*8]
+        # instead of replacing the first 8 results, need to append them
+        # send 'books' as a JsonResponse to the AJAX function, for it to then append the books to the end
+
     context = {
         "num": len(books),
         "selected_series": selected_series,
         "selected_world": selected_world,
         "series_list": series_list,
         "worlds": worlds[:-1],
-        "books": books
+        "books": books, 
+        "pagenum": pagenum
     }
+    # display with AJAX
     return render(request, "all_books.html", context)
+
+
+def infinite_scroll(request, id):
+    pagenum = 1
+    books = Book.objects.all().order_by("-date_released")[(pagenum-1)*8:pagenum*8]
+    return
 
 
 def book_view(request, id):
@@ -144,6 +174,19 @@ def lore_object_view(request, id):
 def search_view(request):
     # GET request; find books, series, lore items
     query = request.GET["q"]
+    punct = string.punctuation
+    for q in query:
+        if q in punct or q == " ":
+            query = query.replace(q, "")
+    
+    if query == "":
+        error_message = "Please enter a valid search term"
+        context = {
+            "query": query,
+            "error_message": error_message,
+        }
+        return render(request, "search_results.html", context)
+    
     original_query = query
     books = Book.objects.all()
     #lore_objects = LoreObject.objects.all()
@@ -151,11 +194,6 @@ def search_view(request):
     book_matches = []
     #lore_matches = []
     error_message = ""
-    punct = string.punctuation
-
-    for q in query:
-        if q in punct or q == " ":
-            query = query.replace(q, "")
 
     r = re.compile(rf"({query})", re.IGNORECASE)
 

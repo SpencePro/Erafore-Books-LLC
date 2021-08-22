@@ -1,4 +1,5 @@
 {% extends 'layout.html' %}
+{% load static %}
 
 {% block head %}
 Login
@@ -6,7 +7,7 @@ Login
 
 {% block body %}
 
-<div class="login-form vert">
+<div class="login-form vert center">
     <h4>Login</h4>
     <form id="login-form" action="{% url 'login' %}" method="POST">
         {% csrf_token %}
@@ -14,6 +15,12 @@ Login
         <input type="password" name="password" id="password" autocomplete="off" placeholder="Password">
         <button type="submit" id="login-btn">Log In</button>
     </form>
+    <div class="show-password hori">
+        <label id="eye-label" for="eye">Show Password</label>
+        <button type="button" id="show" class="password-show-btn">
+            <img src="{% static site_images %}show_password.avif" alt="Show Password" id="eye">
+        </button>
+    </div>
     {% if message %}
         <p class="error-message">{{ message }}</p>
         <!-- reset password button/form -->
@@ -22,12 +29,16 @@ Login
         <div class="forgot-password vert">
             <form action="{% url 'reset' %}" method="POST">
                 {% csrf_token %}
-                <input type="text" name="username" id="username" placeholder="Username" autocomplete="off">
+                <input type="text" name="reset-username" id="reset-username" placeholder="Username" autocomplete="off">
                 <input type="text" name="email" id="email" placeholder="Email Address" autocomplete="off">
-                <button type="submit">Send Email</button>
+                <button type="button" id="reset-btn">Send Email</button>
             </form>
         </div>
     {% endif %}
 </div>
+
+<script type="text/javascript">
+    document.getElementById("show").addEventListener("click", showPassword);
+</script>
 
 {% endblock %}
