@@ -5,7 +5,7 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('all', views.all_books_view, name='all_books'),
-    path('scroll', views.infinite_scroll, name='scroll'),
+    path('filter_books', views.filter_books, name='filter_books'),
     path('book/<int:id>', views.book_view, name='book'),
     path('contact', views.contact_view, name='contact'),
     path('lore', views.lore_view, name='lore_page'),

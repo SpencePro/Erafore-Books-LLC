@@ -16,8 +16,9 @@ Home
         <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Facilis, fugit doloremque. Quidem vel optio commodi ea nemo quasi, explicabo nulla, voluptatem possimus consequuntur provident amet eos placeat aliquid. Sint, ipsum.</p>
     </div>
     {% if sales %}
+    <div class="on-sale center vert">
         <h4>On Sale Now</h4>
-        <div class="on-sale hori">
+        <div class="hori center">
             {% for sale in sales %}
             <div class="sale-item vert">
                 <img src="{% static sale.image %}.avif" alt="{{ sale.title }} Cover" width="150px" height="200px">
@@ -25,15 +26,18 @@ Home
             </div>
             {% endfor %}
         </div>
+    </div>
     {% endif %}
     <div class="vert coming-soon">
         <h4>Coming soon...</h4>
         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atque et laudantium earum aliquam? Excepturi quaerat error libero accusamus.</p>
     </div>
-    <h4>About the Author</h4>
-    <div class="hori about">
-        <img src="" alt="Author Portrait">
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam voluptatum ratione cupiditate nulla eligendi placeat ad neque. Corporis, magni! Cumque dicta assumenda quidem doloribus harum veritatis aliquam non autem tempore.</p>
+    <div class="vert center about">
+        <h4>About the Author</h4>
+        <div class="hori">
+            <img src="#" alt="Author Portrait">
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam voluptatum ratione cupiditate nulla eligendi placeat ad neque. Corporis, magni! Cumque dicta assumenda quidem doloribus harum veritatis aliquam non autem tempore.</p>
+        </div>
     </div>
 </div>
 {% endblock %}

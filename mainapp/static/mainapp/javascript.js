@@ -1,40 +1,36 @@
 
-document.addEventListener("DOMContentLoaded", function () {
-    let scrollY = window.scrollY;
-    let windowHeight = window.innerHeight;
-    let docHeight = document.body.offsetHeight;
-
-    if (scrollY + windowHeight == docHeight) {
-        console.log("true");
-    }
-})
-
 // Function to infinite scroll
 function infiniteScroll() {
-    /*
     window.onscroll = () => {
         if (window.innerHeight + window.scrollY == document.body.offsetHeight) {
-            // get pagenum value and increment by 1
-            var pagenum = parseInt(document.getElementById("pagenum").innerHTML);
-            pagenum++;
-            scroll(pagenum);
-            // then pass to views.py via AJAX, for the view to render the next 8 elements (GET request)
-            function scroll(pagenum) {
+            var data = $("#filter-form").serializeArray();
+            var currentUrl = window.location.href;
+            currentUrl = currentUrl.slice(0, currentUrl.length - 3);
+            if (data[2].value == "" && data[3].value == "") {
+                var url = "all";
+            }
+            else {
+                var url = "filter_books";
+            }
+            scroll(data);
+
+            function scroll(data) {
                 $.ajax({
-                    type: "GET",
-                    url: "/all/",
+                    type: "POST",
+                    url: url,
                     dataType: "json",
-                    data: pagenum,
+                    data: data,
                     success: function (data) {
-                        console.log(data);
+                        document.getElementById("pagenum").value = data.pagenum;
                         // append book elements to the end of .booklist
+                        buildListing(data.books, data, currentUrl);
+                        console.log(data.pagenum);
                     }
                 });
                 return false;
             }
         }
     }
-    */
 }
 
 
@@ -61,23 +57,18 @@ function getCookie(name) {
 // Function to display filtered book results
 function displayFilters() {
     var data = $("#filter-form").serializeArray();
-    var booklist = document.querySelectorAll(".book_listing");
+    var booklist = document.querySelectorAll(".book-listing");
     var errorMessage = document.getElementById("error-message");
     var selectedSeries = document.getElementById("selected-series");
     var selectedWorld = document.getElementById("selected-world");
-    var imageUrl = document.querySelectorAll("img")[0].src;
-    imageUrl = imageUrl.slice(0, imageUrl.length - 55);
     var currentUrl = window.location.href;
     currentUrl = currentUrl.slice(0, currentUrl.length - 3);
-    console.log("url:", currentUrl);
-    console.log("imageUrl:", imageUrl);
-    console.log("initial values:", data);
-    filterFunction(data);
+    filterBooks(data);
 
-    function filterFunction(data) {
+    function filterBooks(data) {
         $.ajax({
             type: "POST",
-            url: "all",
+            url: "filter_books",
             dataType: "json",
             data: data,
             success: function (data) {
@@ -104,37 +95,99 @@ function displayFilters() {
                     else {
                         selectedSeries.classList.add("hidden");
                     }
+                    // clear listings
                     booklist.forEach((listing) => {
                         listing.remove();
                     })
-                    books = data.books;
-                    booklistContainer = document.getElementById("booklist-container");
-                    for (i = 0; i < books.length; i++) {
-                        // build each book listing, append to booklistContainer
-                        const bookListingDiv = document.createElement("div");
-                        bookListingDiv.classList.add("book-listing", "hori");
-                        const titleDiv = document.createElement("div");
-                        titleDiv.classList.add("vert");
-                        const image = document.createElement("img");
-                        image.src = imageUrl + books[i].image + "_small.avif";
-                        image.alt = books[i].title + " Cover";
-                        image.width = "150px";
-                        image.height = "200px";
-                        const titleParagraph = document.createElement("p");
-                        const titleLink = document.createElement("a");
-                        titleLink.href = currentUrl + "book/" + books[i].id;
-                        titleLink.innerHTML = books[i].title;
-                        titleParagraph.appendChild(titleLink);
-                        titleDiv.appendChild(titleParagraph, image);
-                        bookListingDiv.appendChild(titleDiv);
-
-                    }
-                }
-                // show button to clear filters
-                document.getElementById("clear-filter").classList.remove("hidden");
+                    // build new listings
+                    buildListing(data.books, data, currentUrl);
+                    
+                    // show button to clear filters
+                    document.getElementById("clear-filter").classList.remove("hidden");
+                }   
             }
         });
         return false;
+    }
+}
+
+function buildListing(books, data, currentUrl) {
+    const booklistContainer = document.getElementById("booklist-container");
+    for (i = 0; i < books.length; i++) {
+        // build each book listing, append to booklistContainer
+        const bookListingDiv = document.createElement("div");
+        bookListingDiv.classList.add("book-listing", "hori");
+        // create title + image elements
+        const titleDiv = document.createElement("div");
+        titleDiv.classList.add("vert");
+        titleDiv.classList.add("title-div");
+        const image = document.createElement("img");
+        image.src = currentUrl + "static/" + books[i].image + "_small.avif";
+        image.alt = books[i].title + " Cover";
+        image.width = "150";
+        image.height = "200";
+        const titleParagraph = document.createElement("p");
+        const titleLink = document.createElement("a");
+        titleLink.href = currentUrl + "book/" + books[i].id;
+        titleLink.innerHTML = books[i].title;
+        titleParagraph.appendChild(titleLink);
+        titleDiv.appendChild(image);
+        titleDiv.appendChild(titleParagraph);
+        bookListingDiv.appendChild(titleDiv);
+        // create main content elements
+        const contentDiv = document.createElement("div");
+        contentDiv.classList.add("vert");
+        const releaseDate = document.createElement("p");
+        releaseDate.innerHTML = `Published ${books[i].date_released}`;
+        // series div
+        const seriesDiv = document.createElement("div");
+        seriesDiv.classList.add("hori");
+        const seriesP = document.createElement("p");
+        seriesP.id = `book-series-${books[i].title}`;
+        seriesP.innerHTML = data.series_list[parseInt(books[i].series_id) - 1].name;
+        const seriesLabel = document.createElement("label");
+        seriesLabel.for = seriesP.id;
+        seriesLabel.innerHTML = "Series:";
+        seriesDiv.appendChild(seriesLabel);
+        seriesDiv.appendChild(seriesP);
+        // world div
+        const worldDiv = document.createElement("div");
+        worldDiv.classList.add("hori");
+        const worldP = document.createElement("p");
+        worldP.id = `book-world-${books[i].title}`;
+        worldP.innerHTML = books[i].world;
+        const worldLabel = document.createElement("label");
+        worldLabel.for = worldP.id;
+        worldLabel.innerHTML = "World:";
+        worldDiv.appendChild(worldLabel);
+        worldDiv.appendChild(worldP);
+        // synopsis div
+        const synopsisDiv = document.createElement("div");
+        synopsisDiv.classList.add("hori");
+        const synopsisP = document.createElement("p");
+        synopsisP.id = `book-synopsis-${books[i].id}`;
+        synopsisP.innerHTML = `${books[i].synopsis.slice(0, 300)} ...`;
+        const synopsisLabel = document.createElement("label");
+        synopsisLabel.for = synopsisP.id;
+        synopsisLabel.innerHTML = "Synopsis:";
+        const seeMoreLink = document.createElement("a");
+        seeMoreLink.href = currentUrl + "book/" + books[i].id;
+        seeMoreLink.innerHTML = "See more";
+        synopsisP.appendChild(seeMoreLink);
+        synopsisDiv.appendChild(synopsisLabel);
+        synopsisDiv.appendChild(synopsisP);
+        // if on sale
+        if (books[i].on_sale == true) {
+            const onSale = document.createElement("h5");
+            onSale.innerHTML = "On Sale Now!";
+            contentDiv.appendChild(onSale);
+        }
+        contentDiv.appendChild(releaseDate);
+        contentDiv.appendChild(seriesDiv);
+        contentDiv.appendChild(worldDiv);
+        contentDiv.appendChild(synopsisDiv);
+        bookListingDiv.appendChild(contentDiv);
+        booklistContainer.appendChild(bookListingDiv);
     }
 }
 

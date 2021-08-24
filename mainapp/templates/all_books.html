@@ -12,6 +12,7 @@ Books
 
         <form action="{% url 'all_books' %}" method="POST" id="filter-form" class="filter-form hori">
             {% csrf_token %}
+            <input type="text" name="pagenum" value="{{ pagenum }}" id="pagenum" class="hidden">
             <div class="hori">
                 <label for="series">Series</label>
                 <select name="series" id="series-filter" style="width:12rem;">
@@ -58,16 +59,17 @@ Books
     <a href="{% url 'all_books' %}">Clear Filter</a>
 </div>
 
-<p id="pagenum" class="hidden">{{ pagenum }}</p>
-
 <div id="booklist-container" class="booklist vert container">
     {% for book in books %}
-        <div class="book-listing hori">
-            <div class="vert">
+        <div class="book-listing hori" {% if book.on_sale %} class="on-sale-now" {% endif %}>
+            <div class="vert title-div">
                 <img src="{% static book.image %}_small.avif" alt="{{ book.title }} Cover" width="150px" height="200px">
                 <p><a href="{% url 'book' book.id %}">{{ book.title }}</a></p>
             </div>
             <div class="vert">
+                {% if book.on_sale == True %}
+                    <h5>On Sale Now!</h5>
+                {% endif %}
                 <p>Published {{ book.date_released }}</p>
                 <div class="hori">
                     <label for="book-series-{{ book.title }}">Series:</label>
@@ -79,7 +81,7 @@ Books
                 </div>
                 <div class="hori">
                     <label for="book-synopsis-{{ book.id }}">Synopsis:</label>
-                    <p id="book-synopsis-{{ book.id }}">{{ book.synopsis|truncatewords:50 }}<a id="see-more-{{ book.id }}" href="{% url 'book' book.id %}">See more</a>
+                    <p id="book-synopsis-{{ book.id }}">{{ book.synopsis|truncatewords:50 }}<a href="{% url 'book' book.id %}">See more</a>
                     <!-- only show first 50 words, trail off, see more via JS -->
                 </div>
             </div>

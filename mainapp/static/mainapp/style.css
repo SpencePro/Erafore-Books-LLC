@@ -63,6 +63,16 @@ main {
 
 /* Home Page */
 
+.sale-item {
+    width: 25%;
+    padding: 2px;
+    border: 1px solid grey;
+    align-items: center;
+}
+.sale-item p {
+    margin-bottom: 0;
+}
+
 /* Books */
 
 .filter-option {
@@ -70,10 +80,19 @@ main {
     margin-bottom: 1rem;
 }
 
-
 .filter-form {
     flex-wrap: wrap;
     align-content: space-between;
+}
+
+.title-div {
+    width: 25%;
+    margin-right: min(1rem, 5px);
+    margin-right: max(2rem, 15px);
+}
+
+.on-sale-now {
+    background-color: goldenrod;
 }
 
 /* Lore */

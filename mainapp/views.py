@@ -21,58 +21,27 @@ def index(request):
 
 
 def all_books_view(request):
-    # GET request shows all, POST request shows specified series
-    # show first 10, use infinite scroll to show more 
+    # GET request shows first 8, POST to show the rest via infinite scroll
     series_list = Series.objects.all()
     selected_series = ""
     selected_world = ""
     worlds = ["Erafore", "Messy Earth", "Terra", "Standalone", ""]
-    pagenum = 1
-
-    if request.method == "POST":
-        series_id = request.POST["series"]
-        world = request.POST["world"]
-        if series_id == "" and world == "":
-            return JsonResponse({"error": "Please enter at least one search filter"})
-        elif world not in worlds:
-            return JsonResponse({"error": "Invalid world"})
-        else:
-            def filter_without_none(**kwargs):
-                return Q(**{k: v for k, v in kwargs.items() if v is not None and v != ""})
-
-            books = Book.objects.filter(
-                filter_without_none(series=series_id, world=world)
-            ).order_by("-date_released") #[(pagenum-1)*8:pagenum*8]
-            
-            books_data = list(books.values())
-            if len(books_data) < 1:
-                return JsonResponse({"error": "No books match the filters"})
-            
-            if series_id != "":
-                selected_series = Series.objects.get(pk=series_id)
-                selected_series_name = selected_series.name
-                selected_series_description = selected_series.description
-            else:
-                selected_series_name = None
-                selected_series_description = None
-                
-            selected_world = world
-
-            return JsonResponse({
-                "selected_world": selected_world, 
-                "selected_series_name": selected_series_name,
-                "selected_series_description": selected_series_description,
-                "books": books_data,
-            })
-
+    
+    if request.method == "GET":
+        pagenum = 1
+        books = Book.objects.all().order_by("-date_released")[0:8]
+    
     else:
-        # get pagenum from AJAX; 
-        # pagenum = 1
+        pagenum = int(request.POST["pagenum"]) + 1
+        print(pagenum)
         books = Book.objects.all().order_by("-date_released")[(pagenum-1)*8:pagenum*8]
+        books = list(books.values())
 
-        # books = Book.objects.all().order_by("-date_released")[:pagenum*8]
-        # instead of replacing the first 8 results, need to append them
-        # send 'books' as a JsonResponse to the AJAX function, for it to then append the books to the end
+        return JsonResponse({
+            "pagenum": pagenum,
+            "books": books,
+            "series_list": list(series_list.values())
+        })
 
     context = {
         "num": len(books),
@@ -83,14 +52,55 @@ def all_books_view(request):
         "books": books, 
         "pagenum": pagenum
     }
-    # display with AJAX
     return render(request, "all_books.html", context)
 
 
-def infinite_scroll(request, id):
-    pagenum = 1
-    books = Book.objects.all().order_by("-date_released")[(pagenum-1)*8:pagenum*8]
-    return
+def filter_books(request):
+    series_list = Series.objects.all()
+    selected_series = ""
+    selected_world = ""
+    worlds = ["Erafore", "Messy Earth", "Terra", "Standalone", ""]
+
+    if request.method == "POST":
+        pagenum = int(request.POST["pagenum"]) + 1
+        series_id = request.POST["series"]
+        world = request.POST["world"]
+
+        if series_id == "" and world == "":
+            return JsonResponse({"error": "Please enter at least one search filter"})
+        elif world not in worlds:
+            return JsonResponse({"error": "Invalid world"})
+        else:
+            def filter_without_none(**kwargs):
+                return Q(**{k: v for k, v in kwargs.items() if v is not None and v != ""})
+
+            books = Book.objects.filter(
+                filter_without_none(series=series_id, world=world)
+            ).order_by("-date_released")[(pagenum-1)*8:pagenum*8]
+
+            books_data = list(books.values())
+
+            if len(books_data) < 1:
+                return JsonResponse({"error": "No books match the filters"})
+
+            if series_id != "":
+                selected_series = Series.objects.get(pk=series_id)
+                selected_series_name = selected_series.name
+                selected_series_description = selected_series.description
+            else:
+                selected_series_name = None
+                selected_series_description = None
+
+            selected_world = world
+
+            return JsonResponse({
+                "selected_world": selected_world,
+                "selected_series_name": selected_series_name,
+                "selected_series_description": selected_series_description,
+                "books": books_data,
+                "series_list": list(series_list.values()),
+                "pagenum": pagenum
+            })
 
 
 def book_view(request, id):
