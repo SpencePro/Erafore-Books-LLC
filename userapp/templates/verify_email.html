@@ -5,13 +5,26 @@ Verify Email
 {% endblock %}
 
 {% block body %}
+    <div class="center vert">
+        <h2>Verify your Email Address</h2>
+        <p>We have sent an email to the address given. In it, you will see a passcode; enter that in the form below and press 'Submit'. If it is correct, you will be directed to the login page; if it is not, you will be redirected to the registration page to try again.</p>
+        <form action="{% url 'verify_registration' %}" method="POST" id="verify-email-form">
+            {% csrf_token %}
+            <input type="text" name="passcode" id="passcode" placeholder="Passcode" autocomplete="off">
+            <button type="button" id="verify-email-btn">Submit</button>
+        </form>
+        <h5 id="error-message"></h5>
+    </div>
 
-    <h2>Verify your Email Address</h2>
-    <p>We have sent an email to the address given. In it, you will see a passcode; enter that in the form below and press 'Submit'. If it is correct, you will be directed to the login page; if it is not, you will be redirected to the registration page to try again.</p>
-    <form action="{% url 'verify_registration' %}" method="POST">
-        {% csrf_token %}
-        <input type="text" name="passcode" id="passcode" placeholder="Passcode" autocomplete="off">
-        <button type="submit">Submit</button>
-    </form>
+    <script type="text/javascript">
+        document.querySelectorAll("input").forEach((input) => {
+            input.addEventListener("keydown", function(keypress) {
+                if (keypress.keyCode === 13) {
+                    event.preventDefault();
+                }
+            })
+        });
+        document.getElementById("verify-email-btn").addEventListener("click", verifyEmailRegister);
+    </script>
 
 {% endblock %}

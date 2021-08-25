@@ -13,7 +13,7 @@ Login
         {% csrf_token %}
         <input type="text" name="username" id="username" autocomplete="off" placeholder="Username">
         <input type="password" name="password" id="password" autocomplete="off" placeholder="Password">
-        <button type="submit" id="login-btn">Log In</button>
+        <button type="button" id="login-btn">Log In</button>
     </form>
     <div class="show-password hori">
         <label id="eye-label" for="eye">Show Password</label>
@@ -21,24 +21,27 @@ Login
             <img src="{% static site_images %}show_password.avif" alt="Show Password" id="eye">
         </button>
     </div>
-    {% if message %}
-        <p class="error-message">{{ message }}</p>
-        <!-- reset password button/form -->
+
+    <div id="error-div" class="error vert center hidden">
+        <p id="error-message" class="error-message"></p>
         <h4>Reset Your Password</h4>
         <p>You can reset your password by entering your username and email address in the form below; a code to reset your password will be sent to you</p>
         <div class="forgot-password vert">
-            <form action="{% url 'reset' %}" method="POST">
+            <form action="{% url 'reset' %}" method="POST" id="reset-form">
                 {% csrf_token %}
                 <input type="text" name="reset-username" id="reset-username" placeholder="Username" autocomplete="off">
                 <input type="text" name="email" id="email" placeholder="Email Address" autocomplete="off">
                 <button type="button" id="reset-btn">Send Email</button>
             </form>
         </div>
-    {% endif %}
+    </div>
+
 </div>
 
 <script type="text/javascript">
     document.getElementById("show").addEventListener("click", showPassword);
+    document.getElementById("login-btn").addEventListener("click", submitLogin);
+    document.getElementById("reset-btn").addEventListener("click", resetPassword);
 </script>
 
 {% endblock %}

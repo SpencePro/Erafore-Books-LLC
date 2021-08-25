@@ -21,7 +21,7 @@ Register
     </div>
     <div class="registration-form-div vert">
         <h4>Register</h4>
-        <form action="{% url 'register' %}" method="POST" class="registration-form hori center">
+        <form action="{% url 'register' %}" method="POST" id="registration-form" class="registration-form hori center">
             {% csrf_token %}
             <input type="text" name="username" id="username" autocomplete="off" placeholder="Username"><br>
             <input type="text" name="email" id="email" autocomplete="off" placeholder="Email"><br>
@@ -36,8 +36,7 @@ Register
                 <img src="{% static site_images %}show_password.avif" alt="Show Password" id="eye">
             </button>
         </div>
-        <h5 id="error-message"></h5>
-        <!-- use AJAX to update this from backend -->
+        <h5 class="center" id="error-message"></h5>
         <p style="font-size: small;">Your email address will be used solely to send you notifications of book sales and
             new releases, and to confirm your account information; your information will never be sold to third parties. By signing up for an account you consent to receive email notifications of sales and book releases. You can update your email permissions in your profile page at any time.</p>
     </div>

@@ -6,33 +6,30 @@ Lore
 
 {% block body %}
 <h2>Lore Page</h2>
-<!-- user can choose from one or more lists -->
-<form action="{% url 'lore_page' %}" method="POST" class="lore-search hori">
+<form action="{% url 'lore_page' %}" method="POST" class="filter-form hori center">
     {% csrf_token %}
-
-    <div class="filter-option vert">
+    <input type="text" name="pagenum" value="{{ pagenum }}" id="pagenum" class="hidden">
+    <div class="hori">
         <label for="series">Series:</label>
-        <select name="series" id="series">
+        <select name="series" id="series" style="width:12rem;">
             <option value="" selected></option>
             {% for series in series_list %}
             <option value="{{ series.name }}">{{ series.name }}</option>
             {% endfor %}
         </select>
     </div>
-
-    <div class="filter-option vert">
+    <div class="hori">
         <label for="world">World:</label>
-        <select name="world" id="world">
+        <select name="world" id="world" style="width:12rem;">
             <option value="" selected></option>
             {% for world in world_list %}
             <option value="{{ world }}">{{ world }}</option>
             {% endfor %}
         </select>
     </div>
-
-    <div class="filter-option vert">
+    <div class="hori">
         <label for="type">Type:</label>
-        <select name="type" id="type">
+        <select name="type" id="type" style="width:12rem;"> 
             <option value="" selected></option>
             {% for type in type_list %}
             <option value="{{ type }}">{{ type }}</option>

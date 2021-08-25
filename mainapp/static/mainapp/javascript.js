@@ -2,60 +2,59 @@
 // Function to infinite scroll
 function infiniteScroll() {
     window.onscroll = () => {
-        if (window.innerHeight + window.scrollY == document.body.offsetHeight) {
-            var data = $("#filter-form").serializeArray();
-            var currentUrl = window.location.href;
-            currentUrl = currentUrl.slice(0, currentUrl.length - 3);
-            if (data[2].value == "" && data[3].value == "") {
-                var url = "all";
-            }
-            else {
-                var url = "filter_books";
-            }
-            scroll(data);
+        if (document.getElementById("stop-scrolling").innerHTML == "False") {
+            if (window.innerHeight + window.scrollY == document.body.offsetHeight) {
+                var data = $("#filter-form").serializeArray();
+                data[1].value++;
+                var currentUrl = window.location.href;
+                currentUrl = currentUrl.slice(0, currentUrl.length - 3);
+                if (data[2].value == "" && data[3].value == "") {
+                    var url = "all";
+                }
+                else {
+                    var url = "filter_books";
+                }
+                scroll(data);
 
-            function scroll(data) {
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    dataType: "json",
-                    data: data,
-                    success: function (data) {
-                        document.getElementById("pagenum").value = data.pagenum;
-                        // append book elements to the end of .booklist
-                        buildListing(data.books, data, currentUrl);
-                        console.log(data.pagenum);
-                    }
-                });
-                return false;
+                function scroll(data) {
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        dataType: "json",
+                        data: data,
+                        success: function (data) {
+                            document.getElementById("pagenum").value = data.pagenum;
+                            // append book elements to the end of .booklist
+                            if (data.error) {
+                                let errorMessage = document.getElementById("error-message");
+                                let selectedSeries = document.getElementById("selected-series");
+                                let selectedWorld = document.getElementById("selected-world");
+                                errorMessage.innerHTML = data.error;
+                                errorMessage.classList.remove("hidden");
+                                selectedWorld.classList.add("hidden");
+                                selectedSeries.classList.add("hidden");
+                            }
+                            else {
+                                buildListing(data.books, data, currentUrl);
+                            }
+                            if (data.stop_scrolling == true) {
+                                document.getElementById("stop-scrolling").innerHTML = "True";
+                            }
+                            else {
+                                document.getElementById("stop-scrolling").innerHTML = "False";
+                            }
+                        }
+                    });
+                    return false;
+                }
             }
         }
     }
 }
 
-
-// Function to get cookie for csrf_token to pass form data securely
-/*
-function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = jQuery.trim(cookies[i]);
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-};
-*/
-
-
 // Function to display filtered book results
 function displayFilters() {
+    document.getElementById("pagenum").value = 1;
     var data = $("#filter-form").serializeArray();
     var booklist = document.querySelectorAll(".book-listing");
     var errorMessage = document.getElementById("error-message");
@@ -95,7 +94,7 @@ function displayFilters() {
                     else {
                         selectedSeries.classList.add("hidden");
                     }
-                    // clear listings
+                    // clear existing listings
                     booklist.forEach((listing) => {
                         listing.remove();
                     })
@@ -104,6 +103,14 @@ function displayFilters() {
                     
                     // show button to clear filters
                     document.getElementById("clear-filter").classList.remove("hidden");
+
+                    // signal page to stop scrolling
+                    if (data.stop_scrolling == true) {
+                        document.getElementById("stop-scrolling").innerHTML = "True";
+                    }
+                    else {
+                        document.getElementById("stop-scrolling").innerHTML = "False";
+                    }
                 }   
             }
         });
@@ -182,6 +189,7 @@ function buildListing(books, data, currentUrl) {
             onSale.innerHTML = "On Sale Now!";
             contentDiv.appendChild(onSale);
         }
+        // append together
         contentDiv.appendChild(releaseDate);
         contentDiv.appendChild(seriesDiv);
         contentDiv.appendChild(worldDiv);
@@ -191,6 +199,20 @@ function buildListing(books, data, currentUrl) {
     }
 }
 
+// Function to make search button clickable
+function makeClickable() {
+    let userInput = document.getElementById("searchbox").value;
+    let searchButton = document.getElementById("search-btn");
+
+    if (userInput.length > 0) {
+        searchButton.type = "submit";
+    }
+    else {
+        searchButton.type = "button";
+    }
+}
+
+// Functions for USERAPP
 
 // Function to show or hide password
 function showPassword() {
@@ -221,7 +243,6 @@ function showPassword() {
     }
 }
 
-
 // Function to verify registration requirements for account creation
 function verifyRequirements() {
     let password = document.getElementById("password").value;
@@ -248,18 +269,94 @@ function verifyRequirements() {
     }
     else {
         // Pass to AJAX
+        var data = $("#registration-form").serializeArray();
+        registerUser(data);
+
+        function registerUser(data) {
+            $.ajax({
+                type: "POST",
+                url: "register",
+                dataType: "json",
+                data: data,
+                success: function (data) {
+                    if (data.success == true) {
+                        window.location.href = data.url;
+                    }
+                    else {
+                        errorMessage.innerHTML = data.error_message;
+                    }
+                }
+            });
+            return false;
+        }
     }
 }
 
+// Function to verify email for registration
+function verifyEmailRegister() {
+    var data = $("#verify-email-form").serializeArray();
+    verifyRegistration(data);
+
+    function verifyRegistration(data) {
+        $.ajax({
+            type: "POST",
+            url: "verify_registration",
+            dataType: "json",
+            data: data,
+            success: function (data) {
+                if (data.success == true) {
+                    window.location.href = data.url;
+                }
+                else {
+                    document.getElementById("error-message").innerHTML = data.error_message;
+                    // pause, then redirect;
+                    var url = data.url
+                    setTimeout(function() {
+                        window.location.href = url;
+                    }, 3000);
+                }
+            }
+        });
+        return false;
+    }
+}
+
+// Function to reset password
+function resetPassword() {
+    var data = $("#reset-form").serializeArray();
+    verifyEmail(data);
+
+    function verifyEmail(data) {
+        $.ajax({
+            type: "POST",
+            url: "reset",
+            dataType: "json",
+            data: data,
+            success: function (data) {
+                if (data.success == false) {
+                    document.getElementById("error-message").innerHTML = data.error_message;
+                }
+                else {
+                    window.location.href = data.url;
+                }
+            }
+        });
+        return false;
+    }
+}
 
 // Function to verify registration requirements for email reset
 function verifyRequirementsReset() {
     let password = document.getElementById("password").value;
     let confirmation = document.getElementById("confirmation").value;
+    let passcode = document.getElementById("passcode").value;
 
-    const errorMessage = document.getElementById("error-message");
+    var errorMessage = document.getElementById("error-message");
 
-    if (password.length < 8) {
+    if (passcode.length == 0) {
+        errorMessage.innerHTML = "Missing passcode";
+    }
+    else if (password.length < 8) {
         errorMessage.innerHTML = "Invalid password";
     }
     else if (password != confirmation) {
@@ -267,16 +364,59 @@ function verifyRequirementsReset() {
     }
     else {
         // Pass to AJAX
+        var data = $("#verify-reset-form").serializeArray();
+        verifyReset(data);
+        
+        function verifyReset(data) {
+            $.ajax({
+                type: "POST",
+                url: "verify_reset",
+                dataType: "json",
+                data: data,
+                success: function (data) {
+                    if (data.success == true) {
+                        window.location.href = data.url;
+                    }
+                    else {
+                        errorMessage.innerHTML = data.error_message;
+                        if (data.url) {
+                            var url = data.url
+                            setTimeout(function() {
+                                window.location.href = url;
+                            }, 3000);
+                        }
+                    }
+                }
+            });
+            return false;
+        }
     }
 }
 
+// Function to login and show login error messages
+function submitLogin() {
+    var data = $("#login-form").serializeArray();
+    checkError(data);
 
-// Function to show login error messages
-// use AJAX
-function loginErrors() {
-
+    function checkError(data) {
+        $.ajax({
+            type: "POST",
+            url: "login",
+            dataType: "json",
+            data: data,
+            success: function (data) {
+                if (data.success) {
+                    window.location.href = data.url;
+                }
+                else {
+                    document.getElementById("error-div").classList.remove("hidden");
+                    document.getElementById("error-message").innerHTML = data.message;
+                }
+            }
+        });
+        return false;
+    }
 }
-
 
 // Function to show ability to edit user preferences
 function editPreferences() {
@@ -293,7 +433,6 @@ function editPreferences() {
     }
 }
 
-
 // Function to uncheck all email preferences
 function uncheckAll() {
     let checkboxes = document.querySelectorAll(".checkbox");
@@ -303,7 +442,6 @@ function uncheckAll() {
         }
     }
 }
-
 
 // Function to show delete account option
 function deleteAccount() {
@@ -320,17 +458,11 @@ function deleteAccount() {
     }
 }
 
+// Function to remove books from wishlist
+// AJAX
 
-// Function to make search button clickable
-function makeClickable() {
-    let userInput = document.getElementById("searchbox").value;
-    let searchButton = document.getElementById("search-btn");
+// Function to unfollow series
+// AJAX
 
-    if (userInput.length > 0) {
-        searchButton.type = "submit";
-    }
-    else {
-        searchButton.type = "button";
-    }
-}
-
+// Function to show delete account error messages
+// AJAX

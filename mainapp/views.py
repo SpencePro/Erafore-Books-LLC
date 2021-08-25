@@ -26,21 +26,24 @@ def all_books_view(request):
     selected_series = ""
     selected_world = ""
     worlds = ["Erafore", "Messy Earth", "Terra", "Standalone", ""]
+    results_to_show = 8
     
     if request.method == "GET":
         pagenum = 1
-        books = Book.objects.all().order_by("-date_released")[0:8]
+        books = Book.objects.all().order_by("-date_released")[0:results_to_show]
     
     else:
-        pagenum = int(request.POST["pagenum"]) + 1
-        print(pagenum)
-        books = Book.objects.all().order_by("-date_released")[(pagenum-1)*8:pagenum*8]
+        pagenum = int(request.POST["pagenum"])
+        books = Book.objects.all().order_by("-date_released")[(pagenum-1)*results_to_show:pagenum*results_to_show]
         books = list(books.values())
+
+        print(pagenum)
 
         return JsonResponse({
             "pagenum": pagenum,
             "books": books,
-            "series_list": list(series_list.values())
+            "series_list": list(series_list.values()),
+            "stop_scrolling": True if len(books) < results_to_show else False # this prevents the server from being called unnecessarily
         })
 
     context = {
@@ -60,11 +63,17 @@ def filter_books(request):
     selected_series = ""
     selected_world = ""
     worlds = ["Erafore", "Messy Earth", "Terra", "Standalone", ""]
+    results_to_show = 8
 
     if request.method == "POST":
-        pagenum = int(request.POST["pagenum"]) + 1
+        try:
+            pagenum = int(request.POST["pagenum"])
+        except:
+            pagenum = 1
         series_id = request.POST["series"]
         world = request.POST["world"]
+        
+        print(pagenum)
 
         if series_id == "" and world == "":
             return JsonResponse({"error": "Please enter at least one search filter"})
@@ -76,7 +85,7 @@ def filter_books(request):
 
             books = Book.objects.filter(
                 filter_without_none(series=series_id, world=world)
-            ).order_by("-date_released")[(pagenum-1)*8:pagenum*8]
+            ).order_by("-date_released")[(pagenum-1)*results_to_show:pagenum*results_to_show]
 
             books_data = list(books.values())
 
@@ -99,7 +108,8 @@ def filter_books(request):
                 "selected_series_description": selected_series_description,
                 "books": books_data,
                 "series_list": list(series_list.values()),
-                "pagenum": pagenum
+                "pagenum": pagenum,
+                "stop_scrolling": True if len(books_data) < results_to_show else False
             })
 
 

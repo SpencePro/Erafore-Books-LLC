@@ -59,6 +59,8 @@ Books
     <a href="{% url 'all_books' %}">Clear Filter</a>
 </div>
 
+<p id="stop-scrolling" class="hidden">False</p>
+
 <div id="booklist-container" class="booklist vert container">
     {% for book in books %}
         <div class="book-listing hori" {% if book.on_sale %} class="on-sale-now" {% endif %}>

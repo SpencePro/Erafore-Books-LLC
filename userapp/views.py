@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 from django.urls import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 import random
 
 from userapp.models import User, Follow, Wish
@@ -22,12 +22,9 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse("index"))
+            return JsonResponse({"success": True, "url": reverse("index")})
         else:
-            context = {
-                "message": "Invalid login credentials",
-            }
-            return render(request, "login.html", context)
+            return JsonResponse({"success": False, "message": "Invalid login credentials"})
     else:
         return render(request, "login.html")
 
@@ -40,8 +37,6 @@ def logout_view(request):
 
 def register_view(request):
     # GET request loads page, POST request submits
-    error_message = ""
-
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
@@ -51,18 +46,18 @@ def register_view(request):
         # check length of username
         if len(username) < 6:
             error_message = "Invalid username"
-            return render(request, "register.html", context={"error_message": error_message})
+            return JsonResponse({"success": False, "error_message": error_message}) 
 
         # validate password
         validate = validate_pword(password, confirmation, username, email)
         if validate != None:
-            return render(request, "register.html", context={"error_message": validate})
+            return JsonResponse({"success": False, "error_message": validate})
 
         # username must be unique
         try_user = User.objects.filter(username=username)
         if len(try_user) > 0:
             error_message = "Invalid username"
-            return render(request, "register.html", context={"error_message": error_message})
+            return JsonResponse({"success": False, "error_message": error_message})
         else:
             # send email to user with code, if they enter code successfully, activate account
             passcode = random.randint(100000, 1000000)
@@ -71,10 +66,9 @@ def register_view(request):
             request.session["username"] = username
             request.session["email"] = email
             request.session["password"] = password
-            # use AJAX to create form on same page instead of using new HTML page
-            return render(request, "verify_email.html")
+            return JsonResponse({"success": True, "url": reverse("verify_registration")})
     else:
-        return render(request, "register.html", context={"error_message": error_message})
+        return render(request, "register.html")
 
 
 def verify_registration(request):
@@ -92,33 +86,34 @@ def verify_registration(request):
             del request.session["username"]
             del request.session["email"]
             del request.session["password"]
-            return HttpResponseRedirect(reverse("login"))
+            return JsonResponse({"success": True, "url": reverse("login")})
         else:
             error_message = "Incorrect Passcode"
             del request.session["passcode"]
             del request.session["username"]
             del request.session["email"]
             del request.session["password"]
-            return render(request, "register.html", context={"error_message": error_message})
+            return JsonResponse({"success": False, "error_message": error_message, "url": reverse("register")})
+    else:
+        return render(request, "verify_email.html")
 
 
 # reset user's password if they forget it
 def reset_password(request):
-    # POST request
     if request.method == "POST":
-        username = request.POST["username"]
+        username = request.POST["reset-username"]
         email = request.POST["email"]
         
         user = User.objects.filter(username=username, email=email)
         if len(user) < 1:
-            return render(request, "login.html", context={"message": "Invalid credentials"})
+            return JsonResponse({"success": False, "error_message": "Invalid credentials"})
         else:
             passcode = random.randint(100000, 1000000)
             change_password(email, passcode)
             request.session["passcode"] = passcode
             request.session["username"] = username
             request.session["email"] = email
-            return render(request, "change_password.html")
+            return JsonResponse({"success": True, "url": reverse("verify_reset")})
 
 
 def verify_reset(request):
@@ -129,10 +124,10 @@ def verify_reset(request):
         passcode = int(request.session["passcode"])
         username = request.session["username"]
         email = request.session["email"]
-        
-        validate = validate_pword(password, confirmation, username)
+
+        validate = validate_pword(password, confirmation, username, email)
         if validate != None:
-            return render(request, "change_password.html", context={"error_message": validate})
+            return JsonResponse({"success": False, "error_message": validate})
 
         # Verify user's passcode
         if user_submission == passcode:
@@ -143,13 +138,15 @@ def verify_reset(request):
             del request.session["passcode"]
             del request.session["username"]
             del request.session["email"]
-            return HttpResponseRedirect(reverse("login"))
+            return JsonResponse({"success": True, "url": reverse("login")})
         else:
             error_message = "Incorrect Passcode"
             del request.session["passcode"]
             del request.session["username"]
             del request.session["email"]
-            return render(request, "login.html", context={"error_message": error_message})
+            return JsonResponse({"success": False, "error_message": error_message, "url": reverse("login")})
+    else:
+        return render(request, "change_password.html")
 
 
 @login_required(login_url="login")
