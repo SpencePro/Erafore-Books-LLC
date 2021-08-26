@@ -1,4 +1,6 @@
 
+// Functions for MAINAPP
+
 // Function to infinite scroll
 function infiniteScroll() {
     window.onscroll = () => {
@@ -118,6 +120,7 @@ function displayFilters() {
     }
 }
 
+// Function to build book results from filters
 function buildListing(books, data, currentUrl) {
     const booklistContainer = document.getElementById("booklist-container");
     for (i = 0; i < books.length; i++) {
@@ -212,7 +215,69 @@ function makeClickable() {
     }
 }
 
-// Functions for USERAPP
+// Function to clear filter results
+function clearFilters() {
+    var url = this.form.action;
+    var currentUrl = window.location.href;
+    currentUrl = currentUrl.slice(0, currentUrl.length - 3);
+    try {
+        var bookList = document.querySelectorAll(".book-listing");
+    }
+    catch { }
+    try {
+        var loreList = document.querySelectorAll(".lore-listing");
+    }
+    catch { }
+    data = $("#clear-filter-form").serializeArray();
+    clearFiltersFunc(data);
+
+    function clearFiltersFunc(data) {
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType: "json",
+            data: data,
+            success: function (data) {
+                if (url.slice(url.length-3) == "all") {
+                    // clear book filters
+                    document.getElementById("series-name").innerHTML = "";
+                    document.getElementById("series-description").innerHTML = "";
+                    document.getElementById("selected-series").classList.add("hidden");
+                    document.getElementById("world-name").innerHTML = "";
+                    document.getElementById("selected-world").classList.add("hidden");
+                    document.getElementById("error-message").innerHTML = "";
+                    document.getElementById("error-message").classList.add("hidden");
+                    document.getElementById("clear-filter").classList.add("hidden");
+                    bookList.forEach((listing) => {
+                        listing.remove();
+                    })
+                    document.getElementById("pagenum").value = 1;
+                    resetFilter("series-filter", "world-filter", "");
+                    function resetFilter(seriesId, worldId, valueToSelect) {
+                        let seriesElement = document.getElementById(seriesId);
+                        let worldElement = document.getElementById(worldId)
+                        seriesElement.value = valueToSelect;
+                        worldElement.value = valueToSelect;
+                    }
+                    // build new book listings
+                    buildListing(data.books, data, currentUrl);
+                    document.getElementById("stop-scrolling").innerHTML = "False";
+                }
+                else {
+                    // clear lore filters
+                }
+            }
+        });
+        return false;
+    }
+}
+
+// Function to display filtered lore results
+
+// Function to build lore results from filters
+
+
+// Functions for USERAPP & EMAILAPP
 
 // Function to show or hide password
 function showPassword() {
@@ -419,7 +484,7 @@ function submitLogin() {
 }
 
 // Function to show ability to edit user preferences
-function editPreferences() {
+function showEditPreferences() {
     let form = document.getElementById("edit-preference-form");
     let button = document.getElementById("show-preference-form");
 
@@ -433,6 +498,31 @@ function editPreferences() {
     }
 }
 
+// Function to change user email preferences
+function editPreferences() {
+    var data = $("#edit-preference-form").serializeArray();
+    var url = this.form.action;
+    editPreferenceFunc(data);
+
+    function editPreferenceFunc(data) {
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType: "json",
+            data: data,
+            success: function (data) {
+                var saveMessage = document.getElementById("save-message");
+                saveMessage.innerHTML = "Your preferences have been saved";
+                setTimeout(function () {
+                    saveMessage.innerHTML = "";
+                }, 3000);
+            }
+        });
+        return false;
+    }
+
+}
+
 // Function to uncheck all email preferences
 function uncheckAll() {
     let checkboxes = document.querySelectorAll(".checkbox");
@@ -444,9 +534,9 @@ function uncheckAll() {
 }
 
 // Function to show delete account option
-function deleteAccount() {
+function showDeleteAccount() {
     let form = document.getElementById("delete-account-div");
-    let button = document.getElementById("delete-account-btn");
+    let button = document.getElementById("show-delete-account-btn");
 
     if (button.innerHTML == "Delete Account") {
         form.classList.remove("hidden");
@@ -455,14 +545,125 @@ function deleteAccount() {
     else {
         form.classList.add("hidden");
         button.innerHTML = "Delete Account";
+        document.getElementById("delete-error-message").innerHTML = "";
+    }
+}
+
+// Function to show delete account error messages
+function deleteAccount() {
+    var data = $("#delete-account-form").serializeArray();
+    var url = this.form.action;
+    deleteAccountFinal(data);
+
+    function deleteAccountFinal(data) {
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType: "json",
+            data: data,
+            success: function (data) {
+                if (data.success == false) {
+                    document.getElementById("delete-error-message").innerHTML = data.message;
+                }
+                else {
+                    window.location.href = data.url;
+                }
+            }
+        });
+        return false;
     }
 }
 
 // Function to remove books from wishlist
-// AJAX
+function wishlistFunc() {
+    var bookId = this.form.classList[0];
+    var formId = this.form.id;
+    var url = this.form.action;
+    data = $(`#${formId}`).serializeArray();
+    var page = data[1].value;
+    updateWish(data);
+
+    function updateWish(data) {
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType: "json",
+            data: data, 
+            success: function (data) {
+                if (page == "profile") {
+                    document.getElementById(`wish-element-${bookId}`).remove();
+                    const wishlistCount = parseInt(document.querySelectorAll(".wishlist-element").length);
+                    if (wishlistCount == 0) {
+                        document.getElementById("wishlist-ul").remove();
+                        const wishlistDiv = document.getElementById("wishlist-div");
+                        const noBooks = document.createElement("p");
+                        noBooks.innerHTML = "You have no books yet in your wishlist";
+                        noBooks.id = "no-books";
+                        wishlistDiv.appendChild(noBooks);
+                    }
+                }
+                else {
+                    if (data.action == "remove") {
+                        document.getElementById("wish-btn").innerHTML = "Add to wishlist";
+                        document.getElementById("in-wishlist").remove();
+                    }
+                    else {
+                        document.getElementById("wish-btn").innerHTML = "Remove from wishlist";
+                        const inWishlist = document.createElement("p");
+                        inWishlist.id = "in-wishlist";
+                        inWishlist.innerHTML = "This book is in your wishlist";
+                        document.getElementById(formId).appendChild(inWishlist);
+                    }
+                }
+            }
+        });
+        return false;
+    }
+}
 
 // Function to unfollow series
-// AJAX
+function followFunc() {
+    var seriesId = this.form.classList[0];
+    var formId = this.form.id;
+    var url = this.form.action;
+    data = $(`#${formId}`).serializeArray();
+    var page = data[1].value;
+    updateFollow(data);
 
-// Function to show delete account error messages
-// AJAX
+    function updateFollow(data) {
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType: "json",
+            data: data,
+            success: function (data) {
+                if (page == "profile") {
+                    document.getElementById(`follow-element-${seriesId}`).remove();
+                    const followCount = parseInt(document.querySelectorAll(".follow-element").length);
+                    if (followCount == 0) {
+                        document.getElementById("follow-ul").remove();
+                        const followDiv = document.getElementById("follow-div");
+                        const noSeries = document.createElement("p");
+                        noSeries.innerHTML = "You are not following any series right now";
+                        noSeries.id = "no-books";
+                        followDiv.appendChild(noSeries);
+                    }
+                }
+                else {
+                    if (data.action == "remove") {
+                        document.getElementById("follow-btn").innerHTML = "Follow Series";
+                        document.getElementById("are-following").remove();
+                    }
+                    else {
+                        document.getElementById("follow-btn").innerHTML = "Unfollow Series";
+                        const following = document.createElement("p");
+                        following.id = "are-following";
+                        following.innerHTML = "You are following this series";
+                        document.getElementById(formId).appendChild(following);
+                    }
+                }
+            }
+        });
+        return false;
+    }
+}

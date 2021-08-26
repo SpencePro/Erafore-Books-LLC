@@ -15,16 +15,15 @@
         <a href="{{ book.amazon_link }}" target="_blank" rel="noreferrer noopener">Purchase on Amazon</a>
             
         {% if user.is_authenticated %}
-            <form action="{% url 'add' book.id %}" method="POST">
+            <form action="{% url 'add' book.id %}" method="POST" class="{{ book.id }}" id="wishlist-form-{{ book.id }}">
                 {% csrf_token %}
                 <input type="text" name="page" value="book-page" class="hidden">
                 {% if wishlist == "" %}
-                    <button type="submit" class="wish-btn">Add to wishlist</button>
+                    <button type="button" id="wish-btn" class="wish-btn">Add to wishlist</button>
                 {% else %}
-                    <p>This book is in your wishlist</p>
-                    <button type="submit" class="wish-btn">Remove from wishlist</button>
+                    <button type="button" id="wish-btn" class="wish-btn">Remove from wishlist</button>
+                    <p id="in-wishlist">This book is in your wishlist</p>
                 {% endif %}
-                <!-- use AJAX to show 'Remove from wishlist'/'Add to wishlist' when form submitted -->
             </form>
         {% endif %}
 
@@ -35,17 +34,16 @@
             <p id="book-series">{{ book.series.name }}</p>
         </div>
         {% if user.is_authenticated %}
-            <form action="{% url 'follow' book.series.id %}" method="POST">
+            <form action="{% url 'follow' book.series.id %}" method="POST" class="{{ book.series.id }}" id="follow-form-{{ book.series.id }}">
                 {% csrf_token %}
                 <input type="text" name="page" value="book-page" class="hidden">
                 <input type="text" name="book" value="{{ book.id }}" class="hidden">
                 {% if following == "" %}
-                    <button type="submit" class="follow-btn">Follow Series</button>
+                    <button type="button" id="follow-btn" class="follow-btn">Follow Series</button>
                 {% else %}
-                    <p>You are following this series</p>
-                    <button type="submit" class="follow-btn">Unfollow Series</button>
+                    <button type="button" id="follow-btn" class="follow-btn">Unfollow Series</button>
+                    <p id="are-following">You are following this series</p>
                 {% endif %}
-                <!-- use AJAX to show 'Unfollow series'/'Follow series' when form submitted -->
             </form>
         {% endif %}
         
@@ -61,4 +59,11 @@
         </div>
     </div>
 </div>
+{% if user.is_authenticated %}
+    <script type="text/javascript">
+        document.getElementById("wish-btn").addEventListener("click", wishlistFunc);
+        document.getElementById("follow-btn").addEventListener("click", followFunc);
+    </script>
+{% endif %}
+
 {% endblock %}

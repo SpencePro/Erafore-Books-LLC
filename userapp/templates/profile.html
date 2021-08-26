@@ -41,7 +41,8 @@ Profile
                     <input type="checkbox" name="all-notifications" id="all-notifications">
                     <label for="all-notifications">Disable all email notifications</label>
                 </div>
-                <button type="submit" id="edit-btn">Update Preferences</button>
+                <button type="button" id="edit-btn">Update Preferences</button>
+                <p id="save-message"></p>
             </form>
             <button id="show-preference-form">Change Email Preferences</button>
         </div>
@@ -57,50 +58,49 @@ Profile
                 <input type="password" name="password" id="delete-password" autocomplete="off"
                 placeholder="Password">
                 <input type="password" name="confirmation" id="confirmation" autocomplete="off"                 placeholder="Confirmation">
-                <button type="button">Delete Account</button>
+                <button type="button" id="delete-account-btn">Delete Account</button>
             </form>
-            <!-- use AJAX for this part -->
             <p id="delete-error-message"></p>
         </div>
-        <!-- use JS to show form and deletion message, and change button text below to 'Cancel'; show popup to confirm user choice -->
-        <button id="delete-account-btn">Delete Account</button>
+        <button id="show-delete-account-btn">Delete Account</button>
     </div>
 
-    <div class="wishlist vert">
+    <div id="wishlist-div" class="wishlist vert">
         <h4>Wishlist</h4>
         {% if wishlist %}
-        <ul>
+        <ul id="wishlist-ul">
             {% for wish in wishlist %}
-            <li><a href="{% url 'book' wish.book.id %}">{{ wish.book.title }}</a>
-                <form action="{% url 'add' wish.book.id %}" method="POST">
+            <li id="wish-element-{{ wish.book.id }}" class="wishlist-element">
+                <a href="{% url 'book' wish.book.id %}">{{ wish.book.title }}</a>
+                <form action="{% url 'add' wish.book.id %}" method="POST" id="wishlist-form-{{ wish.book.id }}" class="{{ wish.book.id }}">
                     {% csrf_token %}
                     <input type="text" name="page" value="profile" class="hidden">
-                    <button type="submit" id="wish-btn-{{ wish.book.id }}">Remove</button>
+                    <button type="button" id="wish-btn-{{ wish.book.id }}" class="wishlist-btn">Remove</button>
                 </form>
             </li>
             {% endfor %}
         </ul>
         {% else %}
-        <p>You have no books yet in your wishlist</p>
+        <p id="no-books">You have no books yet in your wishlist</p>
         {% endif %}
     </div>
 
-    <div class="following vert">
+    <div id="follow-div" class="following vert">
         <h4>Series Followed</h4>
         {% if series_followed %}
-        <ul>
+        <ul id="follow-ul">
             {% for series in series_followed %}
-            <li>{{ series.series.name }}
-                <form action="{% url 'follow' series.series.id %}" method="POST">
+            <li id="follow-element-{{ series.series.id }}" class="follow-element">{{ series.series.name }}
+                <form action="{% url 'follow' series.series.id %}" method="POST" id="follow-form-{{ series.series.id }}" class="{{ series.series.id }}">
                     {% csrf_token %}
                     <input type="text" name="page" value="profile" class="hidden">
-                    <button type="submit" id="follow-btn-{{ series.series.id }}">Unfollow</button>
+                    <button type="button" id="follow-btn-{{ series.series.id }}" class="follow-btn">Unfollow</button>
                 </form>
             </li>
             {% endfor %}
         </ul>
         {% else %}
-        <p>You are not following any series right now</p>
+        <p id="no-series">You are not following any series right now</p>
         {% endif %}
     </div>
 
@@ -108,9 +108,17 @@ Profile
 {% endif %}
 
 <script type="text/javascript">
-    document.getElementById("show-preference-form").addEventListener("click", editPreferences);
+    document.getElementById("show-preference-form").addEventListener("click", showEditPreferences);
     document.getElementById("all-notifications").addEventListener("change", uncheckAll);
+    document.getElementById("edit-btn").addEventListener("click", editPreferences);
+    document.getElementById("show-delete-account-btn").addEventListener("click", showDeleteAccount);
     document.getElementById("delete-account-btn").addEventListener("click", deleteAccount);
+    document.querySelectorAll(".wishlist-btn").forEach((button) => {
+        button.addEventListener("click", wishlistFunc);
+    });
+    document.querySelectorAll(".follow-btn").forEach((button) => {
+        button.addEventListener("click", followFunc);
+    });
 </script>
 
 

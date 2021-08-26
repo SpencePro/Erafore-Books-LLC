@@ -36,7 +36,6 @@ def all_books_view(request):
         pagenum = int(request.POST["pagenum"])
         books = Book.objects.all().order_by("-date_released")[(pagenum-1)*results_to_show:pagenum*results_to_show]
         books = list(books.values())
-
         print(pagenum)
 
         return JsonResponse({
@@ -72,8 +71,6 @@ def filter_books(request):
             pagenum = 1
         series_id = request.POST["series"]
         world = request.POST["world"]
-        
-        print(pagenum)
 
         if series_id == "" and world == "":
             return JsonResponse({"error": "Please enter at least one search filter"})
@@ -180,6 +177,11 @@ def lore_view(request):
         "error_message": error_message
     }
     return render(request, "lorepage.html", context)
+
+
+def filter_lore(request):
+    # POST request
+    return
 
 
 def lore_object_view(request, id):

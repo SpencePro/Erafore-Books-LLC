@@ -152,34 +152,28 @@ def verify_reset(request):
 @login_required(login_url="login")
 def delete_account(request, id):
     # POST request
-    # use AJAX to display error messages
     if request.method == "POST":
         if request.user.id != id:
-            print("You do not have permission to perform this action")
-            return HttpResponseRedirect(reverse("profile", kwargs={"id": request.user.id}))
+            return JsonResponse({"success": False, "message": "You do not have permission to perform this action"})
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
         if password == "":
-            print("Enter password")
-            return HttpResponseRedirect(reverse("profile", kwargs={"id": request.user.id}))
+            return JsonResponse({"success": False, "message": "Enter password"})
         if password != confirmation:
-            print("Password does not equal confirmation")
-            return HttpResponseRedirect(reverse("profile", kwargs={"id": request.user.id}))
+            return JsonResponse({"success": False, "message": "Password does not equal confirmation"})
         authenticated = authenticate(
             request, username=request.user.username, password=password)
         if authenticated is not None:
             user = User.objects.get(pk=id)
             user.delete()
-            return HttpResponseRedirect(reverse("logout"))
+            return JsonResponse({"success": True, "url": reverse("logout")})
         else:
-            print("Incorrect Password")
-            return HttpResponseRedirect(reverse("profile", kwargs={"id": request.user.id}))
+            return JsonResponse({"success": False, "message": "Incorrect Password"})
 
 
 @login_required(login_url="login")
 def edit_settings(request):
     # POST request
-    # use AJAX
     if request.method == "POST":
         user = User.objects.get(pk=request.user.id)
         new_books = request.POST.get("new-books", "")
@@ -204,8 +198,7 @@ def edit_settings(request):
         else:
             user.can_send_wish_sales = True
         user.save()
-
-        return HttpResponseRedirect(reverse("profile", kwargs={"id": user.id}))
+        return JsonResponse({"success": True})
 
 
 @login_required(login_url="login")
@@ -226,43 +219,32 @@ def profile_view(request, id):
 @login_required(login_url="login")
 def add_to_wishlist(request, id):
     # POST request
-    # update with AJAX
     if request.method == "POST":
         user = User.objects.get(pk=request.user.id)
         book = Book.objects.get(pk=id)
-        page = request.POST["page"]
 
         try_wish = Wish.objects.filter(user=user, book=book)
         if len(try_wish) > 0:
             try_wish[0].delete()
+            return JsonResponse({"action": "remove"})
         else:
             add_wish = Wish(user=user, book=book)
             add_wish.save()
-    
-    if page == "profile":
-        return HttpResponseRedirect(reverse("profile", kwargs={"id": user.id}))
-    else:
-        return HttpResponseRedirect(reverse("book", kwargs={"id": book.id}))
+            return JsonResponse({"action": "add"})
 
 
 @login_required(login_url="login")
 def follow_series(request, id):
     # POST request
-    # update with AJAX
     if request.method == "POST":
         user = User.objects.get(username=request.user.username)
         series = Series.objects.get(pk=id)
-        page = request.POST["page"]
 
         try_follow = Follow.objects.filter(follower=user, series=series)
         if len(try_follow) > 0:
             try_follow[0].delete()
+            return JsonResponse({"action": "remove"})
         else:
             follow = Follow(follower=user, series=series)
             follow.save()
-    
-    if page == "profile":
-        return HttpResponseRedirect(reverse("profile", kwargs={"id": user.id}))
-    else:
-        book = request.POST["book"]
-        return HttpResponseRedirect(reverse("book", kwargs={"id": int(book)}))
+            return JsonResponse({"action": "add"})

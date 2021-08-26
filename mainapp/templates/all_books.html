@@ -39,7 +39,6 @@ Books
     </div>
 </div>
 
-<!-- use AJAX for these; build with JS -->
 <div id="selected-series" class="selected-series vert center hidden">
     <div class="hori center" style="align-items: baseline;">
         <label style="font-size: large;" for="series-name">Series:</label>
@@ -56,7 +55,11 @@ Books
 <h5 id="error-message" class="hidden center"></h5>
 
 <div id="clear-filter" class="center hidden">
-    <a href="{% url 'all_books' %}">Clear Filter</a>
+    <form action="{% url 'all_books' %}" method="POST" id="clear-filter-form">
+        {% csrf_token %}
+        <input type="text" name="pagenum" value="1" class="hidden">
+        <button type="button" id="clear-filter-btn">Clear Filter</button>
+    </form>
 </div>
 
 <p id="stop-scrolling" class="hidden">False</p>
@@ -95,6 +98,7 @@ Books
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", infiniteScroll);
     document.getElementById("submit-filter").addEventListener("click", displayFilters);
+    document.getElementById("clear-filter-btn").addEventListener("click", clearFilters);
 </script>
 
 
