@@ -6,13 +6,26 @@
 {% endblock %}
 
 {% block body %}
-<h2>Book Title {{ book.title }}</h2>
+<h2>{{ book.title }}</h2>
 <div class="listing hori">
-    <div class="vert">
-        <img src="{% static book.image %}.avif" alt="{{ book.title }} Cover" width="250px" height="400px">
+    <div class="book-div vert">
+        <picture>
+            <source srcset="{% static book.image %}_small.avif" type="img/avif">
+            <source srcset="{% static book.image %}_small.jpg" type="img/jpg">
+            <img src="{% static book.image %}.avif" alt="{{ book.title }} Cover" class="medium-img" id="book-image">
+        </picture>
+        <div id="my-modal" class="modal hidden center">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <picture>
+                    <source srcset="{% static book.image %}_small.avif" type="img/avif">
+                    <source srcset="{% static book.image %}_small.jpg" type="img/jpg">
+                    <img src="{% static book.image %}.avif" alt="{{ book.title }} Cover" class="large-img">
+                </picture>
+            </div>
+        </div>
     </div>
-    <div class="vert">
-        <a href="{{ book.amazon_link }}" target="_blank" rel="noreferrer noopener">Purchase on Amazon</a>
+    <div class="book-details vert">
             
         {% if user.is_authenticated %}
             <form action="{% url 'add' book.id %}" method="POST" class="{{ book.id }}" id="wishlist-form-{{ book.id }}">
@@ -27,7 +40,7 @@
             </form>
         {% endif %}
 
-        <p>Published {{ book.date_released }}</p>
+        <p>Published {{ book.date_released|date:"M d, Y" }}</p>
         
         <div class="hori">
             <label for="book-series">Series:</label>
@@ -57,13 +70,19 @@
             <p id="book-synopsis">{{ book.synopsis }}
             </p>
         </div>
+        <h5><a href="{{ book.amazon_link }}" target="_blank" rel="noreferrer noopener">Purchase on Amazon</a></h5>
     </div>
 </div>
+
 {% if user.is_authenticated %}
     <script type="text/javascript">
         document.getElementById("wish-btn").addEventListener("click", wishlistFunc);
         document.getElementById("follow-btn").addEventListener("click", followFunc);
     </script>
 {% endif %}
+    <script>
+        document.getElementById("book-image").addEventListener("click", largeImage);
+    </script>
+
 
 {% endblock %}

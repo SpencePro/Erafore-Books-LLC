@@ -16,8 +16,10 @@ from userapp.models import Wish, Follow
 
 def index(request):
     # GET request
-    sales = Book.objects.filter(on_sale=True)
-    return render(request, "index.html", context={"sales": sales})
+    books = Book.objects.all()
+    sales = [book for book in books if book.on_sale == True]
+
+    return render(request, "index.html", context={"books": books, "sales": sales})
 
 
 def all_books_view(request):
@@ -36,7 +38,12 @@ def all_books_view(request):
         pagenum = int(request.POST["pagenum"])
         books = Book.objects.all().order_by("-date_released")[(pagenum-1)*results_to_show:pagenum*results_to_show]
         books = list(books.values())
-        print(pagenum)
+        months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        for book in books:
+            date = book["date_released"]
+            split_date = str(date).split("-")
+            final_timestamp = f"{months[int(split_date[1]) - 1]} {split_date[2]}, {split_date[0]}"
+            book["date_released"] = final_timestamp
 
         return JsonResponse({
             "pagenum": pagenum,
@@ -88,6 +95,13 @@ def filter_books(request):
 
             if len(books_data) < 1:
                 return JsonResponse({"error": "No books match the filters"})
+            
+            months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            for book in books_data:
+                date = book["date_released"]
+                split_date = str(date).split("-")
+                final_timestamp = f"{months[int(split_date[1]) - 1]} {split_date[2]}, {split_date[0]}"
+                book["date_released"] = final_timestamp
 
             if series_id != "":
                 selected_series = Series.objects.get(pk=series_id)

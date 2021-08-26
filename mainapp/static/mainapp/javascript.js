@@ -1,6 +1,29 @@
 
 // Functions for MAINAPP
 
+// Function for slideshow
+function slideshow() {
+    var imageBoxes = document.querySelectorAll(".image-box");
+    var i = 0;
+    //while (i < imageBoxes.length) {
+        setInterval(
+            function () {
+                console.log(imageBoxes[i]);
+                imageBoxes[i].classList.remove("hidden");
+                try {
+                    imageBoxes[i-1].classList.add("hidden");
+                }
+                catch { }
+                i++;
+                if (i > imageBoxes.length) {
+                    i = 0;
+                }
+            }, 1000
+        );
+    //}
+}
+
+
 // Function to infinite scroll
 function infiniteScroll() {
     window.onscroll = () => {
@@ -134,8 +157,7 @@ function buildListing(books, data, currentUrl) {
         const image = document.createElement("img");
         image.src = currentUrl + "static/" + books[i].image + "_small.avif";
         image.alt = books[i].title + " Cover";
-        image.width = "150";
-        image.height = "200";
+        image.classList.add("small-img");
         const titleParagraph = document.createElement("p");
         const titleLink = document.createElement("a");
         titleLink.href = currentUrl + "book/" + books[i].id;
@@ -275,6 +297,48 @@ function clearFilters() {
 // Function to display filtered lore results
 
 // Function to build lore results from filters
+
+// Function to darken the page and display larger image
+function largeImage() {
+
+    var modal = document.getElementById("my-modal");
+    var close = document.querySelector(".close");
+    modal.classList.remove("hidden");
+    modal.style.display = "block";
+    console.log(modal.classList);
+    close.onclick = function() {
+        modal.classList.add("hidden");
+        modal.style.display = "none";
+    }
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+
+    /*let image = document.querySelector("img");
+    let originalDimensions = [image.naturalWidth, image.naturalHeight];
+    let viewPort = [window.innerWidth, window.innerHeight];
+    console.log(originalDimensions);
+    console.log(viewPort);
+    for (i=0; i<2; i++) {
+        if (originalDimensions[i] >= viewPort[i]) {
+            console.log(`True: ${originalDimensions[i]} > ${viewPort[i]}`);
+        }
+        else {
+            console.log(`False: ${originalDimensions[i]} < ${viewPort[i]}`);
+        }
+    }
+    // dim the page
+    let body = document.querySelector("body");
+    if (body.classList.contains("dim")) {
+        body.classList.remove("dim");
+    }
+    else {
+        body.classList.add("dim");
+    }*/
+}
 
 
 // Functions for USERAPP & EMAILAPP

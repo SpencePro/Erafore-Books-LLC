@@ -7,11 +7,19 @@ Home
 
 {% block body %}
 <h2>Main Page</h2>
-<div class="slideshow">
-    <h4>Slideshow here</h4>
+<div class="slideshow hori">
+    {% for book in books %}
+    <div class="image-box hidden" id="image-{{ book.id }}">
+        <picture>
+            <source srcset="{% static book.image %}.avif" type="img/avif">
+            <source srcset="{% static book.image %}.jpg" type="img/jpg">
+            <a href="{% url 'book' book.id %}"><img src="{% static book.image %}.avif" alt="{{ book.title }} Cover" class="medium-img"></a>
+        </picture>
+    </div>
+    {% endfor %}
 </div>
 <div class="vert main-content">
-    <div class="vert welcome-message">
+    <div class="vert center welcome-message">
         <h4>Welcome to Erafore Books!</h4>
         <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Facilis, fugit doloremque. Quidem vel optio commodi ea nemo quasi, explicabo nulla, voluptatem possimus consequuntur provident amet eos placeat aliquid. Sint, ipsum.</p>
     </div>
@@ -21,14 +29,18 @@ Home
         <div class="hori center">
             {% for sale in sales %}
             <div class="sale-item vert">
-                <img src="{% static sale.image %}.avif" alt="{{ sale.title }} Cover" width="150px" height="200px">
-                <p><a href="{% url 'book' sale.id %}">{{ sale.title }}</a></p>
+                <picture>
+                    <source srcset="{% static sale.image %}_small.avif" type="img/avif">
+                    <source srcset="{% static sale.image %}_small.jpg" type="img/jpg">
+                    <img src="{% static sale.image %}_small.avif" alt="{{ sale.title }} Cover" class="small-img">
+                </picture>
+                <p><a href="{% url 'book' sale.id %}">{{ sale.title }}</a></p>                
             </div>
             {% endfor %}
         </div>
     </div>
     {% endif %}
-    <div class="vert coming-soon">
+    <div class="vert center coming-soon">
         <h4>Coming soon...</h4>
         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atque et laudantium earum aliquam? Excepturi quaerat error libero accusamus.</p>
     </div>
@@ -40,4 +52,9 @@ Home
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", slideshow);
+</script>
+
 {% endblock %}

@@ -68,14 +68,18 @@ Books
     {% for book in books %}
         <div class="book-listing hori" {% if book.on_sale %} class="on-sale-now" {% endif %}>
             <div class="vert title-div">
-                <img src="{% static book.image %}_small.avif" alt="{{ book.title }} Cover" width="150px" height="200px">
+                <picture>
+                    <source srcset="{% static book.image %}_small.avif" type="img/avif">
+                    <source srcset="{% static book.image %}_small.jpg" type="img/jpg">
+                    <img src="{% static book.image %}_small.avif" alt="{{ book.title }} Cover" class="small-img">
+                </picture>
                 <p><a href="{% url 'book' book.id %}">{{ book.title }}</a></p>
             </div>
             <div class="vert">
                 {% if book.on_sale == True %}
                     <h5>On Sale Now!</h5>
                 {% endif %}
-                <p>Published {{ book.date_released }}</p>
+                <p>Published {{ book.date_released|date:"M d, Y" }}</p>
                 <div class="hori">
                     <label for="book-series-{{ book.title }}">Series:</label>
                     <p id="book-series-{{ book.title }}">{{ book.series.name }}</p>
