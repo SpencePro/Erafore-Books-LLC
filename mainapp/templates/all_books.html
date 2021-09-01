@@ -33,7 +33,7 @@ Books
                 </select>
             </div>
             <br>
-            <button type="button" id="submit-filter">Filter</button>
+            <button type="button" id="submit-filter" class="btn btn-primary btn-sm">Filter</button>
         </form>
 
     </div>
@@ -58,7 +58,7 @@ Books
     <form action="{% url 'all_books' %}" method="POST" id="clear-filter-form">
         {% csrf_token %}
         <input type="text" name="pagenum" value="1" class="hidden">
-        <button type="button" id="clear-filter-btn">Clear Filter</button>
+        <button type="button" id="clear-filter-btn" class="link-btn">CLEAR FILTER</button>
     </form>
 </div>
 
@@ -67,18 +67,18 @@ Books
 <div id="booklist-container" class="booklist vert container">
     {% for book in books %}
         <div class="book-listing hori" {% if book.on_sale %} class="on-sale-now" {% endif %}>
-            <div class="vert title-div">
+            <div class="vert image-div">
                 <picture>
                     <source srcset="{% static book.image %}_small.avif" type="img/avif">
                     <source srcset="{% static book.image %}_small.jpg" type="img/jpg">
                     <img src="{% static book.image %}_small.avif" alt="{{ book.title }} Cover" class="small-img">
                 </picture>
-                <p><a href="{% url 'book' book.id %}">{{ book.title }}</a></p>
             </div>
             <div class="vert">
                 {% if book.on_sale == True %}
                     <h5>On Sale Now!</h5>
                 {% endif %}
+                <p><a href="{% url 'book' book.id %}">{{ book.title }}</a></p>
                 <p>Published {{ book.date_released|date:"M d, Y" }}</p>
                 <div class="hori">
                     <label for="book-series-{{ book.title }}">Series:</label>
@@ -88,21 +88,25 @@ Books
                     <label for="book-world-{{ book.title }}">World:</label>
                     <p id="book-world-{{ book.title }}">{{ book.world }}</p>
                 </div>
-                <div class="hori">
+                <div>
                     <label for="book-synopsis-{{ book.id }}">Synopsis:</label>
-                    <p id="book-synopsis-{{ book.id }}">{{ book.synopsis|truncatewords:50 }}<a href="{% url 'book' book.id %}">See more</a>
-                    <!-- only show first 50 words, trail off, see more via JS -->
+                    <p id="book-synopsis-{{ book.id }}" class="synopsis">{{ book.synopsis }}</p><button type="button" class="link-btn more-btn">See more</button>
                 </div>
             </div>
         </div>
     {% endfor %}
 </div>
-
+<div class="center">
+    <a href="#" >Return to top</a>
+</div>
 
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", infiniteScroll);
     document.getElementById("submit-filter").addEventListener("click", displayFilters);
     document.getElementById("clear-filter-btn").addEventListener("click", clearFilters);
+    document.querySelectorAll(".more-btn").forEach((button) => {
+        button.addEventListener("click", showMore);
+    })
 </script>
 
 

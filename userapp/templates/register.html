@@ -8,27 +8,16 @@ Register
 {% block body %}
 
 <div class="registration-content hori">
-    <div class="registration-instructions vert">
-        <h4>Registration Requirements</h4>
-        <ul>
-            <li>Usernames must be at least 6 characters long</li>
-            <li>Usernames must be unique</li>
-            <li>Passwords must be at least 8 characters long</li>
-            <li>Passwords must contain at least 1 of each of the following: special character, uppercase letter, number
-            </li>
-            <li>Your username cannot be the same as your password</li>
-        </ul>
-    </div>
     <div class="registration-form-div vert">
         <h4>Register</h4>
-        <form action="{% url 'register' %}" method="POST" id="registration-form" class="registration-form hori center">
+        <form action="{% url 'register' %}" method="POST" id="registration-form" class="registration-form vert center">
             {% csrf_token %}
-            <input type="text" name="username" id="username" autocomplete="off" placeholder="Username"><br>
-            <input type="text" name="email" id="email" autocomplete="off" placeholder="Email"><br>
-            <input type="password" name="password" id="password" autocomplete="off" placeholder="Password"><br>
+            <input type="text" name="username" id="username" autocomplete="off" placeholder="Username">
+            <input type="text" name="email" id="email" autocomplete="off" placeholder="Email">
+            <input type="password" name="password" id="password" autocomplete="off" placeholder="Password">
             <input type="password" name="confirmation" id="confirmation" autocomplete="off"
-                placeholder="Confirmation"><br>
-            <button type="button" id="register-btn">Register</button>
+                placeholder="Confirmation">
+            <button type="button" id="register-btn" class="btn btn-primary btn-sm">Register</button>
         </form>
         <div class="show-password hori">
             <label id="eye-label" for="eye">Show Password</label>
@@ -39,6 +28,17 @@ Register
         <h5 class="center" id="error-message"></h5>
         <p style="font-size: small;">Your email address will be used solely to send you notifications of book sales and
             new releases, and to confirm your account information; your information will never be sold to third parties. By signing up for an account you consent to receive email notifications of sales and book releases. You can update your email permissions in your profile page at any time.</p>
+    </div>
+    <div class="registration-instructions vert">
+        <h4>Registration Requirements</h4>
+        <ul>
+            <li>Usernames must be at least 6 characters long</li>
+            <li>Usernames must be unique</li>
+            <li>Passwords must be at least 8 characters long</li>
+            <li>Passwords must contain at least 1 of each of the following: special character, uppercase letter, number
+            </li>
+            <li>Your username cannot be the same as your password</li>
+        </ul>
     </div>
 </div>
 

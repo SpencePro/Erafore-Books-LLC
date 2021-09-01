@@ -11,7 +11,7 @@ Verify Email
         <form action="{% url 'verify_registration' %}" method="POST" id="verify-email-form">
             {% csrf_token %}
             <input type="text" name="passcode" id="passcode" placeholder="Passcode" autocomplete="off">
-            <button type="button" id="verify-email-btn">Submit</button>
+            <button type="button" id="verify-email-btn" class="btn btn-primary btn-sm">Submit</button>
         </form>
         <h5 id="error-message"></h5>
     </div>

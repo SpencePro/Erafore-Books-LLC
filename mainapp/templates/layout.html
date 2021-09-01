@@ -9,32 +9,62 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
             integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="{% static 'mainapp/style.css' %}">
+        <link rel="icon" href="{% static 'favicon.ico' %}">
+        <script src="https://kit.fontawesome.com/e21174c2c9.js" crossorigin="anonymous"></script>
         <script src="{% static 'mainapp/javascript.js' %}"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
     
     <body>
-        <header>
-            <h2>Erafore Books, LLC</h2>
-            <h4>Created by Ian Rodgers</h4>
+        <header class="hori">
+            <div class="logo-area center vert">
+                <h2>Erafore Books, LLC</h2>
+                <h5>Books by Ian Rodgers</h5>
+            </div>
             <div class="navbar">
-                <nav><a href="{% url 'index' %}">Home</a></nav>
-                <nav><a href="{% url 'all_books' %}">Buy Now</a></nav>
-                <nav><a href="{% url 'lore_page' %}">Lore</a></nav>
-                <nav><a href="{% url 'contact' %}">Contact</a></nav>
+                <div class="hori">
+                    <i class="fas fa-home"></i>
+                    <nav><a href="{% url 'index' %}">HOME</a></nav>
+                </div>
+                <div class="hori">
+                    <i class="fas fa-book-open"></i>
+                    <nav><a href="{% url 'all_books' %}">BUY NOW</a></nav>
+                </div>
+                <div class="hori">
+                    <i class="fas fa-magic"></i>
+                    <nav><a href="{% url 'lore_page' %}">LORE</a></nav>
+                </div>
+                <div class="hori">
+                    <i class="fas fa-phone"></i>
+                    <nav><a href="{% url 'contact' %}">CONTACT</a></nav>
+                </div>
                 
                 {% if user.is_authenticated %}
-                    <nav><a href="{% url 'profile' user.id %}">My Profile</a></nav>
-                    <nav><a href="{% url 'logout' %}">Logout</a></nav>
+                    <div class="hori">
+                        <i class="fas fa-user"></i>
+                        <nav><a href="{% url 'profile' user.id %}">MY PROFILE</a></nav>
+                    </div>
+                    <div class="hori">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <nav><a href="{% url 'logout' %}">LOGOUT</a></nav>
+                    </div>
                 {% else %}
-                    <nav><a href="{% url 'login' %}">Login</a></nav>
-                    <nav><a href="{% url 'register' %}">Register</a></nav>
+                    <div class="hori">
+                        <i class="fas fa-user"></i>
+                        <nav><a href="{% url 'register' %}">REGISTER</a></nav>
+                    </div>
+                    <div class="hori">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <nav><a href="{% url 'login' %}">LOGIN</a></nav>
+                    </div>
                 {% endif %}
-                
-                <nav><a href="{% url 'random' %}">Random Book</a></nav>
+                <div class="hori">
+                    <i class="fas fa-book"></i>
+                    <nav><a href="{% url 'random' %}">RANDOM BOOK</a></nav>
+                </div>
                 <form class="form-inline" action="{% url 'search' %}" method="GET">
                     <input type="text" name="q" id="searchbox" autocomplete="off" placeholder="Search">
-                    <button id="search-btn" class="btn btn-primary btn-sm" type="button">Search</button>
+                    <button id="search-btn" class="btn btn-primary btn-sm" type="button">SEARCH</button>
                 </form>
             </div>
         </header>
@@ -55,7 +85,23 @@
 
         <footer class="center">
             <p>Erafore Books, LLC &copy;2021</p>
+            <p>Created by Ian Rodgers</p>
             <p>All rights reserved</p>
+            <div class="hori">
+                <div class="hori">
+                    <i class="fab fa-facebook-square"></i>
+                    <a href="https://www.facebook.com/Ian-Rodgers-Author-Page-1305156149529437" target="_blank" rel="noreferrer noopener">Facebook</a>
+                </div>
+                <p>-</p>
+                <div class="hori">
+                    <i class="fab fa-twitter-square"></i>
+                    <a href="https://twitter.com/erafore" target="_blank" rel="noreferrer noopener">Twitter</a>
+                </div>
+            </div>
+            <div class="hori">
+                <i class="fas fa-envelope"></i>
+                Email
+            </div>
         </footer>
     </body>
 

@@ -9,11 +9,11 @@ Login
 
 <div class="login-form vert center">
     <h4>Login</h4>
-    <form id="login-form" action="{% url 'login' %}" method="POST">
+    <form id="login-form" action="{% url 'login' %}" method="POST" class="center hori">
         {% csrf_token %}
         <input type="text" name="username" id="username" autocomplete="off" placeholder="Username">
         <input type="password" name="password" id="password" autocomplete="off" placeholder="Password">
-        <button type="button" id="login-btn">Log In</button>
+        <button type="button" id="login-btn" class="btn btn-primary btn-sm">Log In</button>
     </form>
     <div class="show-password hori">
         <label id="eye-label" for="eye">Show Password</label>
@@ -27,11 +27,11 @@ Login
         <h4>Reset Your Password</h4>
         <p>You can reset your password by entering your username and email address in the form below; a code to reset your password will be sent to you</p>
         <div class="forgot-password vert">
-            <form action="{% url 'reset' %}" method="POST" id="reset-form">
+            <form action="{% url 'reset' %}" method="POST" id="reset-form" class="hori center">
                 {% csrf_token %}
                 <input type="text" name="reset-username" id="reset-username" placeholder="Username" autocomplete="off">
                 <input type="text" name="email" id="email" placeholder="Email Address" autocomplete="off">
-                <button type="button" id="reset-btn">Send Email</button>
+                <button type="button" id="reset-btn" class="btn btn-primary btn-sm">Send Email</button>
             </form>
         </div>
     </div>

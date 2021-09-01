@@ -22,6 +22,9 @@
                     <source srcset="{% static book.image %}_small.jpg" type="img/jpg">
                     <img src="{% static book.image %}.avif" alt="{{ book.title }} Cover" class="large-img">
                 </picture>
+                {% if book.cover_artist %}
+                    <p class="artist">Art by {{ book.cover_artist }}</p>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -32,45 +35,44 @@
                 {% csrf_token %}
                 <input type="text" name="page" value="book-page" class="hidden">
                 {% if wishlist == "" %}
-                    <button type="button" id="wish-btn" class="wish-btn">Add to wishlist</button>
+                    <button type="button" id="wish-btn" class="wish-btn link-btn">Add to wishlist</button>
                 {% else %}
-                    <button type="button" id="wish-btn" class="wish-btn">Remove from wishlist</button>
-                    <p id="in-wishlist">This book is in your wishlist</p>
+                    <button type="button" id="wish-btn" class="wish-btn link-btn">Remove from wishlist</button>
                 {% endif %}
             </form>
         {% endif %}
 
         <p>Published {{ book.date_released|date:"M d, Y" }}</p>
         
-        <div class="hori">
+        <div class="hori series-div">
             <label for="book-series">Series:</label>
-            <p id="book-series">{{ book.series.name }}</p>
+            <p id="book-series">{{ book.series.name }} - </p>
+            {% if user.is_authenticated %}
+                <form action="{% url 'follow' book.series.id %}" method="POST" class="{{ book.series.id }}"
+                    id="follow-form-{{ book.series.id }}">
+                    {% csrf_token %}
+                        <input type="text" name="page" value="book-page" class="hidden">
+                        <input type="text" name="book" value="{{ book.id }}" class="hidden">
+                    {% if following == "" %}
+                        <button type="button" id="follow-btn" class="follow-btn link-btn">Follow Series</button>
+                    {% else %}
+                        <button type="button" id="follow-btn" class="follow-btn link-btn">Unfollow Series</button>
+                    {% endif %}
+                </form>
+            {% endif %}
         </div>
-        {% if user.is_authenticated %}
-            <form action="{% url 'follow' book.series.id %}" method="POST" class="{{ book.series.id }}" id="follow-form-{{ book.series.id }}">
-                {% csrf_token %}
-                <input type="text" name="page" value="book-page" class="hidden">
-                <input type="text" name="book" value="{{ book.id }}" class="hidden">
-                {% if following == "" %}
-                    <button type="button" id="follow-btn" class="follow-btn">Follow Series</button>
-                {% else %}
-                    <button type="button" id="follow-btn" class="follow-btn">Unfollow Series</button>
-                    <p id="are-following">You are following this series</p>
-                {% endif %}
-            </form>
-        {% endif %}
+        
         
         <div class="hori">
             <label for="book-world">World:</label>
             <p id="book-world">{{ book.world }}</p>
         </div>
 
-        <div class="hori">
+        <div>
             <label for="book-synopsis">Synopsis:</label>
-            <p id="book-synopsis">{{ book.synopsis }}
-            </p>
+            <p id="book-synopsis">{{ book.synopsis }}</p>
         </div>
-        <h5><a href="{{ book.amazon_link }}" target="_blank" rel="noreferrer noopener">Purchase on Amazon</a></h5>
+        <h5><a href="{{ book.amazon_link }}" target="_blank" rel="noreferrer noopener" id="amazon-link">Purchase on Amazon</a></h5>
     </div>
 </div>
 

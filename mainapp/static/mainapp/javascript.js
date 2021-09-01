@@ -1,26 +1,42 @@
 
 // Functions for MAINAPP
 
+// Function to make search button clickable
+function makeClickable() {
+    let userInput = document.getElementById("searchbox").value;
+    let searchButton = document.getElementById("search-btn");
+
+    if (userInput.length > 0) {
+        searchButton.type = "submit";
+    }
+    else {
+        searchButton.type = "button";
+    }
+}
+
 // Function for slideshow
 function slideshow() {
     var imageBoxes = document.querySelectorAll(".image-box");
-    var i = 0;
-    //while (i < imageBoxes.length) {
-        setInterval(
-            function () {
-                console.log(imageBoxes[i]);
-                imageBoxes[i].classList.remove("hidden");
-                try {
-                    imageBoxes[i-1].classList.add("hidden");
-                }
-                catch { }
-                i++;
-                if (i > imageBoxes.length) {
-                    i = 0;
-                }
-            }, 1000
-        );
-    //}
+    imageBoxes = Array.from(imageBoxes);
+    imageBoxes[0].classList.remove("hidden");
+    var i = 1;
+    console.log(imageBoxes.length);
+    setInterval(
+        function () {
+            console.log("Before:", i);
+            console.log("Before:", imageBoxes[i]);
+            imageBoxes[i - 1].classList.add("hidden");
+            imageBoxes[i].classList.remove("hidden");
+            i++;
+            console.log("After:", i);
+            console.log("After:", imageBoxes[i]);
+            if (i >= imageBoxes.length) {
+                console.log(imageBoxes.length);
+                i = 1;
+                imageBoxes[imageBoxes.length - 1].classList.add("hidden");
+            }
+        }, 1000 //3000
+    );
 }
 
 
@@ -123,6 +139,7 @@ function displayFilters() {
                     booklist.forEach((listing) => {
                         listing.remove();
                     })
+
                     // build new listings
                     buildListing(data.books, data, currentUrl);
                     
@@ -149,28 +166,37 @@ function buildListing(books, data, currentUrl) {
     for (i = 0; i < books.length; i++) {
         // build each book listing, append to booklistContainer
         const bookListingDiv = document.createElement("div");
-        bookListingDiv.classList.add("book-listing", "hori");
-        // create title + image elements
-        const titleDiv = document.createElement("div");
-        titleDiv.classList.add("vert");
-        titleDiv.classList.add("title-div");
+        bookListingDiv.classList.add("book-listing", "hori", "fade-in");
+        // create image elements
+        const imageDiv = document.createElement("div");
+        imageDiv.classList.add("vert", "image-div");
+        const picture = document.createElement("picture");
+        const sourceAvif = document.createElement("source");
+        sourceAvif.srcset = currentUrl + "static/" + books[i].image + "_small.avif";
+        sourceAvif.type = "img/avif";
+        const sourceJpg = document.createElement("source");
+        sourceJpg.srcset = currentUrl + "static/" + books[i].image + "_small.jpg";
+        sourceJpg.type = "img/jpg";
         const image = document.createElement("img");
         image.src = currentUrl + "static/" + books[i].image + "_small.avif";
         image.alt = books[i].title + " Cover";
         image.classList.add("small-img");
-        const titleParagraph = document.createElement("p");
-        const titleLink = document.createElement("a");
-        titleLink.href = currentUrl + "book/" + books[i].id;
-        titleLink.innerHTML = books[i].title;
-        titleParagraph.appendChild(titleLink);
-        titleDiv.appendChild(image);
-        titleDiv.appendChild(titleParagraph);
-        bookListingDiv.appendChild(titleDiv);
+        picture.appendChild(sourceAvif);
+        picture.appendChild(sourceJpg);
+        picture.appendChild(image);
+        imageDiv.appendChild(picture);
+        bookListingDiv.appendChild(imageDiv);
         // create main content elements
         const contentDiv = document.createElement("div");
         contentDiv.classList.add("vert");
         const releaseDate = document.createElement("p");
         releaseDate.innerHTML = `Published ${books[i].date_released}`;
+        // create title
+        const titleParagraph = document.createElement("p");
+        const titleLink = document.createElement("a");
+        titleLink.href = currentUrl + "book/" + books[i].id;
+        titleLink.innerHTML = books[i].title;
+        titleParagraph.appendChild(titleLink);
         // series div
         const seriesDiv = document.createElement("div");
         seriesDiv.classList.add("hori");
@@ -195,19 +221,21 @@ function buildListing(books, data, currentUrl) {
         worldDiv.appendChild(worldP);
         // synopsis div
         const synopsisDiv = document.createElement("div");
-        synopsisDiv.classList.add("hori");
         const synopsisP = document.createElement("p");
         synopsisP.id = `book-synopsis-${books[i].id}`;
-        synopsisP.innerHTML = `${books[i].synopsis.slice(0, 300)} ...`;
+        synopsisP.classList.add("synopsis")
+        synopsisP.innerHTML = books[i].synopsis;
         const synopsisLabel = document.createElement("label");
         synopsisLabel.for = synopsisP.id;
         synopsisLabel.innerHTML = "Synopsis:";
-        const seeMoreLink = document.createElement("a");
-        seeMoreLink.href = currentUrl + "book/" + books[i].id;
-        seeMoreLink.innerHTML = "See more";
-        synopsisP.appendChild(seeMoreLink);
+        const seeMore = document.createElement("button");
+        seeMore.type = "button";
+        seeMore.classList.add("link-btn", "more-btn");
+        seeMore.innerHTML = "See more";
+        seeMore.addEventListener("click", showMore);
         synopsisDiv.appendChild(synopsisLabel);
         synopsisDiv.appendChild(synopsisP);
+        synopsisDiv.appendChild(seeMore);
         // if on sale
         if (books[i].on_sale == true) {
             const onSale = document.createElement("h5");
@@ -215,25 +243,13 @@ function buildListing(books, data, currentUrl) {
             contentDiv.appendChild(onSale);
         }
         // append together
+        contentDiv.appendChild(titleParagraph);
         contentDiv.appendChild(releaseDate);
         contentDiv.appendChild(seriesDiv);
         contentDiv.appendChild(worldDiv);
         contentDiv.appendChild(synopsisDiv);
         bookListingDiv.appendChild(contentDiv);
         booklistContainer.appendChild(bookListingDiv);
-    }
-}
-
-// Function to make search button clickable
-function makeClickable() {
-    let userInput = document.getElementById("searchbox").value;
-    let searchButton = document.getElementById("search-btn");
-
-    if (userInput.length > 0) {
-        searchButton.type = "submit";
-    }
-    else {
-        searchButton.type = "button";
     }
 }
 
@@ -298,9 +314,21 @@ function clearFilters() {
 
 // Function to build lore results from filters
 
+// Function to display more of the synopsis
+function showMore() {
+    var synopsis = this.previousElementSibling;
+    if (this.innerHTML === "See more"){
+        synopsis.style.maxHeight = "300px";
+        this.innerHTML = "See less";
+    }
+    else {
+        synopsis.style.maxHeight = "75px";
+        this.innerHTML = "See more";
+    }
+}
+
 // Function to darken the page and display larger image
 function largeImage() {
-
     var modal = document.getElementById("my-modal");
     var close = document.querySelector(".close");
     modal.classList.remove("hidden");
@@ -315,29 +343,6 @@ function largeImage() {
             modal.style.display = "none";
         }
     }
-
-
-    /*let image = document.querySelector("img");
-    let originalDimensions = [image.naturalWidth, image.naturalHeight];
-    let viewPort = [window.innerWidth, window.innerHeight];
-    console.log(originalDimensions);
-    console.log(viewPort);
-    for (i=0; i<2; i++) {
-        if (originalDimensions[i] >= viewPort[i]) {
-            console.log(`True: ${originalDimensions[i]} > ${viewPort[i]}`);
-        }
-        else {
-            console.log(`False: ${originalDimensions[i]} < ${viewPort[i]}`);
-        }
-    }
-    // dim the page
-    let body = document.querySelector("body");
-    if (body.classList.contains("dim")) {
-        body.classList.remove("dim");
-    }
-    else {
-        body.classList.add("dim");
-    }*/
 }
 
 
@@ -547,18 +552,23 @@ function submitLogin() {
     }
 }
 
-// Function to show ability to edit user preferences
-function showEditPreferences() {
-    let form = document.getElementById("edit-preference-form");
-    let button = document.getElementById("show-preference-form");
-
-    if (button.innerHTML == "Change Email Preferences") {
-        form.classList.remove("hidden");
-        button.innerHTML = "Cancel";
+// Function to show user preference and delete account forms 
+function showContent() {
+    let content = this.previousElementSibling;
+    if (content.style.maxHeight) {
+        content.style.maxHeight = null;
+        if (content.id === "edit-preference-form") {
+            this.innerHTML = "Change Email Preferences";
+        }
+        else {
+            this.innerHTML = "Delete Account";
+            document.getElementById("delete-error-message").innerHTML = "";
+        }
     }
     else {
-        form.classList.add("hidden");
-        button.innerHTML = "Change Email Preferences";
+        content.style.maxHeight = "300px";
+        content.classList.remove("hidden");
+        this.innerHTML = "Cancel"
     }
 }
 
@@ -577,8 +587,9 @@ function editPreferences() {
             success: function (data) {
                 var saveMessage = document.getElementById("save-message");
                 saveMessage.innerHTML = "Your preferences have been saved";
+                saveMessage.style.display = "flex";
                 setTimeout(function () {
-                    saveMessage.innerHTML = "";
+                    $("#save-message").fadeOut(1000);
                 }, 3000);
             }
         });
@@ -594,22 +605,6 @@ function uncheckAll() {
         if (checkboxes[i].checked) {
             checkboxes[i].checked = false;
         }
-    }
-}
-
-// Function to show delete account option
-function showDeleteAccount() {
-    let form = document.getElementById("delete-account-div");
-    let button = document.getElementById("show-delete-account-btn");
-
-    if (button.innerHTML == "Delete Account") {
-        form.classList.remove("hidden");
-        button.innerHTML = "Cancel";
-    }
-    else {
-        form.classList.add("hidden");
-        button.innerHTML = "Delete Account";
-        document.getElementById("delete-error-message").innerHTML = "";
     }
 }
 
@@ -669,14 +664,9 @@ function wishlistFunc() {
                 else {
                     if (data.action == "remove") {
                         document.getElementById("wish-btn").innerHTML = "Add to wishlist";
-                        document.getElementById("in-wishlist").remove();
                     }
                     else {
                         document.getElementById("wish-btn").innerHTML = "Remove from wishlist";
-                        const inWishlist = document.createElement("p");
-                        inWishlist.id = "in-wishlist";
-                        inWishlist.innerHTML = "This book is in your wishlist";
-                        document.getElementById(formId).appendChild(inWishlist);
                     }
                 }
             }
@@ -716,14 +706,9 @@ function followFunc() {
                 else {
                     if (data.action == "remove") {
                         document.getElementById("follow-btn").innerHTML = "Follow Series";
-                        document.getElementById("are-following").remove();
                     }
                     else {
                         document.getElementById("follow-btn").innerHTML = "Unfollow Series";
-                        const following = document.createElement("p");
-                        following.id = "are-following";
-                        following.innerHTML = "You are following this series";
-                        document.getElementById(formId).appendChild(following);
                     }
                 }
             }

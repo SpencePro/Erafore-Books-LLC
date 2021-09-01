@@ -16,54 +16,7 @@ Profile
 </div>
 {% else %}
 <h2>User Profile for {{ current_user.username }}</h2>
-<div class="container hori">
-    <div class="user-info vert">
-        <div class="vert" id="edit-div">
-            <form action="{% url 'edit' %}" method="POST" id="edit-preference-form" class="hidden">
-                {% csrf_token %}
-                <div class="hori checkbox-option">
-                    <input type="checkbox" name="new-books" id="new-books" class="checkbox" value="true" {% if current_user.can_send_new %} checked="true" {%endif %}>
-                    <label for="new-books">We can notify you when new books are released</label>
-                </div>
-                <div class="hori checkbox-option">
-                    <input type="checkbox" name="follow-updates" id="follow-updates" class="checkbox" value="true" {% if current_user.can_send_updates %} checked="true" {% endif %}>
-                    <label for="follow-updates">We can notify you when series you follow are updated</label>
-                </div>
-                <div class="hori checkbox-option">
-                    <input type="checkbox" name="sales" id="sales" class="checkbox" value="true" {% if current_user.can_send_sales %} checked="true" {% endif %}>
-                    <label for="sales">We can notify you of all sales</label>
-                </div>
-                <div class="hori checkbox-option">
-                    <input type="checkbox" name="wish-sales" id="wish-sales" class="checkbox" value="true" {% if current_user.can_send_wish_sales %} checked="true" {% endif%}>
-                    <label for="wish-sales">We can notify you when books on your wishlist go on sale</label>
-                </div>
-                <div class="hori checkbox-option">
-                    <input type="checkbox" name="all-notifications" id="all-notifications">
-                    <label for="all-notifications">Disable all email notifications</label>
-                </div>
-                <button type="button" id="edit-btn">Update Preferences</button>
-                <p id="save-message"></p>
-            </form>
-            <button id="show-preference-form">Change Email Preferences</button>
-        </div>
-
-        <div class="vert hidden" id="delete-account-div">
-            <div id="deletion-message vert" >
-                <p>This will delete your username, password, and email in our system, as well as delete your wishlist
-                    and un-follow all series. This action cannot be undone.</p>
-                <p>Are you sure you want to delete your account?</p>
-            </div>
-            <form id="delete-account-form" action="{% url 'delete' current_user.id %}" method="POST" >
-                {% csrf_token %}
-                <input type="password" name="password" id="delete-password" autocomplete="off"
-                placeholder="Password">
-                <input type="password" name="confirmation" id="confirmation" autocomplete="off"                 placeholder="Confirmation">
-                <button type="button" id="delete-account-btn">Delete Account</button>
-            </form>
-            <p id="delete-error-message"></p>
-        </div>
-        <button id="show-delete-account-btn">Delete Account</button>
-    </div>
+<div class="profile-container hori">
 
     <div id="wishlist-div" class="wishlist vert">
         <h4>Wishlist</h4>
@@ -75,7 +28,7 @@ Profile
                 <form action="{% url 'add' wish.book.id %}" method="POST" id="wishlist-form-{{ wish.book.id }}" class="{{ wish.book.id }}">
                     {% csrf_token %}
                     <input type="text" name="page" value="profile" class="hidden">
-                    <button type="button" id="wish-btn-{{ wish.book.id }}" class="wishlist-btn">Remove</button>
+                    <button type="button" id="wish-btn-{{ wish.book.id }}" class="wishlist-btn btn btn-primary btn-sm">Remove</button>
                 </form>
             </li>
             {% endfor %}
@@ -94,7 +47,7 @@ Profile
                 <form action="{% url 'follow' series.series.id %}" method="POST" id="follow-form-{{ series.series.id }}" class="{{ series.series.id }}">
                     {% csrf_token %}
                     <input type="text" name="page" value="profile" class="hidden">
-                    <button type="button" id="follow-btn-{{ series.series.id }}" class="follow-btn">Unfollow</button>
+                    <button type="button" id="follow-btn-{{ series.series.id }}" class="follow-btn btn btn-primary btn-sm">Unfollow</button>
                 </form>
             </li>
             {% endfor %}
@@ -104,14 +57,68 @@ Profile
         {% endif %}
     </div>
 
+    <div class="user-info vert">
+        <div class="vert" id="edit-div">
+            <form action="{% url 'edit' %}" method="POST" id="edit-preference-form" class="hidden hidden-content">
+                {% csrf_token %}
+                <div class="hori checkbox-option">
+                    <input type="checkbox" name="new-books" id="new-books" class="checkbox" value="true" 
+                    {% if current_user.can_send_new %} checked="true" {%endif %}>
+                    <label for="new-books">We can notify you when new books are released</label>
+                </div>
+                <div class="hori checkbox-option">
+                    <input type="checkbox" name="follow-updates" id="follow-updates" class="checkbox" value="true" 
+                    {% if current_user.can_send_updates %} checked="true" {% endif %}>
+                    <label for="follow-updates">We can notify you when series you follow are updated</label>
+                </div>
+                <div class="hori checkbox-option">
+                    <input type="checkbox" name="sales" id="sales" class="checkbox" value="true" 
+                    {% if current_user.can_send_sales %} checked="true" {% endif %}>
+                    <label for="sales">We can notify you of all sales</label>
+                </div>
+                <div class="hori checkbox-option">
+                    <input type="checkbox" name="wish-sales" id="wish-sales" class="checkbox" value="true" 
+                    {% if current_user.can_send_wish_sales %} checked="true" {% endif%}>
+                    <label for="wish-sales">We can notify you when books on your wishlist go on sale</label>
+                </div>
+                <div class="hori checkbox-option">
+                    <input type="checkbox" name="all-notifications" id="all-notifications">
+                    <label for="all-notifications">Disable all email notifications</label>
+                </div>
+                <div class="hori" style="align-items: baseline;">
+                    <button type="button" id="edit-btn" class="btn btn-primary btn-sm">Update Preferences</button>
+                    <p id="save-message"></p>
+                </div>
+            </form>
+            <button id="show-preference-form" class="btn btn-primary btn-sm show-btn">Change Email Preferences</button>
+        </div>
+    
+        <div class="vert hidden hidden-content" id="delete-account-div">
+            <div id="deletion-message vert">
+                <p>This will delete your username, password, and email in our system, as well as delete your wishlist
+                    and un-follow all series. This action cannot be undone.</p>
+                <p>Are you sure you want to delete your account?</p>
+            </div>
+            <form id="delete-account-form" action="{% url 'delete' current_user.id %}" method="POST">
+                {% csrf_token %}
+                <input type="password" name="password" id="delete-password" autocomplete="off" placeholder="Password">
+                <input type="password" name="confirmation" id="confirmation" autocomplete="off" placeholder="Confirmation"><br>
+                <button type="button" id="delete-account-btn" class="btn btn-primary btn-sm">Delete Account</button>
+            </form>
+            <p id="delete-error-message"></p>
+        </div>
+        <button id="show-delete-account-btn" class="btn btn-primary btn-sm show-btn">Delete Account</button>
+    </div>
+
 </div>
 {% endif %}
 
 <script type="text/javascript">
-    document.getElementById("show-preference-form").addEventListener("click", showEditPreferences);
+    document.querySelectorAll(".show-btn").forEach((button) => {
+        button.addEventListener("click", showContent);
+    });
     document.getElementById("all-notifications").addEventListener("change", uncheckAll);
     document.getElementById("edit-btn").addEventListener("click", editPreferences);
-    document.getElementById("show-delete-account-btn").addEventListener("click", showDeleteAccount);
     document.getElementById("delete-account-btn").addEventListener("click", deleteAccount);
     document.querySelectorAll(".wishlist-btn").forEach((button) => {
         button.addEventListener("click", wishlistFunc);

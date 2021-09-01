@@ -6,25 +6,29 @@ Home
 {% endblock %}
 
 {% block body %}
-<h2>Main Page</h2>
-<div class="slideshow hori">
-    {% for book in books %}
-    <div class="image-box hidden" id="image-{{ book.id }}">
-        <picture>
-            <source srcset="{% static book.image %}.avif" type="img/avif">
-            <source srcset="{% static book.image %}.jpg" type="img/jpg">
-            <a href="{% url 'book' book.id %}"><img src="{% static book.image %}.avif" alt="{{ book.title }} Cover" class="medium-img"></a>
-        </picture>
+<div class="vert main-content homepage-div">
+    <div class="hori center welcome-div">
+        <div class="vert center welcome-message">
+            <h4>Welcome to Erafore Books!</h4>
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Facilis, fugit doloremque. Quidem vel optio commodi eanemo quasi, explicabo nulla, voluptatem possimus consequuntur provident amet eos placeat aliquid. Sint, ipsum.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni minima eos iste molestiae natus aperiam beatae, debitis blanditiis quasi, voluptatum perferendis quia praesentium sit? Nobis aperiam voluptate facilis expedita! Similique!</p>
+        </div>
+        <div class="slideshow hori">
+            <a href="#"><img src="static/feathered_edge_ooze_test.jpg" alt="ChroniclesofaRoyalPetAPrincessandanOoze(RoyalOozeChroniclesBook1)" width="300px"></a>
+            {% for book in books %}
+            <div class="image-box hidden" id="image-{{ book.id }}">
+                <picture>
+                    <source srcset="{% static book.image %}.avif" type="img/avif">
+                    <source srcset="{% static book.image %}.jpg" type="img/jpg">
+                    <a href="{% url 'book' book.id %}"><img src="{% static book.image %}.avif" alt="{{ book.title }} Cover" class="medium-img"></a>
+                </picture>
+            </div>
+            {% endfor %}
+        </div>
     </div>
-    {% endfor %}
-</div>
-<div class="vert main-content">
-    <div class="vert center welcome-message">
-        <h4>Welcome to Erafore Books!</h4>
-        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Facilis, fugit doloremque. Quidem vel optio commodi ea nemo quasi, explicabo nulla, voluptatem possimus consequuntur provident amet eos placeat aliquid. Sint, ipsum.</p>
-    </div>
+
     {% if sales %}
-    <div class="on-sale center vert">
+    <div class="on-sale center vert homepage-div">
         <h4>On Sale Now</h4>
         <div class="hori center">
             {% for sale in sales %}
@@ -40,21 +44,34 @@ Home
         </div>
     </div>
     {% endif %}
-    <div class="vert center coming-soon">
+    <div class="vert center homepage-div">
+        <h4>The Latest Release</h4>
+        <picture>
+            <source srcset="{% static new_release.image %}_small.avif" type="img/avif">
+            <source srcset="{% static new_release.image %}_small.jpg" type="img/jpg">
+            <img src="{% static new_release.image %}_small.avif" alt="{{ new_release.title }} Cover" class="small-img">
+        </picture>
+        <p><a href="{% url 'book' new_release.id %}">{{ new_release.title }}</a></p>
+    </div>
+    <div class="vert center homepage-div">
         <h4>Coming soon...</h4>
         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atque et laudantium earum aliquam? Excepturi quaerat error libero accusamus.</p>
     </div>
-    <div class="vert center about">
+    <div class="vert homepage-div about">
         <h4>About the Author</h4>
         <div class="hori">
-            <img src="#" alt="Author Portrait">
+            <picture>
+                <source srcset="{% static 'author_image.avif' %}" type="img/avif">
+                <source srcset="{% static 'author_image.jpg' %}" type="img/jpg">
+                <img src="{% static 'author_image.avif' %}" alt="Author's Portrait" class="author-img">
+            </picture>
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam voluptatum ratione cupiditate nulla eligendi placeat ad neque. Corporis, magni! Cumque dicta assumenda quidem doloribus harum veritatis aliquam non autem tempore.</p>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-    document.addEventListener("DOMContentLoaded", slideshow);
+    //document.addEventListener("DOMContentLoaded", slideshow);
 </script>
 
 {% endblock %}

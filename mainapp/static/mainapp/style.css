@@ -1,11 +1,30 @@
 html {
-    height: 100%;
+    min-height: 100%;
     width: 100%;
     border: 0;
     margin: 0;
 }
 
-.dim {
+body {
+    /*background-color: #9900d1;*/
+    background: linear-gradient(to bottom right, #9900d1, #420259);
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
+a {
+    color: white;
+}
+
+a:hover {
+    color: #dbdbdb;
+    text-decoration: none;
+}
+
+/*.dim {
     height: 100%;
     width: 100%;
     border: 0;
@@ -13,7 +32,7 @@ html {
     margin: 0;
     background-color: gray;
     opacity: 50%;
-}
+}*/
 
 .vert {
     display: flex;
@@ -53,26 +72,88 @@ select, input {
 }
 
 #eye {
-    padding-bottom: 3px;
+    padding-bottom: 6px;
+}
+
+.password-show-btn {
+    height: 1.7rem;
+    background-color: white;
+    border: solid 1px #404040;
+    border-radius: 2px;
 }
 
 .small-img {
-    max-width: 150px;
-    max-height: 200px;
+    max-width: 225px;
+    max-height: 300px;
 }
 
 .medium-img {
-    max-width: 250px;
+    max-width: 300px;
     max-height: 400px;
 }
 
+.author-img {
+    height: 100px;
+    width: 100px;
+}
+
+.link-btn {
+    border: none;
+    background-color: transparent;
+    color: #dbdbdb;
+    margin-bottom: 0.5rem;
+}
+
+.link-btn:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+#submit-filter {
+    margin-bottom: 0.2rem;
+}
+
+.btn-sm {
+    background-color: #563d7c;
+    border: 1px solid white;
+}
+
+.btn-primary:hover {
+    background-color: #7150a3;
+    border-color: white;
+}
+
+.btn:active, .btn:focus {
+    background-color: #6a42a8 !important;
+    border-color: white !important;
+    box-shadow: 0 0 0 0.2rem white !important;
+}
+
+.fas, .fab {
+    margin-right: 0.2rem;
+}
 
 /* HEADER */
 
+header {
+    width: 100%;
+}
+
+.logo-area {
+    width: 20%;
+    margin-top: 1rem;
+    margin-left: 1rem;
+}
+
 .navbar {
-    padding: 0.5rem 6rem;
-    border-top: solid 1px;
-    border-bottom: solid 1px;
+    justify-content: space-evenly;
+    /*border-top: solid 1px;
+    border-bottom: solid 1px;*/
+    width: 80%;
+}
+
+.navbar div {
+    align-items: baseline;
 }
 
 /* BODY */
@@ -83,14 +164,68 @@ main {
 
 /* Home Page */
 
+.welcome-div {
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+.welcome-message {
+    padding-bottom: 12rem;
+    padding-right: 6rem;
+    width: 60%;
+}
+
+.welcome-message h4 {
+    margin-bottom: 2rem;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0%;
+    }
+    to {
+        opacity: 100%;
+    }
+}
+
+.welcome-message p {
+    position: relative;
+    animation-name: fade-in;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+}
+
 .sale-item {
     width: 25%;
     padding: 2px;
-    border: 1px solid grey;
     align-items: center;
 }
+
 .sale-item p {
     margin-bottom: 0;
+}
+
+.homepage-div {
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.homepage-div img {
+    padding: 0.2rem;
+    background-color: grey;
+}
+
+.about {
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+.about picture {
+    margin-right: 1rem;
+}
+
+.slideshow {
+    margin-top: 3%;
 }
 
 /* Books */
@@ -105,23 +240,110 @@ main {
     align-content: space-between;
 }
 
-.title-div {
-    width: 25%;
-    margin-right: max(2rem, 15px);
-    max-width: 200px;
-    min-width: 150px;
+.filter-form select {
+    margin-bottom: 0.2rem;
+}
+
+.image-div {
+    width: 40%;
+    margin-right: max(2rem, 25px);
+    max-width: 300px;
+    min-width: 225px;
+
+}
+
+.image-div img {
+    padding: 0.2rem;
+    background-color: grey;
+}
+
+.book-listing {
+    background-color: white;
+    color: black;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+}
+
+.book-listing a {
+    color: #007bff;
+}
+
+.book-listing a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.synopsis {
+    max-height: 75px;
+    overflow: hidden;
+    margin-bottom: 0;
+    transition: max-height 0.2s ease-out;
 }
 
 .on-sale-now {
     background-color: goldenrod;
 }
 
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.fade-in {
+    animation-name: fade-in;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+}
 
 /* Individual Books */
+
+.listing {
+    padding: 0.5rem;
+    border-radius: 5px;
+    background-color: white;
+    color: black;
+}
+
+.series-div {
+    align-items: baseline;
+}
+
+#book-series {
+    padding-right: 0.2rem;
+}
+
+#follow-btn, #wish-btn, .more-btn {
+    color: #007bff;
+    padding-left: 0;
+}
+
+#follow-btn:hover, #wish-btn:hover, .more-btn:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+#amazon-link {
+    color: #007bff;
+}
+
+#amazon-link:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
 
 .book-div {
     max-width: fit-content;
     margin-right: max(2rem, 15px);
+}
+
+.book-div img {
+    padding: 0.2rem;
+    background-color: grey;
 }
 
 .large-img {
@@ -168,19 +390,37 @@ main {
 
 /* Login */
 
+.login-form {
+    margin-top: 5%;
+}
 
 /* Registration */
 
 .registration-content {
     width: 100%;
+    padding-left: 5rem;
+    padding-right: 5rem;
 }
 
 .registration-instructions {
-    margin-right: 3rem;
+    margin-left: 2rem;
 }
 
 .registration-instructions .registration-form {
     flex: 1;
+}
+
+.registration-form-div {
+    width: 60%;
+}
+
+.registration-form input {
+    margin-bottom: 0.5rem;
+}
+
+.registration-form button {
+    margin-top: 0.5rem;
+    margin-right: 0.5rem;
 }
 
 /* Contact */
@@ -196,19 +436,87 @@ main {
     list-style: none;
 }
 
+.social-media li div {
+    align-items: baseline;
+}
+
 /* Profile */
+
+.profile-container {
+    margin-top: 2rem;
+    width: 100%;
+    justify-content: space-evenly;
+}
 
 .checkbox-option {
     align-items: baseline;
 }
 
+#wishlist-div, #follow-div {
+    width: 35%;
+}
+
+#no-series {
+    text-align: center;
+}
+
 .user-info {
-    width: 40%;
+    width: 30%;
+}
+
+.user-info #edit-div {
+    margin-bottom: 0.2rem;
+}
+
+#delete-account-btn {
+    margin-top: 0.2rem;
+}
+
+.hidden-content {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.2s ease-out;
+}
+
+#edit-btn {
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
 /* Search Results */
 
+.search-results {
+    width: 100%;
+}
+
+.search-results ul {
+    width: 50%;
+    margin-left: 25%;
+}
+
+.search-results li {
+    list-style: none;
+    margin-bottom: 0.2rem;
+}
 
 /* FOOTER */
 
+footer {
+    background-color: #2c0069;
+    min-height: 50px;
+    margin-top: auto;
+}
 
+footer p {
+    margin-bottom: 0.2rem;
+}
+
+footer div {
+    align-items: baseline;
+    justify-content: center;
+}
+
+footer div p {
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+}
