@@ -133,6 +133,17 @@ select, input {
     margin-right: 0.2rem;
 }
 
+.return-btn {
+    z-index: 99;
+    position: fixed;
+    font-size: large;
+    border: none;
+    padding: 1rem;
+    bottom: 30px;
+    right: 30px;
+    box-shadow: 0px 0.2rem 0.2rem 3px rgba(41, 19, 48, 0.5);
+}
+
 /* HEADER */
 
 header {
@@ -388,9 +399,9 @@ main {
 /* Lore */
 
 
-/* Login */
+/* Login + Logout */
 
-.login-form {
+.login-form, .logout-confirm {
     margin-top: 5%;
 }
 
@@ -456,7 +467,7 @@ main {
     width: 35%;
 }
 
-#no-series {
+#no-series, #no-books {
     text-align: center;
 }
 
@@ -483,6 +494,10 @@ main {
     margin-bottom: 0.5rem;
 }
 
+.follow-element p {
+    margin-bottom: 0;
+}
+
 /* Search Results */
 
 .search-results {
@@ -496,7 +511,7 @@ main {
 
 .search-results li {
     list-style: none;
-    margin-bottom: 0.2rem;
+    margin-bottom: 0.4rem;
 }
 
 /* FOOTER */

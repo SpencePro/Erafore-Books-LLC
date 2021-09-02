@@ -43,7 +43,8 @@ Profile
         {% if series_followed %}
         <ul id="follow-ul">
             {% for series in series_followed %}
-            <li id="follow-element-{{ series.series.id }}" class="follow-element">{{ series.series.name }}
+            <li id="follow-element-{{ series.series.id }}" class="follow-element">
+                <p>{{ series.series.name }}</p>
                 <form action="{% url 'follow' series.series.id %}" method="POST" id="follow-form-{{ series.series.id }}" class="{{ series.series.id }}">
                     {% csrf_token %}
                     <input type="text" name="page" value="profile" class="hidden">

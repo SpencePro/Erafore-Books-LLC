@@ -39,55 +39,52 @@ function slideshow() {
     );
 }
 
-
 // Function to infinite scroll
 function infiniteScroll() {
-    window.onscroll = () => {
-        if (document.getElementById("stop-scrolling").innerHTML == "False") {
-            if (window.innerHeight + window.scrollY == document.body.offsetHeight) {
-                var data = $("#filter-form").serializeArray();
-                data[1].value++;
-                var currentUrl = window.location.href;
-                currentUrl = currentUrl.slice(0, currentUrl.length - 3);
-                if (data[2].value == "" && data[3].value == "") {
-                    var url = "all";
-                }
-                else {
-                    var url = "filter_books";
-                }
-                scroll(data);
+    if (document.getElementById("stop-scrolling").innerHTML == "False") {
+        if (window.innerHeight + window.scrollY == document.body.offsetHeight) {
+            var data = $("#filter-form").serializeArray();
+            data[1].value++;
+            var currentUrl = window.location.href;
+            currentUrl = currentUrl.slice(0, currentUrl.length - 3);
+            if (data[2].value == "" && data[3].value == "") {
+                var url = "all";
+            }
+            else {
+                var url = "filter_books";
+            }
+            scroll(data);
 
-                function scroll(data) {
-                    $.ajax({
-                        type: "POST",
-                        url: url,
-                        dataType: "json",
-                        data: data,
-                        success: function (data) {
-                            document.getElementById("pagenum").value = data.pagenum;
-                            // append book elements to the end of .booklist
-                            if (data.error) {
-                                let errorMessage = document.getElementById("error-message");
-                                let selectedSeries = document.getElementById("selected-series");
-                                let selectedWorld = document.getElementById("selected-world");
-                                errorMessage.innerHTML = data.error;
-                                errorMessage.classList.remove("hidden");
-                                selectedWorld.classList.add("hidden");
-                                selectedSeries.classList.add("hidden");
-                            }
-                            else {
-                                buildListing(data.books, data, currentUrl);
-                            }
-                            if (data.stop_scrolling == true) {
-                                document.getElementById("stop-scrolling").innerHTML = "True";
-                            }
-                            else {
-                                document.getElementById("stop-scrolling").innerHTML = "False";
-                            }
+            function scroll(data) {
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    dataType: "json",
+                    data: data,
+                    success: function (data) {
+                        document.getElementById("pagenum").value = data.pagenum;
+                        // append book elements to the end of .booklist
+                        if (data.error) {
+                            let errorMessage = document.getElementById("error-message");
+                            let selectedSeries = document.getElementById("selected-series");
+                            let selectedWorld = document.getElementById("selected-world");
+                            errorMessage.innerHTML = data.error;
+                            errorMessage.classList.remove("hidden");
+                            selectedWorld.classList.add("hidden");
+                            selectedSeries.classList.add("hidden");
                         }
-                    });
-                    return false;
-                }
+                        else {
+                            buildListing(data.books, data, currentUrl);
+                        }
+                        if (data.stop_scrolling == true) {
+                            document.getElementById("stop-scrolling").innerHTML = "True";
+                        }
+                        else {
+                            document.getElementById("stop-scrolling").innerHTML = "False";
+                        }
+                    }
+                });
+                return false;
             }
         }
     }
@@ -325,6 +322,24 @@ function showMore() {
         synopsis.style.maxHeight = "75px";
         this.innerHTML = "See more";
     }
+}
+
+// Function to show the scroll button
+function topButtonScroll() {
+    var scrollBtn = document.getElementById("return-to-top");
+    var screen = window.screen.height;
+    if (document.body.scrollTop > screen/2 || document.documentElement.scrollTop > screen/2) {
+        scrollBtn.classList.remove("hidden");
+    }
+    else {
+        scrollBtn.classList.add("hidden");
+    }
+}
+
+// Function to scroll to the top of the page
+function returnToTop() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
 }
 
 // Function to darken the page and display larger image
@@ -650,15 +665,23 @@ function wishlistFunc() {
             data: data, 
             success: function (data) {
                 if (page == "profile") {
-                    document.getElementById(`wish-element-${bookId}`).remove();
-                    const wishlistCount = parseInt(document.querySelectorAll(".wishlist-element").length);
-                    if (wishlistCount == 0) {
-                        document.getElementById("wishlist-ul").remove();
-                        const wishlistDiv = document.getElementById("wishlist-div");
-                        const noBooks = document.createElement("p");
-                        noBooks.innerHTML = "You have no books yet in your wishlist";
-                        noBooks.id = "no-books";
-                        wishlistDiv.appendChild(noBooks);
+                    if (data.action == "remove") {
+                        document.getElementById(`wish-element-${bookId}`).children[0].classList.add("hidden");
+                        document.getElementById(`wish-btn-${bookId}`).innerHTML = "Undo";
+                        
+                        const wishlistCount = parseInt(document.querySelectorAll(".wishlist-element").length);
+                        if (wishlistCount == 0) {
+                            document.getElementById("wishlist-ul").remove();
+                            const wishlistDiv = document.getElementById("wishlist-div");
+                            const noBooks = document.createElement("p");
+                            noBooks.innerHTML = "You have no books yet in your wishlist";
+                            noBooks.id = "no-books";
+                            wishlistDiv.appendChild(noBooks);
+                        }
+                    }
+                    else {
+                        document.getElementById(`wish-element-${bookId}`).children[0].classList.remove("hidden");
+                        document.getElementById(`wish-btn-${bookId}`).innerHTML = "Remove";
                     }
                 }
                 else {
@@ -675,7 +698,7 @@ function wishlistFunc() {
     }
 }
 
-// Function to unfollow series
+// Function to follow and unfollow series
 function followFunc() {
     var seriesId = this.form.classList[0];
     var formId = this.form.id;
@@ -692,15 +715,23 @@ function followFunc() {
             data: data,
             success: function (data) {
                 if (page == "profile") {
-                    document.getElementById(`follow-element-${seriesId}`).remove();
-                    const followCount = parseInt(document.querySelectorAll(".follow-element").length);
-                    if (followCount == 0) {
-                        document.getElementById("follow-ul").remove();
-                        const followDiv = document.getElementById("follow-div");
-                        const noSeries = document.createElement("p");
-                        noSeries.innerHTML = "You are not following any series right now";
-                        noSeries.id = "no-books";
-                        followDiv.appendChild(noSeries);
+                    if (data.action == "remove") {
+                        document.getElementById(`follow-element-${seriesId}`).children[0].classList.add("hidden");
+                        document.getElementById(`follow-btn-${seriesId}`).innerHTML = "Undo";
+
+                        const followCount = parseInt(document.querySelectorAll(".follow-element").length);
+                        if (followCount == 0) {
+                            document.getElementById("follow-ul").remove();
+                            const followDiv = document.getElementById("follow-div");
+                            const noSeries = document.createElement("p");
+                            noSeries.innerHTML = "You are not following any series right now";
+                            noSeries.id = "no-books";
+                            followDiv.appendChild(noSeries);
+                        }
+                    }
+                    else {
+                        document.getElementById(`follow-element-${seriesId}`).children[0].classList.remove("hidden");
+                        document.getElementById(`follow-btn-${seriesId}`).innerHTML = "Unfollow";
                     }
                 }
                 else {

@@ -36,7 +36,7 @@ Home
                 <picture>
                     <source srcset="{% static sale.image %}_small.avif" type="img/avif">
                     <source srcset="{% static sale.image %}_small.jpg" type="img/jpg">
-                    <img src="{% static sale.image %}_small.avif" alt="{{ sale.title }} Cover" class="small-img">
+                    <a href="{% url 'book' sale.id %}"><img src="{% static sale.image %}_small.avif" alt="{{ sale.title }} Cover" class="small-img"></a>
                 </picture>
                 <p><a href="{% url 'book' sale.id %}">{{ sale.title }}</a></p>                
             </div>
@@ -49,7 +49,7 @@ Home
         <picture>
             <source srcset="{% static new_release.image %}_small.avif" type="img/avif">
             <source srcset="{% static new_release.image %}_small.jpg" type="img/jpg">
-            <img src="{% static new_release.image %}_small.avif" alt="{{ new_release.title }} Cover" class="small-img">
+            <a href="{% url 'book' new_release.id %}"><img src="{% static new_release.image %}_small.avif" alt="{{ new_release.title }} Cover" class="small-img"></a>
         </picture>
         <p><a href="{% url 'book' new_release.id %}">{{ new_release.title }}</a></p>
     </div>

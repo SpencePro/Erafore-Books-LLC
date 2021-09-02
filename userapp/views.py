@@ -30,6 +30,11 @@ def login_view(request):
 
 
 @login_required(login_url="login")
+def logout_confirm_view(request):
+    return render(request, "logout_confirm.html")
+
+
+@login_required(login_url="login")
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))

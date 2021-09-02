@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+Confirm Logout
+{% endblock %}
+
+{% block body %}
+
+<div class="vert center logout-confirm">
+    <h4>Are you sure you want to log out?</h4>
+    <a href="{% url 'logout' %}"><button class="btn btn-primary btn-sm">Log out</button></a>
+</div>
+
+{% endblock %}

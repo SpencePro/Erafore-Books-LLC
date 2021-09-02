@@ -64,6 +64,8 @@ Books
 
 <p id="stop-scrolling" class="hidden">False</p>
 
+<button id="return-to-top" class="btn btn-primary btn-sm return-btn hidden">Return to top</button>
+
 <div id="booklist-container" class="booklist vert container">
     {% for book in books %}
         <div class="book-listing hori" {% if book.on_sale %} class="on-sale-now" {% endif %}>
@@ -71,7 +73,7 @@ Books
                 <picture>
                     <source srcset="{% static book.image %}_small.avif" type="img/avif">
                     <source srcset="{% static book.image %}_small.jpg" type="img/jpg">
-                    <img src="{% static book.image %}_small.avif" alt="{{ book.title }} Cover" class="small-img">
+                    <a href="{% url 'book' book.id %}"><img src="{% static book.image %}_small.avif" alt="{{ book.title }} Cover" class="small-img"></a>
                 </picture>
             </div>
             <div class="vert">
@@ -90,23 +92,25 @@ Books
                 </div>
                 <div>
                     <label for="book-synopsis-{{ book.id }}">Synopsis:</label>
-                    <p id="book-synopsis-{{ book.id }}" class="synopsis">{{ book.synopsis }}</p><button type="button" class="link-btn more-btn">See more</button>
+                    <p id="book-synopsis-{{ book.id }}" class="synopsis">{{ book.synopsis }}</p>
+                    <button type="button" class="link-btn more-btn">See more</button>
                 </div>
             </div>
         </div>
     {% endfor %}
 </div>
-<div class="center">
-    <a href="#" >Return to top</a>
-</div>
+
 
 <script type="text/javascript">
-    document.addEventListener("DOMContentLoaded", infiniteScroll);
+    document.addEventListener("scroll", infiniteScroll);
+    document.addEventListener("scroll", topButtonScroll);
     document.getElementById("submit-filter").addEventListener("click", displayFilters);
     document.getElementById("clear-filter-btn").addEventListener("click", clearFilters);
     document.querySelectorAll(".more-btn").forEach((button) => {
         button.addEventListener("click", showMore);
-    })
+    });
+    //document.addEventListener("DOMContentLoaded", topButtonScroll);
+    document.getElementById("return-to-top").addEventListener("click", returnToTop);
 </script>
 
 
