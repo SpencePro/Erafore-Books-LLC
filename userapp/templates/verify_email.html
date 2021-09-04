@@ -5,7 +5,7 @@ Verify Email
 {% endblock %}
 
 {% block body %}
-    <div class="center vert">
+    <div class="verify-email center vert">
         <h2>Verify your Email Address</h2>
         <p>We have sent an email to the address given. In it, you will see a passcode; enter that in the form below and press 'Submit'. If it is correct, you will be directed to the login page; if it is not, you will be redirected to the registration page to try again.</p>
         <form action="{% url 'verify_registration' %}" method="POST" id="verify-email-form">
@@ -14,6 +14,12 @@ Verify Email
             <button type="button" id="verify-email-btn" class="btn btn-primary btn-sm">Submit</button>
         </form>
         <h5 id="error-message"></h5>
+    </div>
+
+    <div class="spinner-div hidden center">
+        <div class="spinner-border text-light" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
     </div>
 
     <script type="text/javascript">

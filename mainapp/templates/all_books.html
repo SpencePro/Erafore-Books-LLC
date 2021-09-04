@@ -71,16 +71,20 @@ Books
         <div class="book-listing hori" {% if book.on_sale %} class="on-sale-now" {% endif %}>
             <div class="vert image-div">
                 <picture>
-                    <source srcset="{% static book.image %}_small.avif" type="img/avif">
-                    <source srcset="{% static book.image %}_small.jpg" type="img/jpg">
-                    <a href="{% url 'book' book.id %}"><img src="{% static book.image %}_small.avif" alt="{{ book.title }} Cover" class="small-img"></a>
+                    <source srcset="{% static book.image %}_small.avif" type="image/avif">
+                    <a href="{% url 'book' book.id %}"><img src="{% static book.image %}_small.jpg" alt="{{ book.title }} Cover" class="small-img"></a>
                 </picture>
             </div>
             <div class="vert">
                 {% if book.on_sale == True %}
                     <h5>On Sale Now!</h5>
                 {% endif %}
-                <p><a href="{% url 'book' book.id %}">{{ book.title }}</a></p>
+                <div class="hori">
+                    <p><a href="{% url 'book' book.id %}">{{ book.title }}</a></p>
+                    {% if book.audio_book == True %}
+                    <h5><i class="fas fa-headphones"></i><span class="tooltip-text">Available as an Audio Book</span></h5>
+                    {% endif %}
+                </div>
                 <p>Published {{ book.date_released|date:"M d, Y" }}</p>
                 <div class="hori">
                     <label for="book-series-{{ book.title }}">Series:</label>
@@ -104,13 +108,15 @@ Books
 <script type="text/javascript">
     document.addEventListener("scroll", infiniteScroll);
     document.addEventListener("scroll", topButtonScroll);
+    document.getElementById("return-to-top").addEventListener("click", returnToTop);
     document.getElementById("submit-filter").addEventListener("click", displayFilters);
     document.getElementById("clear-filter-btn").addEventListener("click", clearFilters);
     document.querySelectorAll(".more-btn").forEach((button) => {
         button.addEventListener("click", showMore);
     });
-    //document.addEventListener("DOMContentLoaded", topButtonScroll);
-    document.getElementById("return-to-top").addEventListener("click", returnToTop);
+    window.addEventListener("beforeunload", function() {
+        resetFilter("series-filter", "world-filter", "");
+    });
 </script>
 
 

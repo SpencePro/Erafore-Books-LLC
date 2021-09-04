@@ -1,6 +1,16 @@
 
 // Functions for MAINAPP
 
+// Function to go back
+function goBack() {
+    try {
+        window.history.back();
+    }
+    catch {
+        window.location.href = "http://127.0.0.1:8000";
+    }
+}
+
 // Function to make search button clickable
 function makeClickable() {
     let userInput = document.getElementById("searchbox").value;
@@ -16,38 +26,33 @@ function makeClickable() {
 
 // Function for slideshow
 function slideshow() {
-    var imageBoxes = document.querySelectorAll(".image-box");
-    imageBoxes = Array.from(imageBoxes);
-    imageBoxes[0].classList.remove("hidden");
-    var i = 1;
-    console.log(imageBoxes.length);
-    setInterval(
-        function () {
-            console.log("Before:", i);
-            console.log("Before:", imageBoxes[i]);
-            imageBoxes[i - 1].classList.add("hidden");
-            imageBoxes[i].classList.remove("hidden");
-            i++;
-            console.log("After:", i);
-            console.log("After:", imageBoxes[i]);
-            if (i >= imageBoxes.length) {
-                console.log(imageBoxes.length);
-                i = 1;
-                imageBoxes[imageBoxes.length - 1].classList.add("hidden");
-            }
-        }, 1000 //3000
-    );
+    var slideIndex = 0;
+    showSlides();
+
+    function showSlides() {
+        var slides = document.querySelectorAll(".slide-image");
+        var i;
+        for (i = 0; i < slides.length; i++) {
+            slides[i].classList.add("hidden")
+        }
+        slideIndex++;
+        if (slideIndex > slides.length) {
+            slideIndex = 1;
+        }
+        slides[slideIndex - 1].classList.remove("hidden");
+        setTimeout(showSlides, 3000);
+    }
 }
 
 // Function to infinite scroll
 function infiniteScroll() {
-    if (document.getElementById("stop-scrolling").innerHTML == "False") {
-        if (window.innerHeight + window.scrollY == document.body.offsetHeight) {
+    if (document.getElementById("stop-scrolling").innerHTML === "False") {
+        if (window.innerHeight + window.scrollY === document.body.offsetHeight) {
             var data = $("#filter-form").serializeArray();
             data[1].value++;
             var currentUrl = window.location.href;
             currentUrl = currentUrl.slice(0, currentUrl.length - 3);
-            if (data[2].value == "" && data[3].value == "") {
+            if (data[2].value === "" && data[3].value === "") {
                 var url = "all";
             }
             else {
@@ -76,7 +81,7 @@ function infiniteScroll() {
                         else {
                             buildListing(data.books, data, currentUrl);
                         }
-                        if (data.stop_scrolling == true) {
+                        if (data.stop_scrolling === true) {
                             document.getElementById("stop-scrolling").innerHTML = "True";
                         }
                         else {
@@ -139,18 +144,18 @@ function displayFilters() {
 
                     // build new listings
                     buildListing(data.books, data, currentUrl);
-                    
+
                     // show button to clear filters
                     document.getElementById("clear-filter").classList.remove("hidden");
 
                     // signal page to stop scrolling
-                    if (data.stop_scrolling == true) {
+                    if (data.stop_scrolling === true) {
                         document.getElementById("stop-scrolling").innerHTML = "True";
                     }
                     else {
                         document.getElementById("stop-scrolling").innerHTML = "False";
                     }
-                }   
+                }
             }
         });
         return false;
@@ -170,17 +175,16 @@ function buildListing(books, data, currentUrl) {
         const picture = document.createElement("picture");
         const sourceAvif = document.createElement("source");
         sourceAvif.srcset = currentUrl + "static/" + books[i].image + "_small.avif";
-        sourceAvif.type = "img/avif";
-        const sourceJpg = document.createElement("source");
-        sourceJpg.srcset = currentUrl + "static/" + books[i].image + "_small.jpg";
-        sourceJpg.type = "img/jpg";
+        sourceAvif.type = "image/avif";
+        const imgLink = document.createElement("a");
+        imgLink.href = currentUrl + "book/" + books[i].id;
         const image = document.createElement("img");
-        image.src = currentUrl + "static/" + books[i].image + "_small.avif";
+        image.src = currentUrl + "static/" + books[i].image + "_small.jpg";
         image.alt = books[i].title + " Cover";
         image.classList.add("small-img");
+        imgLink.appendChild(image);
         picture.appendChild(sourceAvif);
-        picture.appendChild(sourceJpg);
-        picture.appendChild(image);
+        picture.appendChild(imgLink);
         imageDiv.appendChild(picture);
         bookListingDiv.appendChild(imageDiv);
         // create main content elements
@@ -189,11 +193,25 @@ function buildListing(books, data, currentUrl) {
         const releaseDate = document.createElement("p");
         releaseDate.innerHTML = `Published ${books[i].date_released}`;
         // create title
+        const titleDiv = document.createElement("div");
+        titleDiv.classList.add("hori");
         const titleParagraph = document.createElement("p");
         const titleLink = document.createElement("a");
         titleLink.href = currentUrl + "book/" + books[i].id;
         titleLink.innerHTML = books[i].title;
         titleParagraph.appendChild(titleLink);
+        titleDiv.appendChild(titleParagraph);
+        if (books[i].audio_book == true) {
+            const audioBook = document.createElement("h5");
+            const icon = document.createElement("i");
+            icon.classList.add("fas", "fa-headphones");
+            audioBook.appendChild(icon);
+            const span = document.createElement("span");
+            span.classList.add("tooltip-text");
+            span.innerHTML = "Available as an Audio Book";
+            audioBook.appendChild(span);
+            titleDiv.appendChild(audioBook);
+        }
         // series div
         const seriesDiv = document.createElement("div");
         seriesDiv.classList.add("hori");
@@ -234,13 +252,13 @@ function buildListing(books, data, currentUrl) {
         synopsisDiv.appendChild(synopsisP);
         synopsisDiv.appendChild(seeMore);
         // if on sale
-        if (books[i].on_sale == true) {
+        if (books[i].on_sale === true) {
             const onSale = document.createElement("h5");
             onSale.innerHTML = "On Sale Now!";
             contentDiv.appendChild(onSale);
         }
         // append together
-        contentDiv.appendChild(titleParagraph);
+        contentDiv.appendChild(titleDiv);
         contentDiv.appendChild(releaseDate);
         contentDiv.appendChild(seriesDiv);
         contentDiv.appendChild(worldDiv);
@@ -273,7 +291,7 @@ function clearFilters() {
             dataType: "json",
             data: data,
             success: function (data) {
-                if (url.slice(url.length-3) == "all") {
+                if (url.slice(url.length - 3) === "all") {
                     // clear book filters
                     document.getElementById("series-name").innerHTML = "";
                     document.getElementById("series-description").innerHTML = "";
@@ -288,12 +306,6 @@ function clearFilters() {
                     })
                     document.getElementById("pagenum").value = 1;
                     resetFilter("series-filter", "world-filter", "");
-                    function resetFilter(seriesId, worldId, valueToSelect) {
-                        let seriesElement = document.getElementById(seriesId);
-                        let worldElement = document.getElementById(worldId)
-                        seriesElement.value = valueToSelect;
-                        worldElement.value = valueToSelect;
-                    }
                     // build new book listings
                     buildListing(data.books, data, currentUrl);
                     document.getElementById("stop-scrolling").innerHTML = "False";
@@ -306,6 +318,13 @@ function clearFilters() {
         return false;
     }
 }
+// Function to reset search filter
+function resetFilter(seriesId, worldId, valueToSelect) {
+    let seriesElement = document.getElementById(seriesId);
+    let worldElement = document.getElementById(worldId)
+    seriesElement.value = valueToSelect;
+    worldElement.value = valueToSelect;
+}
 
 // Function to display filtered lore results
 
@@ -314,8 +333,8 @@ function clearFilters() {
 // Function to display more of the synopsis
 function showMore() {
     var synopsis = this.previousElementSibling;
-    if (this.innerHTML === "See more"){
-        synopsis.style.maxHeight = "300px";
+    if (this.innerHTML === "See more") {
+        synopsis.style.maxHeight = "700px";
         this.innerHTML = "See less";
     }
     else {
@@ -328,7 +347,7 @@ function showMore() {
 function topButtonScroll() {
     var scrollBtn = document.getElementById("return-to-top");
     var screen = window.screen.height;
-    if (document.body.scrollTop > screen/2 || document.documentElement.scrollTop > screen/2) {
+    if (document.body.scrollTop > screen / 2 || document.documentElement.scrollTop > screen / 2) {
         scrollBtn.classList.remove("hidden");
     }
     else {
@@ -348,13 +367,13 @@ function largeImage() {
     var close = document.querySelector(".close");
     modal.classList.remove("hidden");
     modal.style.display = "block";
-    console.log(modal.classList);
-    close.onclick = function() {
+
+    close.onclick = function () {
         modal.classList.add("hidden");
         modal.style.display = "none";
     }
     window.onclick = function (event) {
-        if (event.target == modal) {
+        if (event.target === modal) {
             modal.style.display = "none";
         }
     }
@@ -374,21 +393,23 @@ function showPassword() {
         confirmation = null;
     }
     let eye = document.getElementById("eye").src;
-    if (password.type == "password") {
+    if (password.type === "password") {
         password.setAttribute("type", "text");
         if (confirmation != null) {
             confirmation.setAttribute("type", "text");
         }
-        document.getElementById("eye").src = eye.slice(0, eye.length - 18) + "hide_password.avif";
+        document.getElementById("eye").src = eye.slice(0, eye.length - 17) + "hide_password.jpg";
         document.getElementById("eye-label").innerHTML = "Hide Password";
+        document.getElementById("eye").parentElement.children[0].srcset = eye.slice(0, eye.length - 17) + "hide_password.avif";
     }
     else {
         password.setAttribute("type", "password");
         if (confirmation != null) {
             confirmation.setAttribute("type", "password");
         }
-        document.getElementById("eye").src = eye.slice(0, eye.length - 18) + "show_password.avif";
+        document.getElementById("eye").src = eye.slice(0, eye.length - 17) + "show_password.jpg";
         document.getElementById("eye-label").innerHTML = "Show Password";
+        document.getElementById("eye").parentElement.children[0].srcset = eye.slice(0, eye.length - 17) + "show_password.avif";
     }
 }
 
@@ -410,14 +431,16 @@ function verifyRequirements() {
     else if (password.length < 8) {
         errorMessage.innerHTML = "Invalid password";
     }
-    else if (username == password) {
+    else if (username === password) {
         errorMessage.innerHTML = "Invalid password";
     }
     else if (password != confirmation) {
         errorMessage.innerHTML = "Password does not match confirmation";
     }
     else {
-        // Pass to AJAX
+        document.querySelector(".registration-content").style.opacity = "50%";
+        var spinner = document.querySelector(".spinner-border");
+        spinner.parentElement.classList.remove("hidden");
         var data = $("#registration-form").serializeArray();
         registerUser(data);
 
@@ -428,12 +451,14 @@ function verifyRequirements() {
                 dataType: "json",
                 data: data,
                 success: function (data) {
-                    if (data.success == true) {
+                    if (data.success === true) {
                         window.location.href = data.url;
                     }
                     else {
                         errorMessage.innerHTML = data.error_message;
                     }
+                    document.querySelector(".registration-content").style.opacity = "100%";
+                    spinner.parentElement.classList.add("hidden");
                 }
             });
             return false;
@@ -443,6 +468,9 @@ function verifyRequirements() {
 
 // Function to verify email for registration
 function verifyEmailRegister() {
+    document.querySelector(".verify-email").style.opacity = "50%";
+    var spinner = document.querySelector(".spinner-border");
+    spinner.parentElement.classList.remove("hidden");
     var data = $("#verify-email-form").serializeArray();
     verifyRegistration(data);
 
@@ -453,14 +481,16 @@ function verifyEmailRegister() {
             dataType: "json",
             data: data,
             success: function (data) {
-                if (data.success == true) {
+                if (data.success === true) {
                     window.location.href = data.url;
                 }
                 else {
+                    document.querySelector(".verify-email").style.opacity = "100%";
+                    spinner.parentElement.classList.add("hidden");
                     document.getElementById("error-message").innerHTML = data.error_message;
                     // pause, then redirect;
                     var url = data.url
-                    setTimeout(function() {
+                    setTimeout(function () {
                         window.location.href = url;
                     }, 3000);
                 }
@@ -472,6 +502,9 @@ function verifyEmailRegister() {
 
 // Function to reset password
 function resetPassword() {
+    document.querySelector(".login-form").style.opacity = "50%";
+    var spinner = document.querySelector(".spinner-border");
+    spinner.parentElement.classList.remove("hidden");
     var data = $("#reset-form").serializeArray();
     verifyEmail(data);
 
@@ -482,12 +515,14 @@ function resetPassword() {
             dataType: "json",
             data: data,
             success: function (data) {
-                if (data.success == false) {
+                if (data.success === false) {
                     document.getElementById("error-message").innerHTML = data.error_message;
                 }
                 else {
                     window.location.href = data.url;
                 }
+                document.querySelector(".login-form").style.opacity = "100%";
+                spinner.parentElement.classList.add("hidden");
             }
         });
         return false;
@@ -502,7 +537,7 @@ function verifyRequirementsReset() {
 
     var errorMessage = document.getElementById("error-message");
 
-    if (passcode.length == 0) {
+    if (passcode.length === 0) {
         errorMessage.innerHTML = "Missing passcode";
     }
     else if (password.length < 8) {
@@ -512,10 +547,12 @@ function verifyRequirementsReset() {
         errorMessage.innerHTML = "Password does not match confirmation";
     }
     else {
-        // Pass to AJAX
+        document.querySelector(".registration-content").style.opacity = "50%";
+        var spinner = document.querySelector(".spinner-border");
+        spinner.parentElement.classList.remove("hidden");
         var data = $("#verify-reset-form").serializeArray();
         verifyReset(data);
-        
+
         function verifyReset(data) {
             $.ajax({
                 type: "POST",
@@ -523,14 +560,20 @@ function verifyRequirementsReset() {
                 dataType: "json",
                 data: data,
                 success: function (data) {
-                    if (data.success == true) {
-                        window.location.href = data.url;
+                    document.querySelector(".registration-content").style.opacity = "100%";
+                    spinner.parentElement.classList.add("hidden");
+                    if (data.success === true) {
+                        errorMessage.innerHTML = "Success! You will be redirected soon";
+                        var url = data.url
+                        setTimeout(function () {
+                            window.location.href = url;
+                        }, 3000);
                     }
                     else {
                         errorMessage.innerHTML = data.error_message;
                         if (data.url) {
                             var url = data.url
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 window.location.href = url;
                             }, 3000);
                         }
@@ -544,6 +587,9 @@ function verifyRequirementsReset() {
 
 // Function to login and show login error messages
 function submitLogin() {
+    document.querySelector(".login-form").style.opacity = "50%";
+    var spinner = document.querySelector(".spinner-border");
+    spinner.parentElement.classList.remove("hidden");
     var data = $("#login-form").serializeArray();
     checkError(data);
 
@@ -561,6 +607,8 @@ function submitLogin() {
                     document.getElementById("error-div").classList.remove("hidden");
                     document.getElementById("error-message").innerHTML = data.message;
                 }
+                document.querySelector(".login-form").style.opacity = "100%";
+                spinner.parentElement.classList.add("hidden");
             }
         });
         return false;
@@ -636,7 +684,7 @@ function deleteAccount() {
             dataType: "json",
             data: data,
             success: function (data) {
-                if (data.success == false) {
+                if (data.success === false) {
                     document.getElementById("delete-error-message").innerHTML = data.message;
                 }
                 else {
@@ -648,13 +696,16 @@ function deleteAccount() {
     }
 }
 
-// Function to remove books from wishlist
+// Function to add or remove books from wishlist
 function wishlistFunc() {
     var bookId = this.form.classList[0];
     var formId = this.form.id;
     var url = this.form.action;
     data = $(`#${formId}`).serializeArray();
     var page = data[1].value;
+    if (page === "profile") {
+        this.form.parentElement.style.opacity = "50%";
+    }
     updateWish(data);
 
     function updateWish(data) {
@@ -662,30 +713,21 @@ function wishlistFunc() {
             type: "POST",
             url: url,
             dataType: "json",
-            data: data, 
+            data: data,
             success: function (data) {
-                if (page == "profile") {
-                    if (data.action == "remove") {
+                if (page === "profile") {
+                    if (data.action === "remove") {
                         document.getElementById(`wish-element-${bookId}`).children[0].classList.add("hidden");
                         document.getElementById(`wish-btn-${bookId}`).innerHTML = "Undo";
-                        
-                        const wishlistCount = parseInt(document.querySelectorAll(".wishlist-element").length);
-                        if (wishlistCount == 0) {
-                            document.getElementById("wishlist-ul").remove();
-                            const wishlistDiv = document.getElementById("wishlist-div");
-                            const noBooks = document.createElement("p");
-                            noBooks.innerHTML = "You have no books yet in your wishlist";
-                            noBooks.id = "no-books";
-                            wishlistDiv.appendChild(noBooks);
-                        }
                     }
                     else {
                         document.getElementById(`wish-element-${bookId}`).children[0].classList.remove("hidden");
                         document.getElementById(`wish-btn-${bookId}`).innerHTML = "Remove";
                     }
+                    document.getElementById(`wish-element-${bookId}`).style.opacity = "100%";
                 }
                 else {
-                    if (data.action == "remove") {
+                    if (data.action === "remove") {
                         document.getElementById("wish-btn").innerHTML = "Add to wishlist";
                     }
                     else {
@@ -705,6 +747,9 @@ function followFunc() {
     var url = this.form.action;
     data = $(`#${formId}`).serializeArray();
     var page = data[1].value;
+    if (page === "profile") {
+        this.form.parentElement.style.opacity = "50%";
+    }
     updateFollow(data);
 
     function updateFollow(data) {
@@ -714,28 +759,19 @@ function followFunc() {
             dataType: "json",
             data: data,
             success: function (data) {
-                if (page == "profile") {
-                    if (data.action == "remove") {
+                if (page === "profile") {
+                    if (data.action === "remove") {
                         document.getElementById(`follow-element-${seriesId}`).children[0].classList.add("hidden");
                         document.getElementById(`follow-btn-${seriesId}`).innerHTML = "Undo";
-
-                        const followCount = parseInt(document.querySelectorAll(".follow-element").length);
-                        if (followCount == 0) {
-                            document.getElementById("follow-ul").remove();
-                            const followDiv = document.getElementById("follow-div");
-                            const noSeries = document.createElement("p");
-                            noSeries.innerHTML = "You are not following any series right now";
-                            noSeries.id = "no-books";
-                            followDiv.appendChild(noSeries);
-                        }
                     }
                     else {
                         document.getElementById(`follow-element-${seriesId}`).children[0].classList.remove("hidden");
                         document.getElementById(`follow-btn-${seriesId}`).innerHTML = "Unfollow";
                     }
+                    document.getElementById(`follow-element-${seriesId}`).style.opacity = "100%";
                 }
                 else {
-                    if (data.action == "remove") {
+                    if (data.action === "remove") {
                         document.getElementById("follow-btn").innerHTML = "Follow Series";
                     }
                     else {

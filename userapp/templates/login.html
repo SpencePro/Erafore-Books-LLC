@@ -18,10 +18,13 @@ Login
     <div class="show-password hori">
         <label id="eye-label" for="eye">Show Password</label>
         <button type="button" id="show" class="password-show-btn">
-            <img src="{% static site_images %}show_password.avif" alt="Show Password" id="eye">
+            <picture>
+                <source srcset="{% static site_images %}show_password.avif" type="image/avif">
+                <img src="{% static site_images %}show_password.jpg" alt="Show Password" id="eye">
+            </picture>
         </button>
     </div>
-
+    
     <div id="error-div" class="error vert center hidden">
         <p id="error-message" class="error-message"></p>
         <h4>Reset Your Password</h4>
@@ -35,7 +38,12 @@ Login
             </form>
         </div>
     </div>
+</div>
 
+<div class="spinner-div hidden center">
+    <div class="spinner-border text-light" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
 </div>
 
 <script type="text/javascript">

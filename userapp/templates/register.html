@@ -22,7 +22,10 @@ Register
         <div class="show-password hori">
             <label id="eye-label" for="eye">Show Password</label>
             <button type="button" id="show" class="password-show-btn">
-                <img src="{% static site_images %}show_password.avif" alt="Show Password" id="eye">
+                <picture>
+                    <source srcset="{% static site_images %}show_password.avif" type="image/avif">
+                    <img src="{% static site_images %}show_password.jpg" alt="Show Password" id="eye">
+                </picture>
             </button>
         </div>
         <h5 class="center" id="error-message"></h5>
@@ -39,6 +42,12 @@ Register
             </li>
             <li>Your username cannot be the same as your password</li>
         </ul>
+    </div>
+</div>
+
+<div class="spinner-div hidden center">
+    <div class="spinner-border text-light" role="status">
+        <span class="sr-only">Loading...</span>
     </div>
 </div>
 

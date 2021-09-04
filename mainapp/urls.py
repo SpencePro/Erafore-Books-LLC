@@ -14,6 +14,5 @@ urlpatterns = [
     path('lore_object/<int:id>', views.lore_object_view, name='lore_object'),
     path('search', views.search_view, name='search'),
     path('random', views.random_view, name='random'),
-    path('back', views.back_page, name='back'),
     path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url("favicon.ico")))
 ]

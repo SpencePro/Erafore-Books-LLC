@@ -9,6 +9,12 @@ Confirm Logout
 <div class="vert center logout-confirm">
     <h4>Are you sure you want to log out?</h4>
     <a href="{% url 'logout' %}"><button class="btn btn-primary btn-sm">Log out</button></a>
+    <br>
+    <div><button id="back-btn" class="btn btn-primary btn-sm">Go Back</button></div>
 </div>
+
+<script type="text/javascript">
+    document.getElementById("back-btn").addEventListener("click", goBack);
+</script>
 
 {% endblock %}

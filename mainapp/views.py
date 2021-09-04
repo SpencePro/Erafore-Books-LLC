@@ -311,9 +311,3 @@ def error_500(request, exception, template_name="500.html"):
     response.status_code = 500
     return response
 
-
-# add once debug=False
-def back_page(request):
-    # GET request
-    # return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    return

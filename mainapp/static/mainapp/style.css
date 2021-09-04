@@ -6,7 +6,6 @@ html {
 }
 
 body {
-    /*background-color: #9900d1;*/
     background: linear-gradient(to bottom right, #9900d1, #420259);
     color: white;
     min-height: 100vh;
@@ -24,15 +23,15 @@ a:hover {
     text-decoration: none;
 }
 
-/*.dim {
+.dim {
     height: 100%;
     width: 100%;
     border: 0;
     padding: 0;
     margin: 0;
-    background-color: gray;
-    opacity: 50%;
-}*/
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 1;
+}
 
 .vert {
     display: flex;
@@ -82,14 +81,18 @@ select, input {
     border-radius: 2px;
 }
 
+img {
+    
+}
+
 .small-img {
-    max-width: 225px;
-    max-height: 300px;
+    width: 200px;
+    height: 300px;
 }
 
 .medium-img {
-    max-width: 300px;
-    max-height: 400px;
+    width: 300px;
+    height: 400px;
 }
 
 .author-img {
@@ -133,6 +136,36 @@ select, input {
     margin-right: 0.2rem;
 }
 
+.audio {
+    align-items: baseline;
+}
+
+.fa-headphones {
+    margin-left: 1rem;
+}
+
+.audio .fa-headphones {
+    margin-left: 0 !important;
+}
+
+.tooltip-text {
+    display: none;
+    position: absolute;
+    width: fit-content;
+    padding: 4px;
+    text-align: center;
+    border: none;
+    z-index: 99;
+    background-color: #6a42a8;
+    color: white;
+    box-shadow: 0px 0.2rem 0.2rem 3px rgba(41, 19, 48, 0.5);
+    border-radius: 4px;
+}
+
+.book-listing h5:hover .tooltip-text {
+    display: block !important;
+}
+
 .return-btn {
     z-index: 99;
     position: fixed;
@@ -142,6 +175,18 @@ select, input {
     bottom: 30px;
     right: 30px;
     box-shadow: 0px 0.2rem 0.2rem 3px rgba(41, 19, 48, 0.5);
+}
+
+.spinner-div {
+    position: absolute;
+    left: 50%;
+    right: 50%;
+    bottom: 50%;
+    top: 50%;
+}
+
+.spinner-border {
+    z-index: 99;
 }
 
 /* HEADER */
@@ -181,7 +226,6 @@ main {
 }
 
 .welcome-message {
-    padding-bottom: 12rem;
     padding-right: 6rem;
     width: 60%;
 }
@@ -206,6 +250,17 @@ main {
     animation-fill-mode: forwards;
 }
 
+.slide-image {
+    animation-name: fade-in;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+}
+
+.slideshow-img {
+    width: 400px;
+    height: 400px;
+}
+
 .sale-item {
     width: 25%;
     padding: 2px;
@@ -223,7 +278,6 @@ main {
 
 .homepage-div img {
     padding: 0.2rem;
-    background-color: grey;
 }
 
 .about {
@@ -388,13 +442,16 @@ main {
     font-weight: bold;
 }
 
-.close:hover,
-.close:focus {
+.close:hover, .close:focus {
     color: black;
     text-decoration: none;
     cursor: pointer;
 }
 
+#series-divider {
+    margin-left: 0.2rem;
+    margin-right: 0.3rem;
+}
 
 /* Lore */
 

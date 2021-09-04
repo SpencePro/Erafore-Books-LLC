@@ -78,7 +78,10 @@ def register_view(request):
 
 def verify_registration(request):
     if request.method == "POST":
-        user_submission = int(request.POST["passcode"])
+        try:
+            user_submission = int(request.POST["passcode"])
+        except:
+            return JsonResponse({"success": False, "error_message": "Incorrect Passcode", "url": reverse("register")})
         passcode = int(request.session["passcode"])
         username = request.session["username"]
         email = request.session["email"]
@@ -125,7 +128,10 @@ def verify_reset(request):
     if request.method == "POST":
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
-        user_submission = int(request.POST["passcode"])
+        try:
+            user_submission = int(request.POST["passcode"])
+        except:
+            return JsonResponse({"success": False, "error_message": "Incorrect Passcode"})
         passcode = int(request.session["passcode"])
         username = request.session["username"]
         email = request.session["email"]
