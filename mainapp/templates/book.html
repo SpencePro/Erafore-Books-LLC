@@ -47,8 +47,10 @@
         <p>Published {{ book.date_released|date:"M d, Y" }}</p>
         
         <div class="hori series-div">
-            <label for="book-series">Series:</label>
-            <p id="book-series">{{ book.series.name }}</p>
+            <div class="hori">
+                <label for="book-series">Series:</label>
+                <p id="book-series">{{ book.series.name }}</p>
+            </div>
             {% if user.is_authenticated %}
                 <p id="series-divider">-</p>
                 <form action="{% url 'follow' book.series.id %}" method="POST" class="{{ book.series.id }}"

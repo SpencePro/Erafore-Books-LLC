@@ -79,7 +79,7 @@ Books
                 {% if book.on_sale == True %}
                     <h5>On Sale Now!</h5>
                 {% endif %}
-                <div class="hori">
+                <div class="listing-title hori">
                     <p><a href="{% url 'book' book.id %}">{{ book.title }}</a></p>
                     {% if book.audio_book == True %}
                     <h5><i class="fas fa-headphones"></i><span class="tooltip-text">Available as an Audio Book</span></h5>
@@ -97,7 +97,9 @@ Books
                 <div>
                     <label for="book-synopsis-{{ book.id }}">Synopsis:</label>
                     <p id="book-synopsis-{{ book.id }}" class="synopsis">{{ book.synopsis }}</p>
-                    <button type="button" class="link-btn more-btn">See more</button>
+                    <div style="text-align: center;">
+                        <button type="button" class="btn btn-primary btn-sm more-btn">See more</button>
+                    </div>
                 </div>
             </div>
         </div>

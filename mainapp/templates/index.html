@@ -10,62 +10,79 @@ Home
     <div class="hori center welcome-div">
         <div class="vert center welcome-message">
             <h4>Welcome to Erafore Books!</h4>
-            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Facilis, fugit doloremque. Quidem vel optio commodi eanemo quasi, explicabo nulla, voluptatem possimus consequuntur provident amet eos placeat aliquid. Sint, ipsum.</p>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni minima eos iste molestiae natus aperiam beatae, debitis blanditiis quasi, voluptatum perferendis quia praesentium sit? Nobis aperiam voluptate facilis expedita! Similique!</p>
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Facilis, fugit doloremque. Quidem vel optio
+                commodi eanemo quasi, explicabo nulla, voluptatem possimus consequuntur provident amet eos placeat
+                aliquid. Sint, ipsum.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni minima eos iste molestiae natus aperiam
+                beatae, debitis blanditiis quasi, voluptatum perferendis quia praesentium sit? Nobis aperiam voluptate
+                facilis expedita! Similique!</p>
         </div>
         <div class="slideshow hori">
-
-            <div>
-                <picture class="hidden slide-image">
-                    <source srcset="static/ChroniclesofaRoyalPetAPrincessandanOoze(RoyalOozeChroniclesBook1)_slideshow.avif" type="image/avif">
-                    <a href="{% url 'book' 1 %}"><img src="static/ChroniclesofaRoyalPetAPrincessandanOoze(RoyalOozeChroniclesBook1)_slideshow.png" alt="Chronicles of a Royal Pet Book 1 Cover" class="slideshow-img"></a>
-                </picture>
-                <picture class="hidden slide-image">
-                    <source srcset="static/TheLongRoadofAdventureFlowersontheWayside(Book1)_slideshow.avif" type="image/avif">
-                    <a href="{% url 'book' 8 %}"><img src="static/TheLongRoadofAdventureFlowersontheWayside(Book1)_slideshow.png" alt="Long Road of Adventure Book 1 Cover" class="slideshow-img"></a>
-                </picture>
-                <picture class="hidden slide-image">
-                    <source srcset="static/TheChainedMaidenBoundbyTruth(Book1)_slideshow.avif" type="image/avif">
-                    <a href="{% url 'book' 13 %}"><img src="static/TheChainedMaidenBoundbyTruth(Book1)_slideshow.png" alt="The Chained Maiden Book 1 Cover" class="slideshow-img"></a>
-                </picture>
-                <picture class="hidden slide-image">
-                    <source srcset="static/MyLifeAsAHighSchoolDragonTamerAfterSchoolFantasy(Book1)_slideshow.avif" type="image/avif">
-                    <a href="{% url 'book' 16 %}"><img src="static/MyLifeAsAHighSchoolDragonTamerAfterSchoolFantasy(Book1)_slideshow.png" alt="After School Fantasy Book 1 Cover" class="slideshow-img"></a>
-                </picture>
-                <picture class="hidden slide-image">
-                    <source srcset="static/BehindYourBack_slideshow.avif" type="image/avif">
-                    <a href="{% url 'book' 26 %}"><img src="static/BehindYourBack_slideshow.png" alt="Behind Your Back Cover" class="slideshow-img"></a>
-                </picture>
-                <picture class="hidden slide-image">
-                    <source srcset="static/NotTheEndAnanthologyofshortstoriesandnovellasaboutdeath,ghosts,thesupernaturalandwhathappensafterwards_slideshow.avif" type="image/avif">
-                    <a href="{% url 'book' 21 %}"><img src="static/NotTheEndAnanthologyofshortstoriesandnovellasaboutdeath,ghosts,thesupernaturalandwhathappensafterwards_slideshow.png" alt="Not the End Anthology" class="slideshow-img"></a>
-                </picture>
-                <picture class="hidden slide-image">
-                    <source srcset="static/WelcometotheGalacticShoppersNetwork_slideshow.avif" type="image/avif">
-                    <a href="{% url 'book' 28 %}"><img src="static/WelcometotheGalacticShoppersNetwork_slideshow.png" alt="Welcome to the Galactic Shoppers Network Cover" class="slideshow-img"></a>
-                </picture>
-                <picture class="hidden slide-image">
-                    <source srcset="static/FictionAsStrangeAsRealLife_slideshow.avif" type="image/avif">
-                    <a href="{% url 'book' 25 %}"><img src="static/FictionAsStrangeAsRealLife_slideshow.png" alt="Fiction as Strange as Real Life Cover" class="slideshow-img"></a>
-                </picture>
-            </div>
-
+            <picture class="hidden slide-image">
+                <source
+                    srcset="static/ChroniclesofaRoyalPetAPrincessandanOoze(RoyalOozeChroniclesBook1)_slideshow.avif"
+                    type="image/avif">
+                <a href="{% url 'book' 1 %}"><img
+                        src="static/ChroniclesofaRoyalPetAPrincessandanOoze(RoyalOozeChroniclesBook1)_slideshow.png"
+                        alt="Chronicles of a Royal Pet Book 1 Cover" class="slideshow-img"></a>
+            </picture>
+            <picture class="hidden slide-image">
+                <source srcset="static/TheLongRoadofAdventureFlowersontheWayside(Book1)_slideshow.avif"
+                    type="image/avif">
+                <a href="{% url 'book' 8 %}"><img
+                        src="static/TheLongRoadofAdventureFlowersontheWayside(Book1)_slideshow.png"
+                        alt="Long Road of Adventure Book 1 Cover" class="slideshow-img"></a>
+            </picture>
+            <picture class="hidden slide-image">
+                <source srcset="static/TheChainedMaidenBoundbyTruth(Book1)_slideshow.avif" type="image/avif">
+                <a href="{% url 'book' 13 %}"><img src="static/TheChainedMaidenBoundbyTruth(Book1)_slideshow.png"
+                        alt="The Chained Maiden Book 1 Cover" class="slideshow-img"></a>
+            </picture>
+            <picture class="hidden slide-image">
+                <source srcset="static/MyLifeAsAHighSchoolDragonTamerAfterSchoolFantasy(Book1)_slideshow.avif"
+                    type="image/avif">
+                <a href="{% url 'book' 16 %}"><img
+                        src="static/MyLifeAsAHighSchoolDragonTamerAfterSchoolFantasy(Book1)_slideshow.png"
+                        alt="After School Fantasy Book 1 Cover" class="slideshow-img"></a>
+            </picture>
+            <picture class="hidden slide-image">
+                <source srcset="static/BehindYourBack_slideshow.avif" type="image/avif">
+                <a href="{% url 'book' 26 %}"><img src="static/BehindYourBack_slideshow.png"
+                        alt="Behind Your Back Cover" class="slideshow-img"></a>
+            </picture>
+            <picture class="hidden slide-image">
+                <source
+                    srcset="static/NotTheEndAnanthologyofshortstoriesandnovellasaboutdeath,ghosts,thesupernaturalandwhathappensafterwards_slideshow.avif"
+                    type="image/avif">
+                <a href="{% url 'book' 21 %}"><img
+                        src="static/NotTheEndAnanthologyofshortstoriesandnovellasaboutdeath,ghosts,thesupernaturalandwhathappensafterwards_slideshow.png"
+                        alt="Not the End Anthology" class="slideshow-img"></a>
+            </picture>
+            <picture class="hidden slide-image">
+                <source srcset="static/WelcometotheGalacticShoppersNetwork_slideshow.avif" type="image/avif">
+                <a href="{% url 'book' 28 %}"><img src="static/WelcometotheGalacticShoppersNetwork_slideshow.png"
+                        alt="Welcome to the Galactic Shoppers Network Cover" class="slideshow-img"></a>
+            </picture>
+            <picture class="hidden slide-image">
+                <source srcset="static/FictionAsStrangeAsRealLife_slideshow.avif" type="image/avif">
+                <a href="{% url 'book' 25 %}"><img src="static/FictionAsStrangeAsRealLife_slideshow.png"
+                        alt="Fiction as Strange as Real Life Cover" class="slideshow-img"></a>
+            </picture>
         </div>
     </div>
-
-
 
     {% if sales %}
     <div class="on-sale center vert homepage-div">
         <h4>On Sale Now</h4>
-        <div class="hori center">
+        <div class="sales-div hori center">
             {% for sale in sales %}
             <div class="sale-item vert">
                 <picture>
                     <source srcset="{% static sale.image %}_small.avif" type="image/avif">
-                    <a href="{% url 'book' sale.id %}"><img src="{% static sale.image %}_small.jpg" alt="{{ sale.title }} Cover" class="small-img"></a>
+                    <a href="{% url 'book' sale.id %}"><img src="{% static sale.image %}_small.jpg"
+                            alt="{{ sale.title }} Cover" class="small-img"></a>
                 </picture>
-                <p><a href="{% url 'book' sale.id %}">{{ sale.title }}</a></p>                
+                <p><a href="{% url 'book' sale.id %}">{{ sale.title }}</a></p>
             </div>
             {% endfor %}
         </div>
@@ -73,24 +90,32 @@ Home
     {% endif %}
     <div class="vert center homepage-div">
         <h4>The Latest Release</h4>
-        <picture>
-            <source srcset="{% static new_release.image %}_small.avif" type="image/avif">
-            <a href="{% url 'book' new_release.id %}"><img src="{% static new_release.image %}_small.jpg" alt="{{ new_release.title }} Cover" class="small-img"></a>
-        </picture>
-        <p><a href="{% url 'book' new_release.id %}">{{ new_release.title }}</a></p>
+        <div class="hori center">
+            <div class="new-release vert">
+                <picture>
+                    <source srcset="{% static new_release.image %}_small.avif" type="image/avif">
+                    <a href="{% url 'book' new_release.id %}"><img src="{% static new_release.image %}_small.jpg"
+                            alt="{{ new_release.title }} Cover" class="new-release-img small-img"></a>
+                </picture>
+                <p><a href="{% url 'book' new_release.id %}">{{ new_release.title }}</a></p>
+            </div>
+        </div>
     </div>
     <div class="vert center homepage-div">
         <h4>Coming soon...</h4>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atque et laudantium earum aliquam? Excepturi quaerat error libero accusamus.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atque et laudantium earum aliquam?
+            Excepturi quaerat error libero accusamus.</p>
     </div>
     <div class="vert homepage-div about">
         <h4>About the Author</h4>
-        <div class="hori">
+        <div class="author-img-div hori">
             <picture>
                 <source srcset="{% static 'author_image.avif' %}" type="image/avif">
                 <img src="{% static 'author_image.jpg' %}" alt="Author's Portrait" class="author-img">
             </picture>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam voluptatum ratione cupiditate nulla eligendi placeat ad neque. Corporis, magni! Cumque dicta assumenda quidem doloribus harum veritatis aliquam non autem tempore.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam voluptatum ratione cupiditate nulla
+                eligendi placeat ad neque. Corporis, magni! Cumque dicta assumenda quidem doloribus harum veritatis
+                aliquam non autem tempore.</p>
         </div>
     </div>
 </div>

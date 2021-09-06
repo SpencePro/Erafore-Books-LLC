@@ -194,7 +194,7 @@ function buildListing(books, data, currentUrl) {
         releaseDate.innerHTML = `Published ${books[i].date_released}`;
         // create title
         const titleDiv = document.createElement("div");
-        titleDiv.classList.add("hori");
+        titleDiv.classList.add("hori", "listing-title");
         const titleParagraph = document.createElement("p");
         const titleLink = document.createElement("a");
         titleLink.href = currentUrl + "book/" + books[i].id;
@@ -243,14 +243,17 @@ function buildListing(books, data, currentUrl) {
         const synopsisLabel = document.createElement("label");
         synopsisLabel.for = synopsisP.id;
         synopsisLabel.innerHTML = "Synopsis:";
+        const seeMoreDiv = document.createElement("div");
+        seeMoreDiv.style = "text-align: center";
         const seeMore = document.createElement("button");
         seeMore.type = "button";
-        seeMore.classList.add("link-btn", "more-btn");
+        seeMore.classList.add("btn", "btn-primary", "btn-sm", "more-btn");
         seeMore.innerHTML = "See more";
         seeMore.addEventListener("click", showMore);
+        seeMoreDiv.appendChild(seeMore);
         synopsisDiv.appendChild(synopsisLabel);
         synopsisDiv.appendChild(synopsisP);
-        synopsisDiv.appendChild(seeMore);
+        synopsisDiv.appendChild(seeMoreDiv);
         // if on sale
         if (books[i].on_sale === true) {
             const onSale = document.createElement("h5");
@@ -332,13 +335,20 @@ function resetFilter(seriesId, worldId, valueToSelect) {
 
 // Function to display more of the synopsis
 function showMore() {
-    var synopsis = this.previousElementSibling;
+    var synopsis = this.parentElement.previousElementSibling;
     if (this.innerHTML === "See more") {
         synopsis.style.maxHeight = "700px";
+        synopsis.style.background = "none";
+        this.style.marginTop = "0";
+        this.parentElement.style.height = "2rem";
+        console.log(this.parentElement);
         this.innerHTML = "See less";
     }
     else {
-        synopsis.style.maxHeight = "75px";
+        synopsis.style.maxHeight = "5rem";
+        synopsis.style.background = "linear-gradient(to top, rgba(0,0,0,0.7), 1%, rgba(0,0,0,0.0))";
+        this.style.marginTop = "-2rem";
+        this.parentElement.style.height = "0";
         this.innerHTML = "See more";
     }
 }
@@ -629,7 +639,7 @@ function showContent() {
         }
     }
     else {
-        content.style.maxHeight = "300px";
+        content.style.maxHeight = "1000px";
         content.classList.remove("hidden");
         this.innerHTML = "Cancel"
     }
