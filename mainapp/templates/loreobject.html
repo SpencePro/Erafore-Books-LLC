@@ -5,13 +5,17 @@ Lore Object
 {% endblock %}
 
 {% block body %}
-<h2>Lore Object {{ object.name }}</h2>
+<h2>{{ object.name }}</h2>
 <div class="vert">
     <img src="#" alt="{{ object.name }} Image">
 
     <div class="hori">
         <label for="object-series">Series:</label>
-        <p id="object-series">{{ object.series }}</p>
+        {% if object.series != None %}
+            <p id="object-series">{{ object.series.name }}</p>
+        {% else %}
+            <p id="object-series">Various</p>
+        {% endif %}
     </div>
     <div class="hori">
         <label for="object-world">World:</label>

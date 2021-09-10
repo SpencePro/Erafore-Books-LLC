@@ -54,7 +54,7 @@ Books
 
 <h5 id="error-message" class="hidden center"></h5>
 
-<div id="clear-filter" class="center hidden">
+<div id="clear-filter" class="hidden center">
     <form action="{% url 'all_books' %}" method="POST" id="clear-filter-form">
         {% csrf_token %}
         <input type="text" name="pagenum" value="1" class="hidden">
@@ -106,7 +106,6 @@ Books
     {% endfor %}
 </div>
 
-
 <script type="text/javascript">
     document.addEventListener("scroll", infiniteScroll);
     document.addEventListener("scroll", topButtonScroll);
@@ -117,9 +116,8 @@ Books
         button.addEventListener("click", showMore);
     });
     window.addEventListener("beforeunload", function() {
-        resetFilter("series-filter", "world-filter", "");
+        resetBookFilter("series-filter", "world-filter", "");
     });
 </script>
-
 
 {% endblock %}

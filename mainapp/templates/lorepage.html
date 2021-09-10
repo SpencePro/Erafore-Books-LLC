@@ -1,76 +1,134 @@
 {% extends 'layout.html' %}
+{% load static %}
 
 {% block head %}
-Lore
+Books
 {% endblock %}
 
 {% block body %}
-<h2>Lore Page</h2>
-<form action="{% url 'lore_page' %}" method="POST" class="filter-form hori center">
-    {% csrf_token %}
-    <input type="text" name="pagenum" value="{{ pagenum }}" id="pagenum" class="hidden">
-    <div class="hori">
-        <label for="series">Series:</label>
-        <select name="series" id="series" style="width:12rem;">
-            <option value="" selected></option>
-            {% for series in series_list %}
-            <option value="{{ series.name }}">{{ series.name }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div class="hori">
-        <label for="world">World:</label>
-        <select name="world" id="world" style="width:12rem;">
-            <option value="" selected></option>
-            {% for world in world_list %}
-            <option value="{{ world }}">{{ world }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div class="hori">
-        <label for="type">Type:</label>
-        <select name="type" id="type" style="width:12rem;"> 
-            <option value="" selected></option>
-            {% for type in type_list %}
-            <option value="{{ type }}">{{ type }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <br>
-    <button type="button" id="submit-filter" class="btn btn-primary btn-sm">Filter</button>
+<h2>Books</h2>
+<div class="series-list">
+    <div class="filter-option vert">
 
-    {% if error_message != "" %}
-    <p id="error-message">{{ error_message }}</p>
-    {% endif %}
-    <!-- use JS to check for valid inputs before making AJAX call; display error message -->
-</form>
+        <form action="{% url 'filter_lore' %}" method="POST" id="filter-form" class="filter-form hori">
+            {% csrf_token %}
+            <input type="text" name="pagenum" value="1" id="pagenum" class="hidden">
+            <div class="hori">
+                <label for="series">Series</label>
+                <select name="series" id="series-filter" style="width:12rem;">
+                    <option value="" selected></option>
+                    {% for series in series_list %}
+                    <option value="{{ series.id }}">{{ series.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <br>
+            <div class="hori">
+                <label for="world">World</label>
+                <select name="world" id="world-filter" style="width:12rem;">
+                    <option value="" selected></option>
+                    {% for world in worlds %}
+                    <option value="{{ world }}">{{ world }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <br><div class="hori">
+                <label for="type">Type</label>
+                <select name="type" id="type-filter" style="width:12rem;">
+                    <option value="" selected></option>
+                    {% for type in type_list %}
+                    <option value="{{ type }}">{{ type }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <br>
+            <button type="button" id="submit-filter" class="btn btn-primary btn-sm">Filter</button>
+        </form>
 
-<div class="lore-objects vert">
-    {% for object in lore_objects %}
-    <div class="lore-item hori">
-        <div class="vert">
-            <img src="#" alt="{{ object.name }}">
-            <h4><a href="{% url 'lore_object' object.id %}"></a>{{ object.name }}</h4>
+    </div>
+</div>
+
+<div id="selected-series" class="selected-series vert center hidden">
+    <div class="hori center" style="align-items: baseline;">
+        <label style="font-size: large;" for="series-name">Series:</label>
+        <h5 id="series-name"></h5>
+    </div>
+    <p id="series-description"></p>
+</div>
+
+<div id="selected-world" class="selected-world hori center hidden">
+    <label style="font-size: large;" for="world-name">World:</label>
+    <h5 id="world-name"></h5>
+</div>
+
+<div id="selected-type" class="selected-type hori center hidden">
+    <label style="font-size: large;" for="type-name">Type:</label>
+    <h5 id="type-name"></h5>
+</div>
+
+<h5 id="error-message" class="hidden center"></h5>
+
+<div id="clear-filter" class="hidden center">
+    <form action="{% url 'lore_page' %}" method="POST" id="clear-filter-form">
+        {% csrf_token %}
+        <input type="text" name="pagenum" value="1" class="hidden">
+        <button type="button" id="clear-filter-btn" class="link-btn">CLEAR FILTER</button>
+    </form>
+</div>
+
+<p id="stop-scrolling" class="hidden">False</p>
+
+<button id="return-to-top" class="btn btn-primary btn-sm return-btn hidden">Return to top</button>
+
+<div id="booklist-container" class="booklist vert container">
+    {% for object in lore_data %}
+    <div class="book-listing hori">
+        <div class="vert image-div">
+            <picture>
+                <source srcset="{% static object.image %}_small.avif" type="image/avif">
+                <img src="{% static object.image %}_small.jpg" alt="{{ object.name }}" class="small-img">
+            </picture>
         </div>
-        <div class="lore-item-description vert">
+        <div class="vert">
+            <div class="listing-title hori">
+                <p>{{ object.name }}</p>
+            </div>
             <div class="hori">
                 <label for="object-series-{{ object.name }}">Series:</label>
-                <p id="object-series-{{ object.name }}">{{ object.series }}</p>
+                {% if object.series == None %}
+                    <p id="object-series-{{ object.name }}">Various</p>
+                {% else %}
+                    <p id="object-series-{{ object.name }}">{{ object.series.name }}</p>   
+                {% endif %}                 
             </div>
             <div class="hori">
                 <label for="object-world-{{ object.name }}">World:</label>
                 <p id="object-world-{{ object.name }}">{{ object.world }}</p>
             </div>
-            <div class="hori">
-                <label for="object-type-{{ object.name }}">Type:</label>
-                <p id="object-type-{{ object.name }}">{{ object.type }}</p>
-            </div>
-            <div class="hori">
-                <label for="object-desc-{{ object.name }}">Description:</label>
-                <p id="object-desc-{{ object.name }}">{{ object.description }}</p>
+            <div>
+                <label for="object-synopsis-{{ object.id }}">Description:</label>
+                <p id="object-synopsis-{{ object.id }}" class="synopsis">{{ object.description }}</p>
+                <div style="text-align: center;">
+                    <button type="button" class="btn btn-primary btn-sm more-btn">See more</button>
+                </div>
             </div>
         </div>
     </div>
     {% endfor %}
 </div>
+
+<script type="text/javascript">
+    document.addEventListener("scroll", infiniteScroll);
+    document.addEventListener("scroll", topButtonScroll);
+    document.getElementById("return-to-top").addEventListener("click", returnToTop);
+    document.getElementById("submit-filter").addEventListener("click", displayFilters);
+    document.getElementById("clear-filter-btn").addEventListener("click", clearFilters);
+    document.querySelectorAll(".more-btn").forEach((button) => {
+        button.addEventListener("click", showMore);
+    });
+    window.addEventListener("beforeunload", function () {
+        resetBookFilter("series-filter", "world-filter", "");
+    });
+</script>
+
 {% endblock %}

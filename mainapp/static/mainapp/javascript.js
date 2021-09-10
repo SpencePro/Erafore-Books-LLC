@@ -51,12 +51,27 @@ function infiniteScroll() {
             var data = $("#filter-form").serializeArray();
             data[1].value++;
             var currentUrl = window.location.href;
-            currentUrl = currentUrl.slice(0, currentUrl.length - 3);
-            if (data[2].value === "" && data[3].value === "") {
-                var url = "all";
+            var page = "";
+            
+            if (currentUrl.slice(currentUrl.length - 3) === "all") {
+                page = "books";
+                currentUrl = currentUrl.slice(0, -3);
+                if (data[2].value === "" && data[3].value === "") {
+                    var url = "all";
+                }
+                else {
+                    var url = "filter_books";
+                }
             }
             else {
-                var url = "filter_books";
+                page = "lore";
+                currentUrl = currentUrl.slice(0, -4);
+                if (data[2].value === "" && data[3].value === "" && data[4].value === "") {
+                    var url = "lore";
+                }
+                else {
+                    var url = "filter_lore";
+                }
             }
             scroll(data);
 
@@ -68,18 +83,31 @@ function infiniteScroll() {
                     data: data,
                     success: function (data) {
                         document.getElementById("pagenum").value = data.pagenum;
-                        // append book elements to the end of .booklist
+                        // append elements to the end of .booklist
                         if (data.error) {
+                            // hide elements in case of error
                             let errorMessage = document.getElementById("error-message");
                             let selectedSeries = document.getElementById("selected-series");
                             let selectedWorld = document.getElementById("selected-world");
+                            let selectedType = document.getElementById("selected-type");
                             errorMessage.innerHTML = data.error;
                             errorMessage.classList.remove("hidden");
                             selectedWorld.classList.add("hidden");
                             selectedSeries.classList.add("hidden");
+                            if (page === "lore") {
+                                selectedType.classList.add("hidden");
+                            }
                         }
                         else {
-                            buildListing(data.books, data, currentUrl);
+                            if (page === "books") {
+                                buildListing(data.books, data, currentUrl);
+                            }
+                            else {
+                                console.log("pagenum:", document.getElementById("pagenum").value);
+                                console.log(url);
+                                console.log(data.lore_data);
+                                //buildLoreListing(data.lore_data, data, currentUrl);
+                            }
                         }
                         if (data.stop_scrolling === true) {
                             document.getElementById("stop-scrolling").innerHTML = "True";
@@ -95,7 +123,7 @@ function infiniteScroll() {
     }
 }
 
-// Function to display filtered book results
+// Function to display filtered results
 function displayFilters() {
     document.getElementById("pagenum").value = 1;
     var data = $("#filter-form").serializeArray();
@@ -103,14 +131,26 @@ function displayFilters() {
     var errorMessage = document.getElementById("error-message");
     var selectedSeries = document.getElementById("selected-series");
     var selectedWorld = document.getElementById("selected-world");
+    var selectedType = document.getElementById("selected-type");
     var currentUrl = window.location.href;
-    currentUrl = currentUrl.slice(0, currentUrl.length - 3);
-    filterBooks(data);
+    var page = "";
+    var url = "";
+    if (currentUrl.slice(currentUrl.length - 3) === "all") {
+        page = "books";
+        currentUrl = currentUrl.slice(0, -3);
+        url = "filter_books";
+    }
+    else {
+        page = "lore";
+        currentUrl = currentUrl.slice(0, -4); 
+        url = "filter_lore";
+    }
+    filterObjects(data);
 
-    function filterBooks(data) {
+    function filterObjects(data) {
         $.ajax({
             type: "POST",
-            url: "filter_books",
+            url: url,
             dataType: "json",
             data: data,
             success: function (data) {
@@ -119,6 +159,9 @@ function displayFilters() {
                     errorMessage.classList.remove("hidden");
                     selectedWorld.classList.add("hidden");
                     selectedSeries.classList.add("hidden");
+                    if (page === "lore") {
+                        selectedType.classList.add("hidden");
+                    }
                 }
                 else {
                     errorMessage.classList.add("hidden");
@@ -137,13 +180,28 @@ function displayFilters() {
                     else {
                         selectedSeries.classList.add("hidden");
                     }
+                    if (page === "lore") {
+                        if (data.selected_type) {
+                            selectedType.classList.remove("hidden");
+                            document.getElementById("type-name").innerHTML = data.selected_type;
+                        }
+                        else {
+                            selectedType.classList.add("hidden");
+                        }
+                    }
                     // clear existing listings
                     booklist.forEach((listing) => {
                         listing.remove();
                     })
 
                     // build new listings
-                    buildListing(data.books, data, currentUrl);
+                    if (page === "books") {
+                        buildListing(data.books, data, currentUrl);
+                    }
+                    else {
+                        console.log(data.lore_data);
+                        //buildLoreListing(data.lore_data, data, currentUrl);
+                    }
 
                     // show button to clear filters
                     document.getElementById("clear-filter").classList.remove("hidden");
@@ -275,15 +333,7 @@ function buildListing(books, data, currentUrl) {
 function clearFilters() {
     var url = this.form.action;
     var currentUrl = window.location.href;
-    currentUrl = currentUrl.slice(0, currentUrl.length - 3);
-    try {
-        var bookList = document.querySelectorAll(".book-listing");
-    }
-    catch { }
-    try {
-        var loreList = document.querySelectorAll(".lore-listing");
-    }
-    catch { }
+    var bookList = document.querySelectorAll(".book-listing");
     data = $("#clear-filter-form").serializeArray();
     clearFiltersFunc(data);
 
@@ -294,44 +344,169 @@ function clearFilters() {
             dataType: "json",
             data: data,
             success: function (data) {
-                if (url.slice(url.length - 3) === "all") {
-                    // clear book filters
-                    document.getElementById("series-name").innerHTML = "";
-                    document.getElementById("series-description").innerHTML = "";
-                    document.getElementById("selected-series").classList.add("hidden");
-                    document.getElementById("world-name").innerHTML = "";
-                    document.getElementById("selected-world").classList.add("hidden");
-                    document.getElementById("error-message").innerHTML = "";
-                    document.getElementById("error-message").classList.add("hidden");
-                    document.getElementById("clear-filter").classList.add("hidden");
-                    bookList.forEach((listing) => {
-                        listing.remove();
-                    })
-                    document.getElementById("pagenum").value = 1;
-                    resetFilter("series-filter", "world-filter", "");
+                // clear book filters
+                document.getElementById("series-name").innerHTML = "";
+                document.getElementById("series-description").innerHTML = "";
+                document.getElementById("selected-series").classList.add("hidden");
+                document.getElementById("world-name").innerHTML = "";
+                document.getElementById("selected-world").classList.add("hidden");
+                document.getElementById("error-message").innerHTML = "";
+                document.getElementById("error-message").classList.add("hidden");
+                document.getElementById("clear-filter").classList.add("hidden");
+                bookList.forEach((listing) => {
+                    listing.remove();
+                })
+                document.getElementById("pagenum").value = 1;
+                
+                if (currentUrl.slice(-3) === "all") {
+                    resetBookFilter("series-filter", "world-filter", "");
                     // build new book listings
-                    buildListing(data.books, data, currentUrl);
+                    buildListing(data.books, data, currentUrl.slice(0, -3));
                     document.getElementById("stop-scrolling").innerHTML = "False";
                 }
                 else {
-                    // clear lore filters
+                    // clear additional lore filters
+                    document.getElementById("selected-type").classList.add("hidden");
+                    resetLoreFilter("series-filter", "world-filter", "type-filter", "")
+                    //build lore listing
+                    //buildLoreListing(data.lore_data, data, currentUrl.slice(0, -3));
+                    console.log(data.lore_data);
+                    document.getElementById("stop-scrolling").innerHTML = "False";
                 }
             }
         });
         return false;
     }
 }
-// Function to reset search filter
-function resetFilter(seriesId, worldId, valueToSelect) {
+
+// Function to reset book filter
+function resetBookFilter(seriesId, worldId, valueToSelect) {
+    document.getElementById("pagenum").value = 1;
     let seriesElement = document.getElementById(seriesId);
     let worldElement = document.getElementById(worldId)
     seriesElement.value = valueToSelect;
     worldElement.value = valueToSelect;
 }
 
-// Function to display filtered lore results
+// Function to reset lore filter
+function resetLoreFilter(seriesId, worldId, typeId, valueToSelect) {
+    document.getElementById("pagenum").value = 1;
+    let seriesElement = document.getElementById(seriesId);
+    let worldElement = document.getElementById(worldId)
+    let typeElement = document.getElementById(typeId);
+    seriesElement.value = valueToSelect;
+    worldElement.value = valueToSelect;
+    typeElement.value = valueToSelect;
+}
 
 // Function to build lore results from filters
+function buildLoreListing() {
+    const booklistContainer = document.getElementById("booklist-container");
+    for (i = 0; i < books.length; i++) {
+        // build each book listing, append to booklistContainer
+        const bookListingDiv = document.createElement("div");
+        bookListingDiv.classList.add("book-listing", "hori", "fade-in");
+        // create image elements
+        const imageDiv = document.createElement("div");
+        imageDiv.classList.add("vert", "image-div");
+        const picture = document.createElement("picture");
+        const sourceAvif = document.createElement("source");
+        sourceAvif.srcset = currentUrl + "static/" + books[i].image + "_small.avif";
+        sourceAvif.type = "image/avif";
+        const imgLink = document.createElement("a");
+        imgLink.href = currentUrl + "book/" + books[i].id;
+        const image = document.createElement("img");
+        image.src = currentUrl + "static/" + books[i].image + "_small.jpg";
+        image.alt = books[i].title + " Cover";
+        image.classList.add("small-img");
+        imgLink.appendChild(image);
+        picture.appendChild(sourceAvif);
+        picture.appendChild(imgLink);
+        imageDiv.appendChild(picture);
+        bookListingDiv.appendChild(imageDiv);
+        // create main content elements
+        const contentDiv = document.createElement("div");
+        contentDiv.classList.add("vert");
+        const releaseDate = document.createElement("p");
+        releaseDate.innerHTML = `Published ${books[i].date_released}`;
+        // create title
+        const titleDiv = document.createElement("div");
+        titleDiv.classList.add("hori", "listing-title");
+        const titleParagraph = document.createElement("p");
+        const titleLink = document.createElement("a");
+        titleLink.href = currentUrl + "book/" + books[i].id;
+        titleLink.innerHTML = books[i].title;
+        titleParagraph.appendChild(titleLink);
+        titleDiv.appendChild(titleParagraph);
+        if (books[i].audio_book == true) {
+            const audioBook = document.createElement("h5");
+            const icon = document.createElement("i");
+            icon.classList.add("fas", "fa-headphones");
+            audioBook.appendChild(icon);
+            const span = document.createElement("span");
+            span.classList.add("tooltip-text");
+            span.innerHTML = "Available as an Audio Book";
+            audioBook.appendChild(span);
+            titleDiv.appendChild(audioBook);
+        }
+        // series div
+        const seriesDiv = document.createElement("div");
+        seriesDiv.classList.add("hori");
+        const seriesP = document.createElement("p");
+        seriesP.id = `book-series-${books[i].title}`;
+        seriesP.innerHTML = data.series_list[parseInt(books[i].series_id) - 1].name;
+        const seriesLabel = document.createElement("label");
+        seriesLabel.for = seriesP.id;
+        seriesLabel.innerHTML = "Series:";
+        seriesDiv.appendChild(seriesLabel);
+        seriesDiv.appendChild(seriesP);
+        // world div
+        const worldDiv = document.createElement("div");
+        worldDiv.classList.add("hori");
+        const worldP = document.createElement("p");
+        worldP.id = `book-world-${books[i].title}`;
+        worldP.innerHTML = books[i].world;
+        const worldLabel = document.createElement("label");
+        worldLabel.for = worldP.id;
+        worldLabel.innerHTML = "World:";
+        worldDiv.appendChild(worldLabel);
+        worldDiv.appendChild(worldP);
+        // synopsis div
+        const synopsisDiv = document.createElement("div");
+        const synopsisP = document.createElement("p");
+        synopsisP.id = `book-synopsis-${books[i].id}`;
+        synopsisP.classList.add("synopsis")
+        synopsisP.innerHTML = books[i].synopsis;
+        const synopsisLabel = document.createElement("label");
+        synopsisLabel.for = synopsisP.id;
+        synopsisLabel.innerHTML = "Synopsis:";
+        const seeMoreDiv = document.createElement("div");
+        seeMoreDiv.style = "text-align: center";
+        const seeMore = document.createElement("button");
+        seeMore.type = "button";
+        seeMore.classList.add("btn", "btn-primary", "btn-sm", "more-btn");
+        seeMore.innerHTML = "See more";
+        seeMore.addEventListener("click", showMore);
+        seeMoreDiv.appendChild(seeMore);
+        synopsisDiv.appendChild(synopsisLabel);
+        synopsisDiv.appendChild(synopsisP);
+        synopsisDiv.appendChild(seeMoreDiv);
+        // if on sale
+        if (books[i].on_sale === true) {
+            const onSale = document.createElement("h5");
+            onSale.innerHTML = "On Sale Now!";
+            contentDiv.appendChild(onSale);
+        }
+        // append together
+        contentDiv.appendChild(titleDiv);
+        contentDiv.appendChild(releaseDate);
+        contentDiv.appendChild(seriesDiv);
+        contentDiv.appendChild(worldDiv);
+        contentDiv.appendChild(synopsisDiv);
+        bookListingDiv.appendChild(contentDiv);
+        booklistContainer.appendChild(bookListingDiv);
+    }
+}
 
 // Function to display more of the synopsis
 function showMore() {
@@ -341,7 +516,6 @@ function showMore() {
         synopsis.style.background = "none";
         this.style.marginTop = "0";
         this.parentElement.style.height = "2rem";
-        console.log(this.parentElement);
         this.innerHTML = "See less";
     }
     else {

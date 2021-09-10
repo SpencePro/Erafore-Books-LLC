@@ -27,7 +27,7 @@ Search Results
             {% for lore in lore_results %}
                 <li class="hori">
                     <label for="{{ lore.name }}">></label>
-                    <a href="{% url 'book' lore.id %}">{{ lore.name }}</a>
+                    <p>{{ lore.name }}</p>
                 </li>
             {% endfor %}
             </ul>
