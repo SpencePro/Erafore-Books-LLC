@@ -85,8 +85,8 @@ Books
     <div class="book-listing hori">
         <div class="vert image-div">
             <picture>
-                <source srcset="{% static object.image %}_small.avif" type="image/avif">
-                <img src="{% static object.image %}_small.jpg" alt="{{ object.name }}" class="small-img">
+                <source srcset="{% static 'placeholder.jpg' %}" type="image/avif">
+                <img src="{% static 'placeholder.jpg' %}" alt="{{ object.name }}" class="small-img">
             </picture>
         </div>
         <div class="vert">
@@ -105,6 +105,10 @@ Books
                 <label for="object-world-{{ object.name }}">World:</label>
                 <p id="object-world-{{ object.name }}">{{ object.world }}</p>
             </div>
+            <div class="hori">
+                <label for="object-type-{{ object.name }}">Type:</label>
+                <p id="object-type-{{ object.name }}">{{ object.type }}</p>
+            </div>
             <div>
                 <label for="object-synopsis-{{ object.id }}">Description:</label>
                 <p id="object-synopsis-{{ object.id }}" class="synopsis">{{ object.description }}</p>
@@ -115,6 +119,10 @@ Books
         </div>
     </div>
     {% endfor %}
+</div>
+
+<div class="hori center hidden" id="end-of-results">
+    <h5>End of results</h5>
 </div>
 
 <script type="text/javascript">

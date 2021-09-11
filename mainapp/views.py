@@ -167,18 +167,20 @@ def lore_view(request):
             stop_scrolling = False
 
         return JsonResponse({
-            "pagenum":pagenum,
-            "lore_data":lore_data,
-            "series_list":list(series_list.values()),
-            "stop_scrolling":stop_scrolling
+            "pagenum": pagenum,
+            "lore_data": lore_data,
+            "series_list": list(series_list.values()),
+            "stop_scrolling": stop_scrolling
             })
-            
-    context = {"num":len(lore_data),
-        "series_list":series_list,
-        "worlds":worlds[:-1],
-        "type_list":type_list[:-1],
-        "lore_data":lore_data,
-        "pagenum":pagenum}
+
+    context = {
+        "num": len(lore_data),
+        "series_list": series_list,
+        "worlds": worlds[:-1],
+        "type_list": type_list[:-1],
+        "lore_data": lore_data,
+        "pagenum": pagenum
+        }
     
     return render(request, "lorepage.html", context)
 
@@ -298,12 +300,12 @@ def search_view(request):
         for o in object_name:
             if o in punct or o == " ":
                 object_name = object_name.replace(i, "")
-        if query.lower() == object_name:
+        '''if query.lower() == object_name:
             return HttpResponseRedirect(reverse("lore_object", kwargs={"id": object.id}))
-        else:
-            match = r.search(object_name)
-            if match:
-                lore_matches.append(object)
+        else:'''
+        match = r.search(object_name)
+        if match:
+            lore_matches.append(object)
     
     for series in series_list:
         series_name = series.name.lower()

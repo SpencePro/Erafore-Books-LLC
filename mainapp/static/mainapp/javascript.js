@@ -103,17 +103,16 @@ function infiniteScroll() {
                                 buildListing(data.books, data, currentUrl);
                             }
                             else {
-                                console.log("pagenum:", document.getElementById("pagenum").value);
-                                console.log(url);
-                                console.log(data.lore_data);
-                                //buildLoreListing(data.lore_data, data, currentUrl);
+                                buildLoreListing(data.lore_data, data, currentUrl);
                             }
                         }
                         if (data.stop_scrolling === true) {
                             document.getElementById("stop-scrolling").innerHTML = "True";
+                            document.getElementById("end-of-results").classList.remove("hidden");
                         }
                         else {
                             document.getElementById("stop-scrolling").innerHTML = "False";
+                            document.getElementById("end-of-results").classList.add("hidden")
                         }
                     }
                 });
@@ -200,7 +199,7 @@ function displayFilters() {
                     }
                     else {
                         console.log(data.lore_data);
-                        //buildLoreListing(data.lore_data, data, currentUrl);
+                        buildLoreListing(data.lore_data, data, currentUrl);
                     }
 
                     // show button to clear filters
@@ -209,9 +208,11 @@ function displayFilters() {
                     // signal page to stop scrolling
                     if (data.stop_scrolling === true) {
                         document.getElementById("stop-scrolling").innerHTML = "True";
+                        document.getElementById("end-of-results").classList.remove("hidden")
                     }
                     else {
                         document.getElementById("stop-scrolling").innerHTML = "False";
+                        document.getElementById("end-of-results").classList.add("hidden")
                     }
                 }
             }
@@ -353,6 +354,7 @@ function clearFilters() {
                 document.getElementById("error-message").innerHTML = "";
                 document.getElementById("error-message").classList.add("hidden");
                 document.getElementById("clear-filter").classList.add("hidden");
+                document.getElementById("end-of-results").classList.add("hidden")
                 bookList.forEach((listing) => {
                     listing.remove();
                 })
@@ -369,8 +371,7 @@ function clearFilters() {
                     document.getElementById("selected-type").classList.add("hidden");
                     resetLoreFilter("series-filter", "world-filter", "type-filter", "")
                     //build lore listing
-                    //buildLoreListing(data.lore_data, data, currentUrl.slice(0, -3));
-                    console.log(data.lore_data);
+                    buildLoreListing(data.lore_data, data, currentUrl.slice(0, -3));
                     document.getElementById("stop-scrolling").innerHTML = "False";
                 }
             }
@@ -400,10 +401,12 @@ function resetLoreFilter(seriesId, worldId, typeId, valueToSelect) {
 }
 
 // Function to build lore results from filters
-function buildLoreListing() {
+function buildLoreListing(lore, data, currentUrl) {
+    console.log(lore);
+    console.log(data);
     const booklistContainer = document.getElementById("booklist-container");
-    for (i = 0; i < books.length; i++) {
-        // build each book listing, append to booklistContainer
+    for (i = 0; i < lore.length; i++) {
+        // build each lore listing, append to booklistContainer
         const bookListingDiv = document.createElement("div");
         bookListingDiv.classList.add("book-listing", "hori", "fade-in");
         // create image elements
@@ -411,50 +414,35 @@ function buildLoreListing() {
         imageDiv.classList.add("vert", "image-div");
         const picture = document.createElement("picture");
         const sourceAvif = document.createElement("source");
-        sourceAvif.srcset = currentUrl + "static/" + books[i].image + "_small.avif";
+        sourceAvif.srcset = "static/placeholder.avif";
         sourceAvif.type = "image/avif";
-        const imgLink = document.createElement("a");
-        imgLink.href = currentUrl + "book/" + books[i].id;
         const image = document.createElement("img");
-        image.src = currentUrl + "static/" + books[i].image + "_small.jpg";
-        image.alt = books[i].title + " Cover";
+        image.src = currentUrl + "static/placeholder.jpg";
+        image.alt = lore[i].name;
         image.classList.add("small-img");
-        imgLink.appendChild(image);
         picture.appendChild(sourceAvif);
-        picture.appendChild(imgLink);
+        picture.appendChild(image);
         imageDiv.appendChild(picture);
         bookListingDiv.appendChild(imageDiv);
         // create main content elements
         const contentDiv = document.createElement("div");
         contentDiv.classList.add("vert");
-        const releaseDate = document.createElement("p");
-        releaseDate.innerHTML = `Published ${books[i].date_released}`;
         // create title
         const titleDiv = document.createElement("div");
         titleDiv.classList.add("hori", "listing-title");
         const titleParagraph = document.createElement("p");
-        const titleLink = document.createElement("a");
-        titleLink.href = currentUrl + "book/" + books[i].id;
-        titleLink.innerHTML = books[i].title;
-        titleParagraph.appendChild(titleLink);
         titleDiv.appendChild(titleParagraph);
-        if (books[i].audio_book == true) {
-            const audioBook = document.createElement("h5");
-            const icon = document.createElement("i");
-            icon.classList.add("fas", "fa-headphones");
-            audioBook.appendChild(icon);
-            const span = document.createElement("span");
-            span.classList.add("tooltip-text");
-            span.innerHTML = "Available as an Audio Book";
-            audioBook.appendChild(span);
-            titleDiv.appendChild(audioBook);
-        }
         // series div
         const seriesDiv = document.createElement("div");
         seriesDiv.classList.add("hori");
         const seriesP = document.createElement("p");
-        seriesP.id = `book-series-${books[i].title}`;
-        seriesP.innerHTML = data.series_list[parseInt(books[i].series_id) - 1].name;
+        seriesP.id = `object-series-${lore[i].name}`;
+        if (lore[i].series_id === null) {
+            seriesP.innerHTML = "Various";
+        }
+        else {
+            seriesP.innerHTML = data.series_list[parseInt(lore[i].series_id) - 1].name;
+        }
         const seriesLabel = document.createElement("label");
         seriesLabel.for = seriesP.id;
         seriesLabel.innerHTML = "Series:";
@@ -464,22 +452,33 @@ function buildLoreListing() {
         const worldDiv = document.createElement("div");
         worldDiv.classList.add("hori");
         const worldP = document.createElement("p");
-        worldP.id = `book-world-${books[i].title}`;
-        worldP.innerHTML = books[i].world;
+        worldP.id = `object-world-${lore[i].title}`;
+        worldP.innerHTML = lore[i].world;
         const worldLabel = document.createElement("label");
         worldLabel.for = worldP.id;
         worldLabel.innerHTML = "World:";
         worldDiv.appendChild(worldLabel);
         worldDiv.appendChild(worldP);
+        //type div
+        const typeDiv = document.createElement("div");
+        typeDiv.classList.add("hori");
+        const typeP = document.createElement("p");
+        typeP.id = `object-type-${lore[i].title}`;
+        typeP.innerHTML = lore[i].type;
+        const typeLabel = document.createElement("label");
+        typeLabel.for = typeP.id;
+        typeLabel.innerHTML = "Type:";
+        typeDiv.appendChild(typeLabel);
+        typeDiv.appendChild(typeP);
         // synopsis div
         const synopsisDiv = document.createElement("div");
         const synopsisP = document.createElement("p");
-        synopsisP.id = `book-synopsis-${books[i].id}`;
+        synopsisP.id = `object-description-${lore[i].id}`;
         synopsisP.classList.add("synopsis")
-        synopsisP.innerHTML = books[i].synopsis;
+        synopsisP.innerHTML = lore[i].description;
         const synopsisLabel = document.createElement("label");
         synopsisLabel.for = synopsisP.id;
-        synopsisLabel.innerHTML = "Synopsis:";
+        synopsisLabel.innerHTML = "Description:";
         const seeMoreDiv = document.createElement("div");
         seeMoreDiv.style = "text-align: center";
         const seeMore = document.createElement("button");
@@ -491,17 +490,11 @@ function buildLoreListing() {
         synopsisDiv.appendChild(synopsisLabel);
         synopsisDiv.appendChild(synopsisP);
         synopsisDiv.appendChild(seeMoreDiv);
-        // if on sale
-        if (books[i].on_sale === true) {
-            const onSale = document.createElement("h5");
-            onSale.innerHTML = "On Sale Now!";
-            contentDiv.appendChild(onSale);
-        }
         // append together
         contentDiv.appendChild(titleDiv);
-        contentDiv.appendChild(releaseDate);
         contentDiv.appendChild(seriesDiv);
         contentDiv.appendChild(worldDiv);
+        contentDiv.appendChild(typeDiv);
         contentDiv.appendChild(synopsisDiv);
         bookListingDiv.appendChild(contentDiv);
         booklistContainer.appendChild(bookListingDiv);
