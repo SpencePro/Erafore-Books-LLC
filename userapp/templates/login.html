@@ -7,7 +7,7 @@ Login
 
 {% block body %}
 
-<div class="login-form vert center">
+<div class="login-form vert center fade-in">
     <h4>Login</h4>
     <form id="login-form" action="{% url 'login' %}" method="POST" class="center hori">
         {% csrf_token %}

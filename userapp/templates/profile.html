@@ -17,7 +17,7 @@ Profile
 </script>
 {% else %}
 <h2>User Profile for {{ current_user.username }}</h2>
-<div class="profile-container hori">
+<div class="profile-container hori fade-in">
     <div class="lists-container hori">
 
         <div id="wishlist-div" class="wishlist vert">
@@ -26,13 +26,14 @@ Profile
             <ul id="wishlist-ul">
                 {% for wish in wishlist %}
                 <li id="wish-element-{{ wish.book.id }}" class="wishlist-element">
+                    <label for="wishlist-form-{{ wish.book.id }}">></label>
                     <a href="{% url 'book' wish.book.id %}">{{ wish.book.title }}</a>
                     <form action="{% url 'add' wish.book.id %}" method="POST" id="wishlist-form-{{ wish.book.id }}"
                         class="{{ wish.book.id }}">
                         {% csrf_token %}
                         <input type="text" name="page" value="profile" class="hidden">
                         <button type="button" id="wish-btn-{{ wish.book.id }}"
-                            class="wishlist-btn btn btn-primary btn-sm">Remove</button>
+                        class="wishlist-btn btn btn-primary btn-sm">Remove</button>
                     </form>
                 </li>
                 {% endfor %}
@@ -47,7 +48,8 @@ Profile
             {% if series_followed %}
             <ul id="follow-ul">
                 {% for series in series_followed %}
-                <li id="follow-element-{{ series.series.id }}" class="follow-element">
+                <li id="follow-element-{{ series.series.id }}" class="follow-element hori">
+                    <label for="follow-form-{{ series.series.id }}">></label>
                     <p>{{ series.series.name }}</p>
                     <form action="{% url 'follow' series.series.id %}" method="POST" id="follow-form-{{ series.series.id }}"
                         class="{{ series.series.id }}">

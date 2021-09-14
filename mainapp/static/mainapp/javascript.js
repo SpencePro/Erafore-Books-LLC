@@ -52,6 +52,8 @@ function infiniteScroll() {
             data[1].value++;
             var currentUrl = window.location.href;
             var page = "";
+            var spinner = document.querySelector(".spinner-results");
+            spinner.classList.remove("hidden");
             
             if (currentUrl.slice(currentUrl.length - 3) === "all") {
                 page = "books";
@@ -106,6 +108,8 @@ function infiniteScroll() {
                                 buildLoreListing(data.lore_data, data, currentUrl);
                             }
                         }
+                        spinner.classList.add("hidden");
+
                         if (data.stop_scrolling === true) {
                             document.getElementById("stop-scrolling").innerHTML = "True";
                             document.getElementById("end-of-results").classList.remove("hidden");
@@ -194,11 +198,11 @@ function displayFilters() {
                     })
 
                     // build new listings
+                    
                     if (page === "books") {
                         buildListing(data.books, data, currentUrl);
                     }
                     else {
-                        console.log(data.lore_data);
                         buildLoreListing(data.lore_data, data, currentUrl);
                     }
 
@@ -402,8 +406,6 @@ function resetLoreFilter(seriesId, worldId, typeId, valueToSelect) {
 
 // Function to build lore results from filters
 function buildLoreListing(lore, data, currentUrl) {
-    console.log(lore);
-    console.log(data);
     const booklistContainer = document.getElementById("booklist-container");
     for (i = 0; i < lore.length; i++) {
         // build each lore listing, append to booklistContainer
@@ -894,10 +896,12 @@ function wishlistFunc() {
             success: function (data) {
                 if (page === "profile") {
                     if (data.action === "remove") {
+                        document.getElementById(`wish-element-${bookId}`).children[1].classList.add("hidden");
                         document.getElementById(`wish-element-${bookId}`).children[0].classList.add("hidden");
                         document.getElementById(`wish-btn-${bookId}`).innerHTML = "Undo";
                     }
                     else {
+                        document.getElementById(`wish-element-${bookId}`).children[1].classList.remove("hidden");
                         document.getElementById(`wish-element-${bookId}`).children[0].classList.remove("hidden");
                         document.getElementById(`wish-btn-${bookId}`).innerHTML = "Remove";
                     }
@@ -938,10 +942,12 @@ function followFunc() {
             success: function (data) {
                 if (page === "profile") {
                     if (data.action === "remove") {
+                        document.getElementById(`follow-element-${seriesId}`).children[1].classList.add("hidden");
                         document.getElementById(`follow-element-${seriesId}`).children[0].classList.add("hidden");
                         document.getElementById(`follow-btn-${seriesId}`).innerHTML = "Undo";
                     }
                     else {
+                        document.getElementById(`follow-element-${seriesId}`).children[1].classList.remove("hidden");
                         document.getElementById(`follow-element-${seriesId}`).children[0].classList.remove("hidden");
                         document.getElementById(`follow-btn-${seriesId}`).innerHTML = "Unfollow";
                     }

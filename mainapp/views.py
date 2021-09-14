@@ -22,37 +22,48 @@ def all_books_view(request):
     worlds = ["Erafore", "Messy Earth", "Terra", "Standalone", ""]
     results_to_show = 8
 
-    if request.method == "POST":
+    if request.method == "GET":
+        pagenum = 1
+        books = Book.objects.all().order_by("-date_released")[0:results_to_show]
+        request.session["objects_viewed"] = results_to_show
+    else:
         pagenum = int(request.POST["pagenum"])
-        books = Book.objects.all().order_by("-date_released")[(pagenum - 1) * results_to_show:pagenum * results_to_show]
-        books = list(books.values())
+        all_books = Book.objects.all().order_by("-date_released")
+        books = list(all_books[(pagenum - 1) * results_to_show:pagenum * results_to_show].values())
+        
         months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-
         for book in books:
             date = book["date_released"]
             split_date = str(date).split("-")
             final_timestamp = f"{months[(int(split_date[1]) - 1)]} {split_date[2]}, {split_date[0]}"
             book["date_released"] = final_timestamp
         
+        try:
+            request.session["objects_viewed"] += len(books)
+        except:
+            request.session["objects_viewed"] = results_to_show
+
+        if request.session["objects_viewed"] == len(all_books):
+            stop_scrolling = True
+            request.session["objects_viewed"] = 0
+        else:
+            stop_scrolling = False
+        
         return JsonResponse({
             "pagenum": pagenum,
             "books": books,
             "series_list": list(series_list.values()),
-            "stop_scrolling": True if len(books) < results_to_show else False # this prevents the server from being called unnecessarily
+            "stop_scrolling": stop_scrolling # this prevents the server from being called unnecessarily
             })
     
-    else:
-        pagenum = 1
-        books = Book.objects.all().order_by("-date_released")[0:results_to_show]
-    
-        context = {
-            "num": len(books),
-            "series_list": series_list,
-            "worlds": worlds[:-1],
-            "books": books,
-            "pagenum": pagenum
-        }
-        return render(request, "all_books.html", context)
+    context = {
+        "num": len(books),
+        "series_list": series_list,
+        "worlds": worlds[:-1],
+        "books": books,
+        "pagenum": pagenum
+    }
+    return render(request, "all_books.html", context)
 
 
 def filter_books(request):
@@ -78,14 +89,19 @@ def filter_books(request):
         def filter_without_none(**kwargs):
             return Q(**{k: v for k, v in kwargs.items() if v is not None and v != ""})
 
-        books = Book.objects.filter(filter_without_none(series=series_id, world=world)).order_by("-date_released")[(pagenum - 1) * results_to_show:pagenum * results_to_show]
-        books_data = list(books.values())
+        book_objects = Book.objects.filter(filter_without_none(series=series_id, world=world)).order_by(
+            "-date_released")
+        books = list(book_objects[(pagenum - 1) * results_to_show:pagenum * results_to_show].values())
+
+        print("Pagenum:", pagenum)
+        print("Books:", books)
+        print("Book length:", len(books))
         
-        if len(books_data) < 1:
+        if len(books) < 1:
             return JsonResponse({"error": "No books match the filters"})
         
         months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-        for book in books_data:
+        for book in books:
             date = book["date_released"]
             split_date = str(date).split("-")
             final_timestamp = f"{months[(int(split_date[1]) - 1)]} {split_date[2]}, {split_date[0]}"
@@ -97,18 +113,35 @@ def filter_books(request):
             selected_series_description = selected_series.description
         else:
             selected_series_name = None
+            selected_series_description = None
         
-        selected_series_description = None
         selected_world = world
+
+        print("objects viewed before:", request.session["objects_viewed"])
+
+        if pagenum == 1:
+                request.session["objects_viewed"] = results_to_show
+        else:
+            request.session["objects_viewed"] += len(books)
+
+        print("objects viewed middle:", request.session["objects_viewed"])
         
+        if request.session["objects_viewed"] >= len(book_objects):
+            stop_scrolling = True
+            request.session["objects_viewed"] = 0
+        else:
+            stop_scrolling = False
+        
+        print("objects viewed after:", request.session["objects_viewed"])
+
         return JsonResponse({
-            "selected_world":selected_world,
-            "selected_series_name":selected_series_name,
-            "selected_series_description":selected_series_description,
-            "books":books_data,
-            "series_list":list(series_list.values()),
-            "pagenum":pagenum,
-            "stop_scrolling":True if len(books_data) < results_to_show else False
+            "selected_world": selected_world,
+            "selected_series_name": selected_series_name,
+            "selected_series_description": selected_series_description,
+            "books": books,
+            "series_list": list(series_list.values()),
+            "pagenum": pagenum,
+            "stop_scrolling": stop_scrolling
             })
 
 
@@ -215,8 +248,8 @@ def filter_lore(request):
             def filter_without_none(**kwargs):
                 return Q(**{k: v for k, v in kwargs.items() if v is not None and v != ""})
 
-            lore_objects = LoreObject.objects.filter(filter_without_none(series=series_id, world=world, type=type)).values()
-            lore_data = list(lore_objects[(pagenum - 1) * results_to_show:pagenum * results_to_show])
+            lore_objects = LoreObject.objects.filter(filter_without_none(series=series_id, world=world, type=type))
+            lore_data = list(lore_objects[(pagenum - 1) * results_to_show:pagenum * results_to_show].values())
             if len(lore_data) < 1:
                 return JsonResponse({"error": "No lore matches the filters"})
             
@@ -242,14 +275,16 @@ def filter_lore(request):
             else:
                 stop_scrolling = False
 
-    return JsonResponse({"selected_world":selected_world,
+    return JsonResponse({
+        "selected_world":selected_world,
         "selected_series_name":selected_series_name,
         "selected_series_description":selected_series_description,
         "selected_type":selected_type,
         "lore_data":lore_data,
         "series_list":list(series_list.values()),
         "pagenum":pagenum,
-        "stop_scrolling":stop_scrolling})
+        "stop_scrolling":stop_scrolling
+        })
 
 
 """def lore_object_view(request, id):
@@ -275,10 +310,10 @@ def search_view(request):
     
     original_query = query
     books = Book.objects.all()
-    lore_objects = LoreObject.objects.all()
+    #lore_objects = LoreObject.objects.all()
     series_list = Series.objects.all()
     book_matches = []
-    lore_matches = []
+    #lore_matches = []
     error_message = ""
 
     r = re.compile(rf"({query})", re.IGNORECASE)
@@ -295,17 +330,17 @@ def search_view(request):
             if match_title:
                 book_matches.append(book)
     
-    for object in lore_objects:
+    '''for object in lore_objects:
         object_name = object.name.lower()
         for o in object_name:
             if o in punct or o == " ":
                 object_name = object_name.replace(i, "")
-        '''if query.lower() == object_name:
+        if query.lower() == object_name:
             return HttpResponseRedirect(reverse("lore_object", kwargs={"id": object.id}))
-        else:'''
+        else:
         match = r.search(object_name)
         if match:
-            lore_matches.append(object)
+            lore_matches.append(object)'''
     
     for series in series_list:
         series_name = series.name.lower()
@@ -326,15 +361,15 @@ def search_view(request):
                     if book not in book_matches:
                         book_matches.append(book)
 
-    if len(book_matches) == 0 and len(lore_matches) == 0:
+    if len(book_matches) == 0: # and len(lore_matches) == 0:
         error_message = "There are no results for your search"
 
     context = {
         "query": original_query,
         "book_num": len(book_matches),
         "books": book_matches,
-        "lore_num": len(lore_matches),
-        "lore_results": lore_matches,
+        #"lore_num": len(lore_matches),
+        #"lore_results": lore_matches,
         "error_message": error_message
     }
     return render(request, "search_results.html", context)

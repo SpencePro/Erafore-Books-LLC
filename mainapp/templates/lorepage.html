@@ -6,7 +6,7 @@ Books
 {% endblock %}
 
 {% block body %}
-<h2>Books</h2>
+<h2>Lore</h2>
 <div class="series-list">
     <div class="filter-option vert">
 
@@ -78,11 +78,9 @@ Books
 
 <p id="stop-scrolling" class="hidden">False</p>
 
-<button id="return-to-top" class="btn btn-primary btn-sm return-btn hidden">Return to top</button>
-
 <div id="booklist-container" class="booklist vert container">
     {% for object in lore_data %}
-    <div class="book-listing hori">
+    <div class="book-listing hori fade-in">
         <div class="vert image-div">
             <picture>
                 <source srcset="{% static 'placeholder.jpg' %}" type="image/avif">
@@ -121,14 +119,18 @@ Books
     {% endfor %}
 </div>
 
+<div class="spinner-div spinner-results hidden center">
+    <div class="spinner-border text-light" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+
 <div class="hori center hidden" id="end-of-results">
     <h5>End of results</h5>
 </div>
 
 <script type="text/javascript">
     document.addEventListener("scroll", infiniteScroll);
-    document.addEventListener("scroll", topButtonScroll);
-    document.getElementById("return-to-top").addEventListener("click", returnToTop);
     document.getElementById("submit-filter").addEventListener("click", displayFilters);
     document.getElementById("clear-filter-btn").addEventListener("click", clearFilters);
     document.querySelectorAll(".more-btn").forEach((button) => {

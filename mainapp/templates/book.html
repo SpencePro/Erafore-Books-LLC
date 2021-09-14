@@ -8,7 +8,7 @@
 {% block body %}
 <h2>{{ book.title }}</h2>
 <div class="listing hori">
-    <div class="book-div vert">
+    <div class="book-div vert fade-in">
         <picture>
             <source srcset="{% static book.image %}.avif" type="image/avif">
             <img src="{% static book.image %}.jpg" alt="{{ book.title }} Cover" class="medium-img" id="book-image">
@@ -26,7 +26,7 @@
             </div>
         </div>
     </div>
-    <div class="book-details vert">
+    <div class="book-details vert fade-in">
 
         {% if book.on_sale == True %}
             <h5>On Sale Now!</h5>

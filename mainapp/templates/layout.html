@@ -72,6 +72,7 @@
         <main>
             {% block body %}
             {% endblock %}
+            <button id="return-to-top" class="btn btn-primary btn-sm return-btn hidden">Return to top</button>
         </main>
 
         <script type="text/javascript">
@@ -81,6 +82,8 @@
                 }
             });
             document.getElementById("searchbox").addEventListener("input", makeClickable);
+            document.addEventListener("scroll", topButtonScroll);
+            document.getElementById("return-to-top").addEventListener("click", returnToTop);
         </script>
 
         <footer class="center">
@@ -101,6 +104,11 @@
             <div class="hori">
                 <i class="fas fa-envelope"></i>
                 Email
+            </div>
+            <p>Website by Spencer Rodgers</p>
+            <div class="hori">
+                <i class="fab fa-github-square"></i>
+                <a href="https://github.com/SpencePro" target="_blank" rel="noreferrer noopener">GitHub</a>
             </div>
         </footer>
     </body>
