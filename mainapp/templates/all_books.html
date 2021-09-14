@@ -6,13 +6,13 @@ Books
 {% endblock %}
 
 {% block body %}
+{% if series_request == False %}
 <h2>Books</h2>
 <div class="series-list">
     <div class="filter-option vert">
-
         <form action="{% url 'all_books' %}" method="POST" id="filter-form" class="filter-form hori">
             {% csrf_token %}
-            <input type="text" name="pagenum" value="{{ pagenum }}" id="pagenum" class="hidden">
+            <input type="text" name="pagenum" value="1" id="pagenum" class="hidden">
             <div class="hori">
                 <label for="series">Series</label>
                 <select name="series" id="series-filter" style="width:12rem;">
@@ -35,7 +35,18 @@ Books
             <br>
             <button type="button" id="submit-filter" class="btn btn-primary btn-sm">Filter</button>
         </form>
+    </div>
+</div>
+{% else %}
+<h2>{{ series_name }}</h2>
+<div class="vert center">
+    </h5><a href="{% url 'all_books' %}" id="reset-search">New Book Search</a>
+</div>
+{% endif %}
 
+<div class="fetch-results center hidden">
+    <div class="spinner-border text-light" role="status">
+        <span class="sr-only">Loading...</span>
     </div>
 </div>
 
@@ -62,7 +73,7 @@ Books
     </form>
 </div>
 
-<p id="stop-scrolling" class="hidden">False</p>
+<p id="stop-scrolling" class="hidden">{{ stop_scrolling }}</p>
 
 <div id="booklist-container" class="booklist vert container">
     {% for book in books %}
@@ -104,7 +115,7 @@ Books
     {% endfor %}
 </div>
 
-<div class="spinner-div spinner-results hidden center">
+<div class="spinner-div spinner-results center">
     <div class="spinner-border text-light" role="status">
         <span class="sr-only">Loading...</span>
     </div>
@@ -116,14 +127,19 @@ Books
 
 <script type="text/javascript">
     document.addEventListener("scroll", infiniteScroll);
-    document.getElementById("submit-filter").addEventListener("click", displayFilters);
-    document.getElementById("clear-filter-btn").addEventListener("click", clearFilters);
     document.querySelectorAll(".more-btn").forEach((button) => {
         button.addEventListener("click", showMore);
     });
+</script>
+
+{% if series_request == False %}
+<script type="text/javascript">
     window.addEventListener("beforeunload", function() {
         resetBookFilter("series-filter", "world-filter", "");
     });
+    document.getElementById("submit-filter").addEventListener("click", displayFilters);
+    document.getElementById("clear-filter-btn").addEventListener("click", clearFilters);
 </script>
+{% endif %}
 
 {% endblock %}

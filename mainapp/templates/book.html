@@ -49,7 +49,7 @@
         <div class="hori series-div">
             <div class="hori">
                 <label for="book-series">Series:</label>
-                <p id="book-series">{{ book.series.name }}</p>
+                <a href="{% url 'all_books' book.series.id %}" id="book-series">{{ book.series.name }}</a>
             </div>
             {% if user.is_authenticated %}
                 <p id="series-divider">-</p>

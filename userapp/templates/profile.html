@@ -48,9 +48,9 @@ Profile
             {% if series_followed %}
             <ul id="follow-ul">
                 {% for series in series_followed %}
-                <li id="follow-element-{{ series.series.id }}" class="follow-element hori">
+                <li id="follow-element-{{ series.series.id }}" class="follow-element">
                     <label for="follow-form-{{ series.series.id }}">></label>
-                    <p>{{ series.series.name }}</p>
+                    <a href="{% url 'all_books' series.series.id %}">{{ series.series.name }}</a>
                     <form action="{% url 'follow' series.series.id %}" method="POST" id="follow-form-{{ series.series.id }}"
                         class="{{ series.series.id }}">
                         {% csrf_token %}

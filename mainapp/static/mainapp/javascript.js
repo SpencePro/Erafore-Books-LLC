@@ -46,14 +46,17 @@ function slideshow() {
 
 // Function to infinite scroll
 function infiniteScroll() {
-    if (document.getElementById("stop-scrolling").innerHTML === "False") {
+    if (document.getElementById("stop-scrolling").innerHTML === "True") {
+        document.getElementById("end-of-results").classList.remove("hidden");
+    }
+    else {
         if (window.innerHeight + window.scrollY === document.body.offsetHeight) {
             var data = $("#filter-form").serializeArray();
             data[1].value++;
             var currentUrl = window.location.href;
             var page = "";
             var spinner = document.querySelector(".spinner-results");
-            spinner.classList.remove("hidden");
+            spinner.style.visibility = "visible";
             
             if (currentUrl.slice(currentUrl.length - 3) === "all") {
                 page = "books";
@@ -108,7 +111,7 @@ function infiniteScroll() {
                                 buildLoreListing(data.lore_data, data, currentUrl);
                             }
                         }
-                        spinner.classList.add("hidden");
+                        spinner.style.visibility = "hidden";
 
                         if (data.stop_scrolling === true) {
                             document.getElementById("stop-scrolling").innerHTML = "True";
@@ -138,6 +141,7 @@ function displayFilters() {
     var currentUrl = window.location.href;
     var page = "";
     var url = "";
+    document.querySelector(".fetch-results").classList.remove("hidden");
     if (currentUrl.slice(currentUrl.length - 3) === "all") {
         page = "books";
         currentUrl = currentUrl.slice(0, -3);
@@ -196,19 +200,15 @@ function displayFilters() {
                     booklist.forEach((listing) => {
                         listing.remove();
                     })
-
                     // build new listings
-                    
                     if (page === "books") {
                         buildListing(data.books, data, currentUrl);
                     }
                     else {
                         buildLoreListing(data.lore_data, data, currentUrl);
                     }
-
                     // show button to clear filters
                     document.getElementById("clear-filter").classList.remove("hidden");
-
                     // signal page to stop scrolling
                     if (data.stop_scrolling === true) {
                         document.getElementById("stop-scrolling").innerHTML = "True";
@@ -219,6 +219,7 @@ function displayFilters() {
                         document.getElementById("end-of-results").classList.add("hidden")
                     }
                 }
+                document.querySelector(".fetch-results").classList.add("hidden");
             }
         });
         return false;
@@ -340,6 +341,7 @@ function clearFilters() {
     var currentUrl = window.location.href;
     var bookList = document.querySelectorAll(".book-listing");
     data = $("#clear-filter-form").serializeArray();
+    document.querySelector(".fetch-results").classList.remove("hidden");
     clearFiltersFunc(data);
 
     function clearFiltersFunc(data) {
@@ -362,7 +364,7 @@ function clearFilters() {
                 bookList.forEach((listing) => {
                     listing.remove();
                 })
-                document.getElementById("pagenum").value = 1;
+                //document.getElementById("pagenum").value = 1;
                 
                 if (currentUrl.slice(-3) === "all") {
                     resetBookFilter("series-filter", "world-filter", "");
@@ -378,6 +380,7 @@ function clearFilters() {
                     buildLoreListing(data.lore_data, data, currentUrl.slice(0, -3));
                     document.getElementById("stop-scrolling").innerHTML = "False";
                 }
+                document.querySelector(".fetch-results").classList.add("hidden");
             }
         });
         return false;
@@ -885,6 +888,9 @@ function wishlistFunc() {
     if (page === "profile") {
         this.form.parentElement.style.opacity = "50%";
     }
+    else {
+        this.style.opacity = "50%";
+    }
     updateWish(data);
 
     function updateWish(data) {
@@ -914,6 +920,7 @@ function wishlistFunc() {
                     else {
                         document.getElementById("wish-btn").innerHTML = "Remove from wishlist";
                     }
+                    document.getElementById("wish-btn").style.opacity = "100%";
                 }
             }
         });
@@ -930,6 +937,9 @@ function followFunc() {
     var page = data[1].value;
     if (page === "profile") {
         this.form.parentElement.style.opacity = "50%";
+    }
+    else {
+        this.style.opacity = "50%";
     }
     updateFollow(data);
 
@@ -960,6 +970,7 @@ function followFunc() {
                     else {
                         document.getElementById("follow-btn").innerHTML = "Unfollow Series";
                     }
+                    document.getElementById("follow-btn").style.opacity = "100%";
                 }
             }
         });

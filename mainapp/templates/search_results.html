@@ -10,16 +10,18 @@ Search Results
 {% if error_message != "" %}
 <h4>{{ error_message }}</h4>
 {% else %}
-    <div class="search-results vert">
+    <div class="search-results vert fade-in">
         {% if book_num > 0 %}
             <h4>{{ book_num }} book results:</h4>
             <ul class="search-results vert">
             {% for book in books %}
-                <li class="hori" style="opacity: 0;">
+                <li class="hori">
                     <label for="{{ book.title }}">></label>
-                    <a href="{% url 'book' book.id %}" id="{{ book.title }}" class="search-result">{{ book.title }}</a>
-                    <div class="hover-img">
-                        <span class="tooltip-text"><img src="{% static book.image %}_small.jpg" alt="{{ book.title }} Cover" height="200px" width="auto"></span>
+                    <div class="modal-container hori">
+                        <a href="{% url 'book' book.id %}" id="{{ book.title }}" class="search-result">{{ book.title }}</a>
+                        <div class="hover-img">
+                            <span class="tooltip-text"><img src="{% static book.image %}_small.jpg" alt="{{ book.title }} Cover"></span>
+                        </div>
                     </div>
                 </li>
             {% endfor %}

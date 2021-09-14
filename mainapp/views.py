@@ -17,15 +17,24 @@ def index(request):
     return render(request, "index.html", context={"books":books,  "sales":sales,  "new_release":new_release})
 
 
-def all_books_view(request):
+def all_books_view(request, series=""):
     series_list = Series.objects.all()
     worlds = ["Erafore", "Messy Earth", "Terra", "Standalone", ""]
     results_to_show = 8
+    series_request = False
+    series_name = ""
 
     if request.method == "GET":
         pagenum = 1
-        books = Book.objects.all().order_by("-date_released")[0:results_to_show]
-        request.session["objects_viewed"] = results_to_show
+        stop_scrolling = False
+        if series == "":
+            books = Book.objects.all().order_by("-date_released")[0:results_to_show]
+            request.session["objects_viewed"] = results_to_show
+        else:
+            books = Book.objects.filter(series=series).order_by("-date_released")
+            stop_scrolling = True
+            series_request = True
+            series_name = series_list[int(series)-1].name
     else:
         pagenum = int(request.POST["pagenum"])
         all_books = Book.objects.all().order_by("-date_released")
@@ -45,7 +54,6 @@ def all_books_view(request):
 
         if request.session["objects_viewed"] == len(all_books):
             stop_scrolling = True
-            request.session["objects_viewed"] = 0
         else:
             stop_scrolling = False
         
@@ -61,7 +69,10 @@ def all_books_view(request):
         "series_list": series_list,
         "worlds": worlds[:-1],
         "books": books,
-        "pagenum": pagenum
+        "pagenum": pagenum,
+        "stop_scrolling": stop_scrolling,
+        "series_request": series_request,
+        "series_name": series_name
     }
     return render(request, "all_books.html", context)
 
@@ -78,7 +89,6 @@ def filter_books(request):
             pagenum = int(request.POST["pagenum"])
         except:
             pagenum = 1
-
         series_id = request.POST["series"]
         world = request.POST["world"]
         if series_id == "" and world == "":
@@ -92,10 +102,6 @@ def filter_books(request):
         book_objects = Book.objects.filter(filter_without_none(series=series_id, world=world)).order_by(
             "-date_released")
         books = list(book_objects[(pagenum - 1) * results_to_show:pagenum * results_to_show].values())
-
-        print("Pagenum:", pagenum)
-        print("Books:", books)
-        print("Book length:", len(books))
         
         if len(books) < 1:
             return JsonResponse({"error": "No books match the filters"})
@@ -117,22 +123,15 @@ def filter_books(request):
         
         selected_world = world
 
-        print("objects viewed before:", request.session["objects_viewed"])
-
         if pagenum == 1:
                 request.session["objects_viewed"] = results_to_show
         else:
             request.session["objects_viewed"] += len(books)
-
-        print("objects viewed middle:", request.session["objects_viewed"])
         
         if request.session["objects_viewed"] >= len(book_objects):
             stop_scrolling = True
-            request.session["objects_viewed"] = 0
         else:
             stop_scrolling = False
-        
-        print("objects viewed after:", request.session["objects_viewed"])
 
         return JsonResponse({
             "selected_world": selected_world,
@@ -195,7 +194,6 @@ def lore_view(request):
 
         if request.session["objects_viewed"] == len(lore_objects):
             stop_scrolling = True
-            request.session["objects_viewed"] = 0
         else:
             stop_scrolling = False
 
@@ -271,7 +269,6 @@ def filter_lore(request):
             
             if request.session["objects_viewed"] >= len(lore_objects):
                 stop_scrolling = True
-                request.session["objects_viewed"] = 0
             else:
                 stop_scrolling = False
 

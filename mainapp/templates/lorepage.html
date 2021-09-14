@@ -9,7 +9,6 @@ Books
 <h2>Lore</h2>
 <div class="series-list">
     <div class="filter-option vert">
-
         <form action="{% url 'filter_lore' %}" method="POST" id="filter-form" class="filter-form hori">
             {% csrf_token %}
             <input type="text" name="pagenum" value="1" id="pagenum" class="hidden">
@@ -44,7 +43,12 @@ Books
             <br>
             <button type="button" id="submit-filter" class="btn btn-primary btn-sm">Filter</button>
         </form>
+    </div>
+</div>
 
+<div class="fetch-results center hidden">
+    <div class="spinner-border text-light" role="status">
+        <span class="sr-only">Loading...</span>
     </div>
 </div>
 
@@ -119,7 +123,7 @@ Books
     {% endfor %}
 </div>
 
-<div class="spinner-div spinner-results hidden center">
+<div class="spinner-div spinner-results center">
     <div class="spinner-border text-light" role="status">
         <span class="sr-only">Loading...</span>
     </div>

@@ -183,6 +183,7 @@ select, input {
 }
 
 .spinner-results {
+    visibility: hidden;
     position: inherit;
     left: 50%;
     right: 50%;
@@ -379,6 +380,15 @@ main {
     animation-fill-mode: forwards;
 }
 
+.fetch-results {
+    position: inherit;
+    margin-bottom: 0.5rem;
+}
+
+#reset-search {
+    margin-bottom: 0.5rem;
+}
+
 /* Individual Books */
 
 .listing {
@@ -394,6 +404,12 @@ main {
 
 #book-series {
     padding-right: 0.2rem;
+    color: #007bff;
+}
+
+#book-series:hover {
+    color: #0056b3;
+    text-decoration: underline;
 }
 
 #follow-btn, #wish-btn {
@@ -593,6 +609,14 @@ main {
     margin-bottom: 0;
 }
 
+.access-denied {
+    align-items: center;
+}
+
+.access-denied button {
+    width: fit-content;
+}
+
 /* Search Results */
 
 .search-results {
@@ -604,34 +628,34 @@ main {
     margin-left: 25%;
 }
 
-@keyframes fade-in-delay {
+/* @keyframes fade-in-delay {
     from {
         opacity: 0;
         margin-left: -10rem;
     }
     to {
-        opacity: 1;
+        opacity: 0.99;
         margin-left: 0rem;
     }
-}
+} */
 
 .search-results li {
+    /* opacity: 0; */
     list-style: none;
     margin-bottom: 0.4rem;
-    animation-name: fade-in-delay;
-    animation-duration: 0.5s;
+    /* animation-name: fade-in-delay; */
+    /* animation-duration: 0.5s;
     animation-fill-mode: forwards;
-    animation-iteration-count: 1;
+    animation-iteration-count: 1; */
 }
 
 .search-results li a {
-    z-index: 0;
     position: relative;
 }
 
 /* use SASS to create function for this part */
 
-.search-results li:nth-child(1) {
+/* .search-results li:nth-child(1) {
     animation-delay: 0.2s;
 }
 
@@ -649,11 +673,11 @@ main {
 
 .search-results li:nth-child(5) {
     animation-delay: 1s;
-}
+} */
 
 .search-results li:hover .tooltip-text {
     display: block !important;
-    opacity: 0.99;
+    opacity: 1;
 }
 
 .hover-img, .tooltip-text img {
@@ -661,6 +685,10 @@ main {
     position: relative;
 }
 
+.hover-img img {
+    height: 200px;
+    width: auto;
+}
 
 /* FOOTER */
 
@@ -772,13 +800,29 @@ footer div p {
         margin-left: 0;
         padding-left: 1rem;
     }
+    .hover-img img {
+        height: 150px;
+        width: auto;
+    }
+    .modal-container {
+        flex-direction: row !important;
+    }
 }
 
 /* Profile Page */
-@media (max-width: 670px) {
+@media (max-width: 750px) {
     .profile-container {
         flex-direction: column;
     }
+    .follow-element {
+        flex-direction: none;
+    }
+    .user-info {
+        width: 70%;
+    }
+}
+
+@media (max-width: 670px) {
     .user-info {
         width: 100%;
         justify-content: center;
