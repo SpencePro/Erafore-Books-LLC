@@ -436,6 +436,7 @@ function buildLoreListing(lore, data, currentUrl) {
         const titleDiv = document.createElement("div");
         titleDiv.classList.add("hori", "listing-title");
         const titleParagraph = document.createElement("p");
+        titleParagraph.innerHTML = lore[i].name;
         titleDiv.appendChild(titleParagraph);
         // series div
         const seriesDiv = document.createElement("div");
@@ -517,7 +518,7 @@ function showMore() {
         this.innerHTML = "See less";
     }
     else {
-        synopsis.style.maxHeight = "5rem";
+        synopsis.style.maxHeight = "6.5rem";
         synopsis.style.background = "linear-gradient(to top, rgba(0,0,0,0.7), 1%, rgba(0,0,0,0.0))";
         this.style.marginTop = "-2rem";
         this.parentElement.style.height = "0";

@@ -52,11 +52,12 @@ def all_books_view(request, series=""):
         except:
             request.session["objects_viewed"] = results_to_show
 
-        if request.session["objects_viewed"] == len(all_books):
+        if request.session["objects_viewed"] >= len(all_books):
             stop_scrolling = True
+            request.session["objects_viewed"] = 0
         else:
             stop_scrolling = False
-        
+
         return JsonResponse({
             "pagenum": pagenum,
             "books": books,
@@ -130,6 +131,7 @@ def filter_books(request):
         
         if request.session["objects_viewed"] >= len(book_objects):
             stop_scrolling = True
+            request.session["objects_viewed"] = 0
         else:
             stop_scrolling = False
 
@@ -192,8 +194,9 @@ def lore_view(request):
         except:
             request.session["objects_viewed"] = results_to_show
 
-        if request.session["objects_viewed"] == len(lore_objects):
+        if request.session["objects_viewed"] >= len(lore_objects):
             stop_scrolling = True
+            request.session["objects_viewed"] = 0
         else:
             stop_scrolling = False
 
@@ -269,6 +272,7 @@ def filter_lore(request):
             
             if request.session["objects_viewed"] >= len(lore_objects):
                 stop_scrolling = True
+                request.session["objects_viewed"] = 0
             else:
                 stop_scrolling = False
 
