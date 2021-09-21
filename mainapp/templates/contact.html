@@ -6,7 +6,7 @@ Contact
 
 {% block body %}
 <h2>Contact</h2>
-<div class="main-content vert">
+<div class="main-content social-media-contact vert">
     <h4>Follow along on social media</h4>
     <ul class="social-media">
         <li>
@@ -21,12 +21,21 @@ Contact
                 <a href="https://twitter.com/erafore" target="_blank" rel="noreferrer noopener">Twitter</a>
             </div>
         </li>
+    </ul>
+    <h4>Questions? Comments? Business Propositions?</h4>
+    <ul class="social-media">
         <li>
             <div class="hori">
                 <i class="fas fa-envelope"></i>
-                <p>Email</p>
+                <p id="email-address">EraforeLLCDev@gmail.com</p>
+                <button class="btn btn-sm btn-primary copy-btn"><i class="fas fa-clipboard"></i><span class="tooltip-text">Copy Email to Clipboard</span></button>
             </div>
         </li>
     </ul>
 </div>
+
+<script type="text/javascript">
+    document.querySelector(".copy-btn").addEventListener("click", copyText);
+</script>
+
 {% endblock %}

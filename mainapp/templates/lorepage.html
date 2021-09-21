@@ -9,7 +9,7 @@ Books
 <h2>Lore</h2>
 <div class="series-list">
     <div class="filter-option vert">
-        <form action="{% url 'filter_lore' %}" method="POST" id="filter-form" class="filter-form hori">
+        <form action="{% url 'filter_lore' %}" method="POST" id="filter-form" class="filter-form lore-filter hori">
             {% csrf_token %}
             <input type="text" name="pagenum" value="1" id="pagenum" class="hidden">
             <div class="hori">
@@ -52,7 +52,7 @@ Books
     </div>
 </div>
 
-<div id="selected-series" class="selected-series vert center hidden">
+<div id="selected-series" class="selected-series container vert center hidden">
     <div class="hori center" style="align-items: baseline;">
         <label style="font-size: large;" for="series-name">Series:</label>
         <h5 id="series-name"></h5>
@@ -60,12 +60,12 @@ Books
     <p id="series-description"></p>
 </div>
 
-<div id="selected-world" class="selected-world hori center hidden">
+<div id="selected-world" class="selected-world container hori center hidden">
     <label style="font-size: large;" for="world-name">World:</label>
     <h5 id="world-name"></h5>
 </div>
 
-<div id="selected-type" class="selected-type hori center hidden">
+<div id="selected-type" class="selected-type container hori center hidden">
     <label style="font-size: large;" for="type-name">Type:</label>
     <h5 id="type-name"></h5>
 </div>
@@ -111,12 +111,12 @@ Books
                 <label for="object-type-{{ object.name }}">Type:</label>
                 <p id="object-type-{{ object.name }}">{{ object.type }}</p>
             </div>
-            <div>
+            <div class="synopsis">
                 <label for="object-synopsis-{{ object.id }}">Description:</label>
-                <p id="object-synopsis-{{ object.id }}" class="synopsis">{{ object.description }}</p>
-                <div style="text-align: center;">
-                    <button type="button" class="btn btn-primary btn-sm more-btn">See more</button>
-                </div>
+                <p id="object-synopsis-{{ object.id }}">{{ object.description }}</p>
+            </div>
+            <div style="text-align: center;">
+                <button type="button" class="btn btn-primary btn-sm more-btn">See more</button>
             </div>
         </div>
     </div>

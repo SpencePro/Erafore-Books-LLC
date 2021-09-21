@@ -300,9 +300,9 @@ function buildListing(books, data, currentUrl) {
         worldDiv.appendChild(worldP);
         // synopsis div
         const synopsisDiv = document.createElement("div");
+        synopsisDiv.classList.add("synopsis")
         const synopsisP = document.createElement("p");
         synopsisP.id = `book-synopsis-${books[i].id}`;
-        synopsisP.classList.add("synopsis")
         synopsisP.innerHTML = books[i].synopsis;
         const synopsisLabel = document.createElement("label");
         synopsisLabel.for = synopsisP.id;
@@ -317,7 +317,6 @@ function buildListing(books, data, currentUrl) {
         seeMoreDiv.appendChild(seeMore);
         synopsisDiv.appendChild(synopsisLabel);
         synopsisDiv.appendChild(synopsisP);
-        synopsisDiv.appendChild(seeMoreDiv);
         // if on sale
         if (books[i].on_sale === true) {
             const onSale = document.createElement("h5");
@@ -330,6 +329,7 @@ function buildListing(books, data, currentUrl) {
         contentDiv.appendChild(seriesDiv);
         contentDiv.appendChild(worldDiv);
         contentDiv.appendChild(synopsisDiv);
+        contentDiv.appendChild(seeMoreDiv);
         bookListingDiv.appendChild(contentDiv);
         booklistContainer.appendChild(bookListingDiv);
     }
@@ -511,15 +511,15 @@ function buildLoreListing(lore, data, currentUrl) {
 function showMore() {
     var synopsis = this.parentElement.previousElementSibling;
     if (this.innerHTML === "See more") {
-        synopsis.style.maxHeight = "700px";
-        synopsis.style.background = "none";
+        //synopsis.style.maxHeight = "700px";
+        synopsis.classList.add("expanded");
         this.style.marginTop = "0";
         this.parentElement.style.height = "2rem";
         this.innerHTML = "See less";
     }
     else {
-        synopsis.style.maxHeight = "6.5rem";
-        synopsis.style.background = "linear-gradient(to top, rgba(0,0,0,0.7), 1%, rgba(0,0,0,0.0))";
+        //synopsis.style.maxHeight = "6.5rem";
+        synopsis.classList.remove("expanded"); //("style","-webkit-mask-image: linear-gradient(white, transparent); max-height: 6.5rem;" );
         this.style.marginTop = "-2rem";
         this.parentElement.style.height = "0";
         this.innerHTML = "See more";
@@ -560,6 +560,17 @@ function largeImage() {
             modal.style.display = "none";
         }
     }
+}
+
+// Function to copy email address to the clipboard
+function copyText() {
+    let email = document.getElementById("email-address");
+    let emailText = email.innerHTML;
+    navigator.clipboard.writeText(emailText);
+    document.querySelector(".tooltip-text").innerHTML = "Email Copied!";
+    setTimeout(function () {
+        document.querySelector(".tooltip-text").innerHTML = "Copy Email to Clipboard";
+    }, 3000);
 }
 
 

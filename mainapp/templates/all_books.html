@@ -50,7 +50,7 @@ Books
     </div>
 </div>
 
-<div id="selected-series" class="selected-series vert center hidden">
+<div id="selected-series" class="selected-series container vert center hidden">
     <div class="hori center" style="align-items: baseline;">
         <label style="font-size: large;" for="series-name">Series:</label>
         <h5 id="series-name"></h5>
@@ -58,7 +58,7 @@ Books
     <p id="series-description"></p>
 </div>
 
-<div id="selected-world" class="selected-world hori center hidden">
+<div id="selected-world" class="selected-world container hori center hidden">
     <label style="font-size: large;" for="world-name">World:</label>
     <h5 id="world-name"></h5>
 </div>
@@ -103,12 +103,12 @@ Books
                     <label for="book-world-{{ book.title }}">World:</label>
                     <p id="book-world-{{ book.title }}">{{ book.world }}</p>
                 </div>
-                <div>
+                <div class="synopsis">
                     <label for="book-synopsis-{{ book.id }}">Synopsis:</label>
-                    <p id="book-synopsis-{{ book.id }}" class="synopsis">{{ book.synopsis }}</p>
-                    <div style="text-align: center;">
-                        <button type="button" class="btn btn-primary btn-sm more-btn">See more</button>
-                    </div>
+                    <p id="book-synopsis-{{ book.id }}">{{ book.synopsis }}</p>
+                </div>
+                <div style="text-align: center;">
+                    <button type="button" class="btn btn-primary btn-sm more-btn">See more</button>
                 </div>
             </div>
         </div>
