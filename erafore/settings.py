@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True #os.getenv('DEBUG_VALUE', '') != 'False'
+DEBUG = False #os.getenv('DEBUG_VALUE', '') != 'False'
 
 ALLOWED_HOSTS = ['eraforebooksllc.herokuapp.com']
 
