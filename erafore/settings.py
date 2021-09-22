@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True #os.getenv('DEBUG_VALUE' == 'True')
+DEBUG = False #os.getenv('DEBUG_VALUE' == 'True')
 
 ALLOWED_HOSTS = ['eraforebooksllc.herokuapp.com']
 
@@ -90,13 +90,12 @@ DATABASES = {
     'postgresql': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'erafore_database',
-        'USER': os.getenv('USER'),
+        'USER': 'postgres',
         'PASSWORD': os.getenv('PASSWORD'),
         'HOST': '127.0.0.1',
         'PORT': '5432'
     }
 }
-
 
 
 AUTH_USER_MODEL = "userapp.User"

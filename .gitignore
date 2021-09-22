@@ -1,8 +1,10 @@
 # Secrets and keys
 #.env
+Procfile
 
-# Unused Database
+# Unused Database/Storage
 *.sqlite3
+*.json
 
 # Image Files
 *.avif
