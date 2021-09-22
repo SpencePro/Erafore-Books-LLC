@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False #os.getenv('DEBUG_VALUE' == 'True')
+DEBUG = True #os.getenv('DEBUG_VALUE' == 'True')
 
 ALLOWED_HOSTS = ['eraforebooksllc.herokuapp.com']
 
@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'erafore.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'mysql': {
+    'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'erafore_database',
         'USER': os.getenv('USER'),
@@ -87,7 +87,7 @@ DATABASES = {
         'HOST': '127.0.0.1',
         'PORT': '3306'
     },
-    'default': {
+    'postgresql': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'erafore_database',
         'USER': os.getenv('USER'),
