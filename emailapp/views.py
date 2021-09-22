@@ -84,7 +84,7 @@ def send_sales_notification(sender, instance, **kwargs):
                 synopsis = book.synopsis
 
                 subject = f"On sale now: {book_title} - {user.username}"
-                email_body = f"On sale now from Erafore Books: {book_title}\n\n'{synopsis}'\n\nClick here to purchase on Amazon:\n{book_link}\n\nYou have consented to receive notifications of book sales from Erafore Books, LLC for books in your wishlist. You can edit email permissions in your account anytime at **link to website**"
+                email_body = f"On sale now from Erafore Books: {book_title}\n\n'{synopsis}'\n\nClick here to purchase on Amazon:\n{book_link}\n\nYou have consented to receive notifications of book sales from Erafore Books, LLC for books in your wishlist. You can edit email permissions in your account anytime at www.eraforebooks.com"
 
                 user_message = (subject, email_body, "", [user.email])
                 email_arr.append(user_message)
@@ -98,7 +98,7 @@ def send_sales_notification(sender, instance, **kwargs):
                 synopsis = book.synopsis
 
                 subject = f"On sale now: {book_title} - {user.username}"
-                email_body = f"On sale now from Erafore Books: {book_title}\n\n'{synopsis}'\n\nClick here to purchase on Amazon:\n{book_link}\n\nYou have consented to receive notifications of book sales from Erafore Books, LLC. You can edit email permissions in your account anytime at **link to website**"
+                email_body = f"On sale now from Erafore Books: {book_title}\n\n'{synopsis}'\n\nClick here to purchase on Amazon:\n{book_link}\n\nYou have consented to receive notifications of book sales from Erafore Books, LLC. You can edit email permissions in your account anytime at www.eraforebooks.com"
 
                 user_message = (subject, email_body, "", [user.email])
                 email_arr.append(user_message)
