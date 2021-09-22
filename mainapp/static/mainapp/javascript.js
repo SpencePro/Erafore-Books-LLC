@@ -33,9 +33,10 @@ function slideshow() {
         var slides = document.querySelectorAll(".slide-image");
         var i;
         for (i = 0; i < slides.length; i++) {
-            slides[i].classList.add("hidden")
+            slides[i].classList.add("hidden");
         }
         slideIndex++;
+        //console.log(slideIndex);
         if (slideIndex > slides.length) {
             slideIndex = 1;
         }
@@ -511,7 +512,7 @@ function buildLoreListing(lore, data, currentUrl) {
 function showMore() {
     var synopsis = this.parentElement.previousElementSibling;
     if (this.innerHTML === "See more") {
-        //synopsis.style.maxHeight = "700px";
+        //synopsis.style.maxHeight = "800px";
         synopsis.classList.add("expanded");
         this.style.marginTop = "0";
         this.parentElement.style.height = "2rem";

@@ -10,15 +10,10 @@ Home
     <div class="hori center welcome-div">
         <div class="vert center welcome-message">
             <h4>Welcome to Erafore Books!</h4>
-            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Facilis, fugit doloremque. Quidem vel optio
-                commodi eanemo quasi, explicabo nulla, voluptatem possimus consequuntur provident amet eos placeat
-                aliquid. Sint, ipsum.</p>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni minima eos iste molestiae natus aperiam
-                beatae, debitis blanditiis quasi, voluptatum perferendis quia praesentium sit? Nobis aperiam voluptate
-                facilis expedita! Similique!</p>
+            <p style="font-size: 1rem;">Here you can find all the information you need about the series, novels and short stories by Ian Rodgers</p>
         </div>
         <div class="slideshow hori">
-            <picture class="hidden slide-image">
+            <picture class="slide-image">
                 <source
                     srcset="static/ChroniclesofaRoyalPetAPrincessandanOoze(RoyalOozeChroniclesBook1)_slideshow.avif"
                     type="image/avif">
@@ -26,31 +21,31 @@ Home
                         src="static/ChroniclesofaRoyalPetAPrincessandanOoze(RoyalOozeChroniclesBook1)_slideshow.png"
                         alt="Chronicles of a Royal Pet Book 1 Cover" class="slideshow-img"></a>
             </picture>
-            <picture class="hidden slide-image">
+            <picture class="slide-image">
                 <source srcset="static/TheLongRoadofAdventureFlowersontheWayside(Book1)_slideshow.avif"
                     type="image/avif">
                 <a href="{% url 'book' 8 %}"><img
                         src="static/TheLongRoadofAdventureFlowersontheWayside(Book1)_slideshow.png"
                         alt="Long Road of Adventure Book 1 Cover" class="slideshow-img"></a>
             </picture>
-            <picture class="hidden slide-image">
+            <picture class="slide-image">
                 <source srcset="static/TheChainedMaidenBoundbyTruth(Book1)_slideshow.avif" type="image/avif">
                 <a href="{% url 'book' 13 %}"><img src="static/TheChainedMaidenBoundbyTruth(Book1)_slideshow.png"
                         alt="The Chained Maiden Book 1 Cover" class="slideshow-img"></a>
             </picture>
-            <picture class="hidden slide-image">
+            <picture class="slide-image">
                 <source srcset="static/MyLifeAsAHighSchoolDragonTamerAfterSchoolFantasy(Book1)_slideshow.avif"
                     type="image/avif">
                 <a href="{% url 'book' 16 %}"><img
                         src="static/MyLifeAsAHighSchoolDragonTamerAfterSchoolFantasy(Book1)_slideshow.png"
                         alt="After School Fantasy Book 1 Cover" class="slideshow-img"></a>
             </picture>
-            <picture class="hidden slide-image">
+            <picture class="slide-image">
                 <source srcset="static/BehindYourBack_slideshow.avif" type="image/avif">
                 <a href="{% url 'book' 26 %}"><img src="static/BehindYourBack_slideshow.png"
                         alt="Behind Your Back Cover" class="slideshow-img"></a>
             </picture>
-            <picture class="hidden slide-image">
+            <picture class="slide-image">
                 <source
                     srcset="static/NotTheEndAnanthologyofshortstoriesandnovellasaboutdeath,ghosts,thesupernaturalandwhathappensafterwards_slideshow.avif"
                     type="image/avif">
@@ -58,12 +53,12 @@ Home
                         src="static/NotTheEndAnanthologyofshortstoriesandnovellasaboutdeath,ghosts,thesupernaturalandwhathappensafterwards_slideshow.png"
                         alt="Not the End Anthology" class="slideshow-img"></a>
             </picture>
-            <picture class="hidden slide-image">
+            <picture class="slide-image">
                 <source srcset="static/WelcometotheGalacticShoppersNetwork_slideshow.avif" type="image/avif">
                 <a href="{% url 'book' 28 %}"><img src="static/WelcometotheGalacticShoppersNetwork_slideshow.png"
                         alt="Welcome to the Galactic Shoppers Network Cover" class="slideshow-img"></a>
             </picture>
-            <picture class="hidden slide-image">
+            <picture class="slide-image">
                 <source srcset="static/FictionAsStrangeAsRealLife_slideshow.avif" type="image/avif">
                 <a href="{% url 'book' 25 %}"><img src="static/FictionAsStrangeAsRealLife_slideshow.png"
                         alt="Fiction as Strange as Real Life Cover" class="slideshow-img"></a>
@@ -101,10 +96,32 @@ Home
             </div>
         </div>
     </div>
-    <div class="vert center homepage-div" style="opacity: 0; transition: opacity 2s;">
+    <div class="vert center homepage-div coming-soon" style="opacity: 0; transition: opacity 2s;">
         <h4>Coming soon...</h4>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atque et laudantium earum aliquam?
-            Excepturi quaerat error libero accusamus.</p>
+        <div class="vert">
+            <label for="green-skies">(October) Green Skies Book 1 – A Tree in the Clouds</label>
+            <p id="green-skies">A life of freedom and adventure! That’s all Floin of the Squirrel Tribe has ever
+                wanted. Traveling across the magical land of Flores in his flying treehouse, he has
+                spent his days in quiet and peace.</p>
+            <p>His solitude is broken, however, when he ends up rescuing Ruvia, a young lady of
+                the Squirrel Tribe, from mysterious Rat Tribe assassins. Caught up in events he
+                doesn’t understand, Floin must decide if he will abandon an innocent person to a
+                dark fate and resume his ordinary life, or help her by returning to a life he thought
+                he’d left behind.</p>
+        </div>
+        <div class="vert">
+            <label for="royal-ooze">(December) Royal Ooze Chronicles Book 8 – Jade Eclipse</label>
+            <p id="royal-ooze">Having escaped the Aether with Dora and Gaelin, Jelly is relieved, and eager to
+            return to Orria and reunite with his beloved princess. However, that is easier said
+            than done, and after drifting for several days across the ocean on an iceberg, Jelly
+            and his friends find themselves in Distant Qwan, an exotic land of ancient magic
+            and tradition.</p>
+            <p>Unaware that their presence has been noticed by their enemies, Jelly, Dora, and
+            Gaelin find themselves called by Fate into a series of conflicts that will see them
+            drawn towards the legendary Jade Palace, where numerous evils lurk and wait to
+            strike, sending the country into chaos and madness.</p>
+            <p>The Void is calling. Are Nia’s Chosen Ones ready to face their destiny?</p>
+        </div>
     </div>
     <div class="vert homepage-div about" style="opacity: 0; transition: opacity 2s;">
         <h4>About the Author</h4>
@@ -113,15 +130,22 @@ Home
                 <source srcset="{% static 'author_image' %}.avif" type="image/avif">
                 <img src="{% static 'author_image' %}.jpg" alt="Author's Portrait" class="author-img" loading="lazy">
             </picture>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam voluptatum ratione cupiditate nulla
-                eligendi placeat ad neque. Corporis, magni! Cumque dicta assumenda quidem doloribus harum veritatis
-                aliquam non autem tempore.</p>
+            <div class="vert">
+                <p> Graduate of George Mason University with a Major in History and a Minor in
+                    English, Ian Rodgers has been writing and creating since 4th grade.
+                    He has written and self-published 24 stories, including the widely popular “Royal
+                    Ooze Chronicles” series.</p>
+                <p> When he isn’t writing, Ian is reading or playing table top roleplaying games with
+                    friends. He currently lives in Virginia.</p>
+            </div>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", slideshow);
+    
+    // display sections on scroll
     document.addEventListener("scroll", function() {
         var saleDiv = document.querySelectorAll("h4");
         saleDiv = Array.from(saleDiv).slice(1, 5);
@@ -138,6 +162,38 @@ Home
             else { }
         });
     });
+    // // test function for slideshow 
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     var slideIndex = 0;
+    //     imageChange();
+
+    //     function imageChange() {
+    //         var testImages = document.querySelectorAll(".test-image");
+    //         slideIndex ++;
+    //         console.log(slideIndex);
+    //         if (slideIndex == testImages.length) {
+    //             testImages[0].style.opacity = 1;
+    //             testImages[0].style.zIndex = 0;
+    //         }
+    //         else if (slideIndex > testImages.length) {
+    //             slideIndex = 1;
+    //             for (let i = 0; i < testImages.length; i++) {
+    //                 testImages[i].style.opacity = 1;
+    //             }
+    //         }
+    //         var opacity = 1.00;
+    //         fadeImage();
+    //         function fadeImage() {
+    //             if (opacity > 0) {
+    //                 opacity -= 0.02;
+    //                 setTimeout(function() {fadeImage()}, 10);
+    //             }
+    //             document.querySelectorAll(".test-image")[slideIndex - 1].style.opacity = opacity;
+    //         }
+    //         setTimeout(imageChange, 3000);
+    //     }
+    // });
+
 </script>
 
 {% endblock %}
