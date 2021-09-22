@@ -100,7 +100,7 @@ DATABASES = {
 }
 
 DATABASE_URL = os.environ['DATABASE_URL']
-conn = psycopg2.connect(host="localhost", user='postgres', password=os.getenv('PASSWORD'), dbname=os.getenv('DATABASE_NAME'))  #DATABASE_URL, sslmode='require')
+#conn = psycopg2.connect(host="localhost", user='postgres', password=os.getenv('PASSWORD'), dbname=os.getenv('DATABASE_NAME'))  #DATABASE_URL, sslmode='require')
 DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
 AUTH_USER_MODEL = "userapp.User"
