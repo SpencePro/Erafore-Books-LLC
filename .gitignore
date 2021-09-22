@@ -5,7 +5,7 @@
 *.sqlite3
 
 # Image Files
-*.avif
-*.png
-*.jpg
-*.webp
+#*.avif
+#*.png
+#*.jpg
+#*.webp
