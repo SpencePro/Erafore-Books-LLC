@@ -13,7 +13,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 import django_heroku
-
+import psycopg2
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -78,15 +79,19 @@ WSGI_APPLICATION = 'erafore.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+DATABASE_URL = os.environ['DATABASE_URL']
+conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+#DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+
 DATABASES = {
-    'default': {
+'''    'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'erafore_database',
         'USER': os.getenv('USER'),
         'PASSWORD': os.getenv('PASSWORD'),
         'HOST': '127.0.0.1',
         'PORT': '3306'
-    },
+    },'''
     'postgresql': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'erafore_database',
