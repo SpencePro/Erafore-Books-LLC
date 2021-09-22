@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True #os.getenv('DEBUG_VALUE' == 'True')
+DEBUG = True #os.getenv('DEBUG_VALUE', '') != 'False'
 
 ALLOWED_HOSTS = ['eraforebooksllc.herokuapp.com']
 
@@ -80,19 +80,18 @@ WSGI_APPLICATION = 'erafore.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 
-
 DATABASES = {
-    'default': {
+    ''''default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'erafore_database',
         'USER': os.getenv('USER'),
         'PASSWORD': os.getenv('PASSWORD'),
         'HOST': '127.0.0.1',
         'PORT': '3306'
-    },
-    'postgresql': {
+    },'''
+    'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'erafore_database',
+        'NAME': os.getenv('DATABASE_NAME'),
         'USER': 'postgres',
         'PASSWORD': os.getenv('PASSWORD'),
         'HOST': '127.0.0.1',
@@ -173,5 +172,5 @@ EMAIL_USE_LOCALTIME = True
 
 # Heroku
 django_heroku.settings(locals())
-'''if DEBUG == False:
-    del DATABASES['default']['OPTIONS']['sslmode']'''
+if DEBUG == False:
+    del DATABASES['default']['OPTIONS']['sslmode']
