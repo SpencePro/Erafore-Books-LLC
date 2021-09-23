@@ -89,15 +89,15 @@ DATABASES = {
         'HOST': '127.0.0.1',
         'PORT': '3306'
     },'''
-    'default': {
-    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': os.getenv('DATABASE_NAME'),
-    'USER': os.getenv('NAME'),
-    'PASSWORD': os.getenv('PASSWORD'),
-    'HEROKU_POSTGRESQL_BRONZE_URL': os.getenv('DATABASE_URL'),
-    'HOST': '127.0.0.1',
-    'PORT': '5432'
-},
+        'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('DATABASE_NAME'),
+        'USER': os.getenv('NAME'),
+        'PASSWORD': os.getenv('PASSWORD'),
+        'HEROKU_POSTGRESQL_BRONZE_URL': os.getenv('DATABASE_URL'),
+        'HOST': '127.0.0.1',
+        'PORT': '5432'
+    },
 }
 
 
@@ -106,6 +106,8 @@ DATABASE_URL = os.getenv('DATABASE_URL')
 DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)'''
 
 AUTH_USER_MODEL = "userapp.User"
+
+CONN_MAX_AGE = 120
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
