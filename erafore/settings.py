@@ -81,15 +81,15 @@ WSGI_APPLICATION = 'erafore.wsgi.application'
 
 
 DATABASES = {
-    'default': {
+    ''''default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.getenv('DATABASE_NAME'),
         'USER': os.getenv('USER'),
         'PASSWORD': os.getenv('PASSWORD'),
         'HOST': '127.0.0.1',
         'PORT': '3306'
-    },
-    'postgresql': {
+    },'''
+    'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.getenv('DATABASE_NAME'),
         'USER': os.getenv('NAME'),
@@ -170,5 +170,6 @@ EMAIL_USE_TLS = True
 EMAIL_USE_LOCALTIME = True
 
 # Heroku
-'''django_heroku.settings(locals())
+django_heroku.settings(locals())
+'''
 del DATABASES['default']['OPTIONS']['sslmode']'''

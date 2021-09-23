@@ -97,10 +97,10 @@ def filter_books(request):
         if world not in worlds:
             return JsonResponse({"error": "Invalid world"})
 
-        def filter_without_none(**kwargs):
+        def filter_variable_args(**kwargs):
             return Q(**{k: v for k, v in kwargs.items() if v is not None and v != ""})
 
-        book_objects = Book.objects.filter(filter_without_none(series=series_id, world=world)).order_by(
+        book_objects = Book.objects.filter(filter_variable_args(series=series_id, world=world)).order_by(
             "-date_released")
         books = list(book_objects[(pagenum - 1) * results_to_show:pagenum * results_to_show].values())
         
@@ -246,10 +246,10 @@ def filter_lore(request):
         if type not in type_list:
             return JsonResponse({"error": "Invalid type"})
         else:
-            def filter_without_none(**kwargs):
+            def filter_variable_args(**kwargs):
                 return Q(**{k: v for k, v in kwargs.items() if v is not None and v != ""})
 
-            lore_objects = LoreObject.objects.filter(filter_without_none(series=series_id, world=world, type=type))
+            lore_objects = LoreObject.objects.filter(filter_variable_args(series=series_id, world=world, type=type))
             lore_data = list(lore_objects[(pagenum - 1) * results_to_show:pagenum * results_to_show].values())
             if len(lore_data) < 1:
                 return JsonResponse({"error": "No lore matches the filters"})
