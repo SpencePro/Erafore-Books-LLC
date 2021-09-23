@@ -13,7 +13,7 @@ from userapp.models import Wish, Follow
 def index(request):
     books = Book.objects.all()
     sales = [book for book in books if book.on_sale == True]
-    new_release = books.order_by("-date_released")
+    new_release = books.order_by("-date_released")[0]
     return render(request, "index.html", context={"books": books,  "sales": sales,  "new_release": new_release})
 
 
