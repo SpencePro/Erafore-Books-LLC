@@ -29,7 +29,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True #os.getenv('DEBUG_VALUE', '') != 'False'
 
-ALLOWED_HOSTS = ['eraforebooksllc.herokuapp.com']
+ALLOWED_HOSTS = ['eraforebooksllc.herokuapp.com', '127.0.0.1']
 
 # Application definition
 
@@ -81,27 +81,27 @@ WSGI_APPLICATION = 'erafore.wsgi.application'
 
 
 DATABASES = {
-    ''''default': {
+    'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'erafore_database',
+        'NAME': os.getenv('DATABASE_NAME'),
         'USER': os.getenv('USER'),
         'PASSWORD': os.getenv('PASSWORD'),
         'HOST': '127.0.0.1',
         'PORT': '3306'
-    },'''
-    'default': {
+    },
+    'postgresql': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.getenv('DATABASE_NAME'),
-        'USER': 'postgres',
+        'USER': os.getenv('NAME'),
         'PASSWORD': os.getenv('PASSWORD'),
         'HOST': '127.0.0.1',
         'PORT': '5432'
     }
 }
 
-DATABASE_URL = os.getenv('DATABASE_URL')
+'''DATABASE_URL = os.getenv('DATABASE_URL')
 conn = psycopg2.connect(DATABASE_URL, host="localhost", user='postgres', password=os.getenv('PASSWORD'), dbname=os.getenv('DATABASE_NAME'))
-DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)'''
 
 AUTH_USER_MODEL = "userapp.User"
 
@@ -170,5 +170,5 @@ EMAIL_USE_TLS = True
 EMAIL_USE_LOCALTIME = True
 
 # Heroku
-django_heroku.settings(locals())
-del DATABASES['default']['OPTIONS']['sslmode']
+'''django_heroku.settings(locals())
+del DATABASES['default']['OPTIONS']['sslmode']'''
