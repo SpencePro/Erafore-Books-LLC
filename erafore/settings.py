@@ -91,10 +91,11 @@ DATABASES = {
     },'''
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dd7400li5go667',
-        'USER': 'dfjrlegnhbiynw', # os.getenv('NAME'),
-        'PASSWORD': '056c90d9a130cb57451468b2e81b3adc6fafbd629ed5590905500f2c54a9b578', # os.getenv('PASSWORD'),
-        'HOST': 'ec2-34-227-120-94.compute-1.amazonaws.com',
+        'NAME': os.getenv('DATABASE_NAME'),
+        'USER': os.getenv('NAME'),
+        'PASSWORD': os.getenv('PASSWORD'),
+        'HEROKU_POSTGRESQL_BRONZE_URL': os.getenv('DATABASE_URL'),
+        'HOST': '127.0.0.1',
         'PORT': '5432'
     }
 }
