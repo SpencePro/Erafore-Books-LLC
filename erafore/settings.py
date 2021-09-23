@@ -99,8 +99,8 @@ DATABASES = {
     }
 }
 
-'''DATABASE_URL = os.getenv('DATABASE_URL')
-conn = psycopg2.connect(DATABASE_URL, host="localhost", user='postgres', password=os.getenv('PASSWORD'), dbname=os.getenv('DATABASE_NAME'))
+DATABASE_URL = os.getenv('DATABASE_URL')
+'''conn = psycopg2.connect(DATABASE_URL, host="localhost", user='postgres', password=os.getenv('PASSWORD'), dbname=os.getenv('DATABASE_NAME'))
 DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)'''
 
 AUTH_USER_MODEL = "userapp.User"
