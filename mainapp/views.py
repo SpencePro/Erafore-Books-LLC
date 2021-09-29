@@ -7,34 +7,54 @@ from django.db.models import Q
 from django.template import RequestContext
 from django.core import serializers
 import random, re, string
-from mainapp.models import Series, Book, LoreObject
+from mainapp.models import Series, World, Book, LoreObject
 from userapp.models import Wish, Follow
 
 def index(request):
     books = Book.objects.all()
     sales = [book for book in books if book.on_sale == True]
     new_release = books.order_by("-date_released")[0]
-    return render(request, "index.html", context={"books": books,  "sales": sales,  "new_release": new_release})
+    quotes = [
+    '"What you are does not matter. What you do, does."\n-Goddess Cynthia to Jelly (Royal Ooze Chronicles)', 
+    '"Train, and one day honor your dreams by reaching out for them. Grow strong, grow smart, and grow kind. I leave the future in your hands."\n-World-Paladin Tomas Nierz (The Long Road of Adventure)',
+    '"Forget video games and the internet, buddy, junk food is what I miss the most about the apocalypse."\n-Jake Trevors (After School Fantasy)',
+    '"Zane was curious as to how a blender, a dehumidifier, four computers, eleven gaming consoles and a single Nokia cellphone would possibly be able to make what Rob wanted."\n-Welcome to the Galactic Shoppers Network'
+    ]
+    for q in quotes:
+        quote = quotes[random.randint(0, len(quotes)-1)]
+    return render(request, "index.html", context={"books": books, "sales": sales, "new_release": new_release, "quote": quote})
 
 
-def all_books_view(request, series=""):
+def all_books_view(request, series="", world=""):
     series_list = Series.objects.all()
-    worlds = ["Erafore", "Messy Earth", "Terra", "Standalone", ""]
+    worlds = World.objects.all()
     results_to_show = 8
     series_request = False
     series_name = ""
+    series_desc = ""
+    world_request = False
+    world_name = ""
+    world_desc = ""
 
     if request.method == "GET":
         pagenum = 1
         stop_scrolling = False
-        if series == "":
+        if series == "" and world == "":
             books = Book.objects.all().order_by("-date_released")[0:results_to_show]
             request.session["objects_viewed"] = results_to_show
         else:
-            books = Book.objects.filter(series=series).order_by("-date_released")
-            stop_scrolling = True
-            series_request = True
-            series_name = series_list[int(series)-1].name
+            if series != "":
+                books = Book.objects.filter(series=series).order_by("-date_released")
+                stop_scrolling = True
+                series_request = True
+                series_name = series_list[int(series)-1].name
+                series_desc = books[0].series.description
+            else:
+                books = Book.objects.filter(world=world).order_by("-date_released")
+                stop_scrolling = True
+                world_request = True
+                world_name = worlds[int(world)-1].name
+                world_desc = books[0].world.description
     else:
         pagenum = int(request.POST["pagenum"])
         all_books = Book.objects.all().order_by("-date_released")
@@ -62,27 +82,36 @@ def all_books_view(request, series=""):
             "pagenum": pagenum,
             "books": books,
             "series_list": list(series_list.values()),
+            "worlds": list(worlds.values()),
             "stop_scrolling": stop_scrolling # this prevents the server from being called unnecessarily
             })
     
     context = {
         "num": len(books),
         "series_list": series_list,
-        "worlds": worlds[:-1],
+        "worlds": list(worlds.values()),
         "books": books,
         "pagenum": pagenum,
         "stop_scrolling": stop_scrolling,
         "series_request": series_request,
-        "series_name": series_name
+        "series_name": series_name,
+        "selected_series_description": series_desc,
+        "world_request": world_request,
+        "world_name": world_name,
+        "selected_world_description": world_desc
     }
     return render(request, "all_books.html", context)
 
 
 def filter_books(request):
-    series_list = Series.objects.all()
+    series = Series.objects.all()
+    series_list = [element["id"] for element in list(series.values())]
+    series_list.append("")
     selected_series = ""
     selected_world = ""
-    worlds = ["Erafore", "Messy Earth", "Terra", "Standalone", ""]
+    worlds = World.objects.all()
+    worlds_list = [element["id"] for element in list(worlds.values())]
+    worlds_list.append("")
     results_to_show = 8
     
     if request.method == "POST":
@@ -93,9 +122,13 @@ def filter_books(request):
         series_id = request.POST["series"]
         world = request.POST["world"]
         if series_id == "" and world == "":
-                return JsonResponse({"error": "Please enter at least one search filter"})
-        if world not in worlds:
-            return JsonResponse({"error": "Invalid world"})
+            return JsonResponse({"error": "Please enter at least one search filter"})
+        if world != "":
+            if int(world) not in worlds_list:
+                return JsonResponse({"error": "Invalid world"})
+        if series_id != "":
+            if int(series_id) not in series_list:
+                return JsonResponse({"error": "Invalid series"})
 
         def filter_variable_args(**kwargs):
             return Q(**{k: v for k, v in kwargs.items() if v is not None and v != ""})
@@ -122,7 +155,13 @@ def filter_books(request):
             selected_series_name = None
             selected_series_description = None
         
-        selected_world = world
+        if world != "":
+            selected_world = World.objects.get(pk=int(world))
+            selected_world_name = selected_world.name
+            selected_world_description = selected_world.description
+        else:
+            selected_world_name = None
+            selected_world_description = None
 
         if pagenum == 1:
                 request.session["objects_viewed"] = results_to_show
@@ -136,11 +175,13 @@ def filter_books(request):
             stop_scrolling = False
 
         return JsonResponse({
-            "selected_world": selected_world,
+            "selected_world_name": selected_world_name,
+            "selected_world_description": selected_world_description,
             "selected_series_name": selected_series_name,
             "selected_series_description": selected_series_description,
             "books": books,
-            "series_list": list(series_list.values()),
+            "series_list": list(series.values()),
+            "worlds": list(worlds.values()),
             "pagenum": pagenum,
             "stop_scrolling": stop_scrolling
             })
@@ -176,7 +217,7 @@ def contact_view(request):
 
 def lore_view(request):
     series_list = Series.objects.all()
-    worlds = ["Erafore", "Messy Earth", "Terra", "Standalone", ""]
+    worlds = World.objects.all()
     type_list = ["Character", "Item", "Place", ""]
     results_to_show = 8
     
@@ -204,13 +245,14 @@ def lore_view(request):
             "pagenum": pagenum,
             "lore_data": lore_data,
             "series_list": list(series_list.values()),
+            "worlds": list(worlds.values()),
             "stop_scrolling": stop_scrolling
             })
 
     context = {
         "num": len(lore_data),
         "series_list": series_list,
-        "worlds": worlds[:-1],
+        "worlds": list(worlds.values()),
         "type_list": type_list[:-1],
         "lore_data": lore_data,
         "pagenum": pagenum
@@ -220,12 +262,16 @@ def lore_view(request):
 
 
 def filter_lore(request):
-    series_list = Series.objects.all()
+    series = Series.objects.all()
+    series_list = [element["id"] for element in list(series.values())]
+    series_list.append("")
+    worlds = World.objects.all()
+    worlds_list = [element["id"] for element in list(worlds.values())]
+    worlds_list.append("")
+    type_list = ["Character", "Item", "Place", ""]
     selected_series = ""
     selected_world = ""
     selected_type = ""
-    worlds = ["Erafore", "Messy Earth", "Terra", "Standalone", ""]
-    type_list = ["Character", "Item", "Place", ""]
     results_to_show = 8
     
     if request.method == "POST":
@@ -241,8 +287,12 @@ def filter_lore(request):
         if series_id == "" and world == "" and type == "":
             return JsonResponse({"error": "Please enter at least one search filter"})
 
-        elif world not in worlds:
-            return JsonResponse({"error": "Invalid world"})
+        if world != "":
+            if int(world) not in worlds_list:
+                return JsonResponse({"error": "Invalid world"})
+        if series_id != "":
+            if int(series_id) not in series_list:
+                return JsonResponse({"error": "Invalid series"})
         if type not in type_list:
             return JsonResponse({"error": "Invalid type"})
         else:
@@ -262,7 +312,22 @@ def filter_lore(request):
                 selected_series_name = None
                 selected_series_description = None
             
-            selected_world = world
+            if series_id != "":
+                selected_series = Series.objects.get(pk=series_id)
+                selected_series_name = selected_series.name
+                selected_series_description = selected_series.description
+            else:
+                selected_series_name = None
+                selected_series_description = None
+            
+            if world != "":
+                selected_world = World.objects.get(pk=int(world))
+                selected_world_name = selected_world.name
+                selected_world_description = selected_world.description
+            else:
+                selected_world_name = None
+                selected_world_description = None
+            
             selected_type = type
             
             if pagenum == 1:
@@ -277,14 +342,16 @@ def filter_lore(request):
                 stop_scrolling = False
 
     return JsonResponse({
-        "selected_world":selected_world,
-        "selected_series_name":selected_series_name,
-        "selected_series_description":selected_series_description,
-        "selected_type":selected_type,
-        "lore_data":lore_data,
-        "series_list":list(series_list.values()),
-        "pagenum":pagenum,
-        "stop_scrolling":stop_scrolling
+        "worlds": list(worlds.values()),
+        "selected_world_name": selected_world_name,
+        "selected_world_description": selected_world_description,
+        "selected_series_name": selected_series_name,
+        "selected_series_description": selected_series_description,
+        "selected_type": selected_type,
+        "lore_data": lore_data,
+        "series_list": list(series.values()),
+        "pagenum": pagenum,
+        "stop_scrolling": stop_scrolling
         })
 
 

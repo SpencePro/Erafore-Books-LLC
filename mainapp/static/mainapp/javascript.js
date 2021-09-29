@@ -13,14 +13,34 @@ function goBack() {
 
 // Function to make search button clickable
 function makeClickable() {
-    let userInput = document.getElementById("searchbox").value;
-    let searchButton = document.getElementById("search-btn");
+    let userInput = this.value;
+    let searchButton = this.nextElementSibling;
 
     if (userInput.length > 0) {
         searchButton.type = "submit";
     }
     else {
         searchButton.type = "button";
+    }
+}
+
+// Function to toggle navbar on mobile
+function displayMobileNav() {
+    let navContent = document.getElementById("navbar-mobile");
+    let topBar = document.querySelector(".top-bar");
+    let middleBar = document.querySelector(".middle-bar");
+    let bottomBar = document.querySelector(".bottom-bar");
+    if (navContent.style.maxHeight === "0px") {
+        navContent.style.maxHeight = "1000px";
+        topBar.style.transform = "rotate(45deg)";
+        middleBar.style.opacity = 0;
+        bottomBar.style.transform = "rotate(-45deg)";
+    }
+    else {
+        navContent.style.maxHeight = "0px";
+        topBar.style.transform = "rotate(0)";
+        middleBar.style.opacity = 1;
+        bottomBar.style.transform = "rotate(0)";
     }
 }
 
@@ -36,7 +56,6 @@ function slideshow() {
             slides[i].classList.add("hidden");
         }
         slideIndex++;
-        //console.log(slideIndex);
         if (slideIndex > slides.length) {
             slideIndex = 1;
         }
@@ -173,9 +192,10 @@ function displayFilters() {
                 }
                 else {
                     errorMessage.classList.add("hidden");
-                    if (data.selected_world) {
+                    if (data.selected_world_name) {
                         selectedWorld.classList.remove("hidden");
-                        document.getElementById("world-name").innerHTML = data.selected_world;
+                        document.getElementById("world-name").innerHTML = data.selected_world_name;
+                        document.getElementById("world-description").innerHTML = data.selected_world_description;
                     }
                     else {
                         selectedWorld.classList.add("hidden");
@@ -280,25 +300,27 @@ function buildListing(books, data, currentUrl) {
         // series div
         const seriesDiv = document.createElement("div");
         seriesDiv.classList.add("hori");
-        const seriesP = document.createElement("p");
-        seriesP.id = `book-series-${books[i].title}`;
-        seriesP.innerHTML = data.series_list[parseInt(books[i].series_id) - 1].name;
+        const seriesName = document.createElement("a");
+        seriesName.id = `book-series-${books[i].title}`;
+        seriesName.innerHTML = data.series_list[parseInt(books[i].series_id) - 1].name;
+        seriesName.href = currentUrl + "all/series/" + books[i].series_id;
         const seriesLabel = document.createElement("label");
-        seriesLabel.for = seriesP.id;
+        seriesLabel.for = seriesName.id;
         seriesLabel.innerHTML = "Series:";
         seriesDiv.appendChild(seriesLabel);
-        seriesDiv.appendChild(seriesP);
+        seriesDiv.appendChild(seriesName);
         // world div
         const worldDiv = document.createElement("div");
         worldDiv.classList.add("hori");
-        const worldP = document.createElement("p");
-        worldP.id = `book-world-${books[i].title}`;
-        worldP.innerHTML = books[i].world;
+        const worldName = document.createElement("a");
+        worldName.id = `book-world-${books[i].title}`;
+        worldName.innerHTML = data.worlds[books[i].world_id - 1].name;
+        worldName.href = currentUrl + "all/world/" + books[i].world_id;
         const worldLabel = document.createElement("label");
-        worldLabel.for = worldP.id;
+        worldLabel.for = worldName.id;
         worldLabel.innerHTML = "World:";
         worldDiv.appendChild(worldLabel);
-        worldDiv.appendChild(worldP);
+        worldDiv.appendChild(worldName);
         // synopsis div
         const synopsisDiv = document.createElement("div");
         synopsisDiv.classList.add("synopsis")
@@ -310,11 +332,10 @@ function buildListing(books, data, currentUrl) {
         synopsisLabel.innerHTML = "Synopsis:";
         const seeMoreDiv = document.createElement("div");
         seeMoreDiv.style = "text-align: center";
-        const seeMore = document.createElement("button");
-        seeMore.type = "button";
+        const seeMore = document.createElement("a");
         seeMore.classList.add("btn", "btn-primary", "btn-sm", "more-btn");
         seeMore.innerHTML = "See more";
-        seeMore.addEventListener("click", showMore);
+        seeMore.href = currentUrl + "book/" + books[i].id;
         seeMoreDiv.appendChild(seeMore);
         synopsisDiv.appendChild(synopsisLabel);
         synopsisDiv.appendChild(synopsisP);
@@ -442,30 +463,32 @@ function buildLoreListing(lore, data, currentUrl) {
         // series div
         const seriesDiv = document.createElement("div");
         seriesDiv.classList.add("hori");
-        const seriesP = document.createElement("p");
-        seriesP.id = `object-series-${lore[i].name}`;
+        const seriesName = document.createElement("a");
+        seriesName.id = `object-series-${lore[i].name}`;
         if (lore[i].series_id === null) {
-            seriesP.innerHTML = "Various";
+            seriesName.innerHTML = "Various";
         }
         else {
-            seriesP.innerHTML = data.series_list[parseInt(lore[i].series_id) - 1].name;
+            seriesName.innerHTML = data.series_list[parseInt(lore[i].series_id) - 1].name;
+            seriesName.href = currentUrl + "all/series/" + lore[i].series_id;
         }
         const seriesLabel = document.createElement("label");
-        seriesLabel.for = seriesP.id;
+        seriesLabel.for = seriesName.id;
         seriesLabel.innerHTML = "Series:";
         seriesDiv.appendChild(seriesLabel);
-        seriesDiv.appendChild(seriesP);
+        seriesDiv.appendChild(seriesName);
         // world div
         const worldDiv = document.createElement("div");
         worldDiv.classList.add("hori");
-        const worldP = document.createElement("p");
-        worldP.id = `object-world-${lore[i].title}`;
-        worldP.innerHTML = lore[i].world;
+        const worldName = document.createElement("a");
+        worldName.id = `object-world-${lore[i].title}`;
+        worldName.innerHTML = data.worlds[parseInt(lore[i].world_id) - 1].name;
+        worldName.href = currentUrl + "all/world/" + lore[i].world_id;
         const worldLabel = document.createElement("label");
-        worldLabel.for = worldP.id;
+        worldLabel.for = worldName.id;
         worldLabel.innerHTML = "World:";
         worldDiv.appendChild(worldLabel);
-        worldDiv.appendChild(worldP);
+        worldDiv.appendChild(worldName);
         //type div
         const typeDiv = document.createElement("div");
         typeDiv.classList.add("hori");
@@ -512,15 +535,13 @@ function buildLoreListing(lore, data, currentUrl) {
 function showMore() {
     var synopsis = this.parentElement.previousElementSibling;
     if (this.innerHTML === "See more") {
-        //synopsis.style.maxHeight = "800px";
         synopsis.classList.add("expanded");
         this.style.marginTop = "0";
         this.parentElement.style.height = "2rem";
         this.innerHTML = "See less";
     }
     else {
-        //synopsis.style.maxHeight = "6.5rem";
-        synopsis.classList.remove("expanded"); //("style","-webkit-mask-image: linear-gradient(white, transparent); max-height: 6.5rem;" );
+        synopsis.classList.remove("expanded");
         this.style.marginTop = "-2rem";
         this.parentElement.style.height = "0";
         this.innerHTML = "See more";

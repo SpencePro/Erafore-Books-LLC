@@ -81,25 +81,26 @@ WSGI_APPLICATION = 'erafore.wsgi.application'
 
 
 DATABASES = {
-    ''''default': {
+    'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.getenv('DATABASE_NAME'),
         'USER': os.getenv('USER'),
         'PASSWORD': os.getenv('PASSWORD'),
         'HOST': '127.0.0.1',
         'PORT': '3306'
-    },'''
-        'default': {
+    },
+        
+}
+''''default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.getenv('DATABASE_NAME'),
         'USER': os.getenv('NAME'),
         'PASSWORD': os.getenv('PASSWORD'),
         'HEROKU_POSTGRESQL_BRONZE_URL': os.getenv('DATABASE_URL'),
+        'CONN_MAX_AGE': 1000,
         'HOST': '127.0.0.1',
         'PORT': '5432'
-    },
-}
-
+    },'''
 
 DATABASE_URL = os.getenv('DATABASE_URL')
 '''conn = psycopg2.connect(DATABASE_URL, host="localhost", user='postgres', password=os.getenv('PASSWORD'), dbname=os.getenv('DATABASE_NAME'))
@@ -107,7 +108,7 @@ DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True
 
 AUTH_USER_MODEL = "userapp.User"
 
-CONN_MAX_AGE = 120
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -174,6 +175,6 @@ EMAIL_USE_TLS = True
 EMAIL_USE_LOCALTIME = True
 
 # Heroku
-django_heroku.settings(locals())
+'''django_heroku.settings(locals())
 
-del DATABASES['default']['OPTIONS']['sslmode']
+del DATABASES['default']['OPTIONS']['sslmode']'''

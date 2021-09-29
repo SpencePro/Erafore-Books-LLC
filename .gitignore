@@ -1,6 +1,6 @@
 # Secrets and keys
-#.env
-#Procfile
+.env
+Procfile
 
 # Unused Database/Storage
 *.sqlite3

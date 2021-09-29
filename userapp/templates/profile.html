@@ -16,7 +16,7 @@ Profile
     document.getElementById("back-btn").addEventListener("click", goBack);
 </script>
 {% else %}
-<h2>User Profile for {{ current_user.username }}</h2>
+<h2 class="page-title">User Profile for {{ current_user.username }}</h2>
 <div class="profile-container hori fade-in">
     <div class="lists-container hori">
 
@@ -50,7 +50,7 @@ Profile
                 {% for series in series_followed %}
                 <li id="follow-element-{{ series.series.id }}" class="follow-element">
                     <label for="follow-form-{{ series.series.id }}">></label>
-                    <a href="{% url 'all_books' series.series.id %}">{{ series.series.name }}</a>
+                    <a href="{% url 'all_books/series' series.series.id %}">{{ series.series.name }}</a>
                     <form action="{% url 'follow' series.series.id %}" method="POST" id="follow-form-{{ series.series.id }}"
                         class="{{ series.series.id }}">
                         {% csrf_token %}

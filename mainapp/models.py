@@ -4,11 +4,16 @@ from django.db.models.fields import CharField, TextField, EmailField
 from django.db.models.fields.related import ForeignKey
 
 
+class World(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+
+
 class Series(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     date_started = models.DateField()
-    world = models.CharField(max_length=255, null=True, blank=True)
+    world = models.ForeignKey(World, default=None, on_delete=models.CASCADE)
 
 
 class Book(models.Model):
@@ -19,7 +24,7 @@ class Book(models.Model):
     date_released = models.DateField()
     image = models.CharField(max_length=255, null=True, blank=True)
     amazon_link = models.URLField(max_length=255, null=True, blank=True)
-    world = models.CharField(max_length=255, null=True, blank=True)
+    world = models.ForeignKey(World, default=None, on_delete=models.CASCADE)
     on_sale = models.BooleanField(default=False)
     audio_book = models.BooleanField(default=False)
 
@@ -29,6 +34,6 @@ class LoreObject(models.Model):
     type = models.CharField(max_length=255, null=True, blank=True)
     description = models.TextField()
     series = models.ForeignKey(Series, on_delete=models.CASCADE, null=True, blank=True)
-    world = models.CharField(max_length=255, null=True, blank=True)
+    world = models.ForeignKey(World, default=None, on_delete=models.CASCADE)
     image = models.CharField(max_length=255, null=True, blank=True)
 

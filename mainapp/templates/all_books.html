@@ -6,8 +6,8 @@ Books
 {% endblock %}
 
 {% block body %}
-{% if series_request == False %}
-<h2>Books</h2>
+{% if series_request == False and world_request == False %}
+<h2 class="page-title">BOOKS</h2>
 <div class="series-list">
     <div class="filter-option vert">
         <form action="{% url 'all_books' %}" method="POST" id="filter-form" class="filter-form hori">
@@ -28,7 +28,7 @@ Books
                 <select name="world" id="world-filter" style="width:12rem;">
                     <option value="" selected></option>
                     {% for world in worlds %}
-                    <option value="{{ world }}">{{ world }}</option>
+                    <option value="{{ world.id }}">{{ world.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -37,10 +37,21 @@ Books
         </form>
     </div>
 </div>
-{% else %}
-<h2>{{ series_name }}</h2>
+{% elif series_request == True %}
+<div class="center selected-series">
+    <h2>{{ series_name }}</h2>
+    <p class="selected-series">{{ selected_series_description }}</p>
+</div>
 <div class="vert center">
-    </h5><a href="{% url 'all_books' %}" id="reset-search">New Book Search</a>
+    </h5><a href="{% url 'all_books' %}" id="reset-search">NEW BOOK SEARCH</a>
+</div>
+{% elif world_request == True %}
+<div class="center selected-world">
+    <h2>{{ world_name }}</h2>
+    <p class="selected-world">{{ selected_world_description }}</p>
+</div>
+<div class="vert center">
+    </h5><a href="{% url 'all_books' %}" id="reset-search">NEW BOOK SEARCH</a>
 </div>
 {% endif %}
 
@@ -50,7 +61,7 @@ Books
     </div>
 </div>
 
-<div id="selected-series" class="selected-series container vert center hidden">
+<div id="selected-series" class="container vert center hidden">
     <div class="hori center" style="align-items: baseline;">
         <label style="font-size: large;" for="series-name">Series:</label>
         <h5 id="series-name"></h5>
@@ -58,9 +69,12 @@ Books
     <p id="series-description"></p>
 </div>
 
-<div id="selected-world" class="selected-world container hori center hidden">
-    <label style="font-size: large;" for="world-name">World:</label>
-    <h5 id="world-name"></h5>
+<div id="selected-world" class="container vert center hidden">
+    <div class="hori center" style="align-items: baseline;">
+        <label style="font-size: large;" for="world-name">World:</label>
+        <h5 id="world-name"></h5>
+    </div>
+    <p id="world-description"></p>
 </div>
 
 <h5 id="error-message" class="hidden center"></h5>
@@ -97,18 +111,18 @@ Books
                 <p>Published {{ book.date_released|date:"M d, Y" }}</p>
                 <div class="hori">
                     <label for="book-series-{{ book.title }}">Series:</label>
-                    <p id="book-series-{{ book.title }}">{{ book.series.name }}</p>
+                    <a href="{% url 'all_books/series' book.series.id %}" id="book-series-{{ book.title }}">{{ book.series.name }}</a>
                 </div>
                 <div class="hori">
                     <label for="book-world-{{ book.title }}">World:</label>
-                    <p id="book-world-{{ book.title }}">{{ book.world }}</p>
+                    <a href="{% url 'all_books/world' book.world.id %}" id="book-world-{{ book.title }}">{{ book.world.name }}</a>
                 </div>
                 <div class="synopsis">
                     <label for="book-synopsis-{{ book.id }}">Synopsis:</label>
                     <p id="book-synopsis-{{ book.id }}">{{ book.synopsis }}</p>
                 </div>
                 <div style="text-align: center;">
-                    <button type="button" class="btn btn-primary btn-sm more-btn">See more</button>
+                    <a href="{% url 'book' book.id %}" class="btn btn-primary btn-sm more-btn">See More</a>
                 </div>
             </div>
         </div>
@@ -127,12 +141,9 @@ Books
 
 <script type="text/javascript">
     document.addEventListener("scroll", infiniteScroll);
-    document.querySelectorAll(".more-btn").forEach((button) => {
-        button.addEventListener("click", showMore);
-    });
 </script>
 
-{% if series_request == False %}
+{% if series_request == False and world_request == False %}
 <script type="text/javascript">
     window.addEventListener("beforeunload", function() {
         resetBookFilter("series-filter", "world-filter", "");

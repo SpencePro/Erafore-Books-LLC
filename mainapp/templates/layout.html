@@ -13,13 +13,80 @@
         <script src="https://kit.fontawesome.com/e21174c2c9.js" crossorigin="anonymous"></script>
         <script src="{% static 'mainapp/javascript.js' %}"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     </head>
     
     <body>
         <header class="hori">
-            <div class="logo-area center vert">
-                <h2>Erafore Books, LLC</h2>
-                <h5>Books by Ian Rodgers</h5>
+            <div class="hori">
+                <div class="logo-area center hori">
+                    <picture>
+                        <source srcset="{% static 'site_logo_small.avif' %}" type="image/avif">
+                        <a href="{% url 'index' %}"><img src="{% static 'site_logo_small.png' %}" alt="Jelly" id="logo-img"></a>
+                    </picture>
+                    <div class="vert">
+                        <h2>Erafore Books, LLC</h2>
+                        <h5>Books by Ian Rodgers</h5>
+                    </div>
+                    <button id="nav-btn" class="navbar-toggler vert hidden" type="button">
+                        <span class="icon-bar top-bar"></span>
+                        <span class="icon-bar middle-bar"></span>
+                        <span class="icon-bar bottom-bar"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="mobile-area vert">
+                <ul id="navbar-mobile" class="list-group hidden-content" style="max-height: 0px;">
+                    <li class="list-group-item hori">
+                        <i class="fas fa-home"></i>
+                        <nav><a href="{% url 'index' %}">HOME</a></nav>
+                    </li>
+                    <li class="list-group-item hori">
+                        <i class="fas fa-book-open"></i>
+                        <nav><a href="{% url 'all_books' %}">BUY NOW</a></nav>
+                    </li>
+                    <li class="list-group-item hori">
+                        <i class="fas fa-magic"></i>
+                        <nav><a href="{% url 'lore_page' %}">LORE</a></nav>
+                    </li>
+                    <li class="list-group-item hori">
+                        <i class="fas fa-phone"></i>
+                        <nav><a href="{% url 'contact' %}">CONTACT</a></nav>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="list-group-item hori">
+                        <i class="fas fa-user"></i>
+                        <nav><a href="{% url 'profile' user.id %}">MY PROFILE</a></nav>
+                    </li>
+                    <li class="list-group-item hori">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <nav><a href="{% url 'logout_confirm' %}">LOGOUT</a></nav>
+                    </li>
+                    {% else %}
+                    <li class="list-group-item hori">
+                        <i class="fas fa-user"></i>
+                        <nav><a href="{% url 'register' %}">REGISTER</a></nav>
+                    </li>
+                    <li class="list-group-item hori">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <nav><a href="{% url 'login' %}">LOGIN</a></nav>
+                    </li>
+                    {% endif %}
+                    <li class="list-group-item hori">
+                        <i class="fas fa-book"></i>
+                        <nav><a href="{% url 'random' %}">RANDOM BOOK</a></nav>
+                    </li>
+                    <li class="list-group-item">
+                        <form class="form-inline" action="{% url 'search' %}" method="GET">
+                            <input type="text" name="q" id="searchbox-mobile" class="searchbox" autocomplete="off" placeholder="SEARCH">
+                            <button id="search-btn-mobile" class="btn btn-primary btn-sm" type="button"><i class="fas fa-search"></i></button>
+                        </form>
+                    </li>
+                    <li class="list-group-item hori">
+                        <a href="https://www.facebook.com/Ian-Rodgers-Author-Page-1305156149529437" target="_blank" rel="noreferrer noopener"><i class="fab fa-facebook-square"></i></a>
+                        <a href="https://twitter.com/erafore" target="_blank" rel="noreferrer noopener"><i class="fab fa-twitter-square"></i></a>
+                    </li>
+                </ul>
             </div>
             <div class="navbar">
                 <div class="hori">
@@ -38,7 +105,6 @@
                     <i class="fas fa-phone"></i>
                     <nav><a href="{% url 'contact' %}">CONTACT</a></nav>
                 </div>
-                
                 {% if user.is_authenticated %}
                     <div class="hori">
                         <i class="fas fa-user"></i>
@@ -63,8 +129,8 @@
                     <nav><a href="{% url 'random' %}">RANDOM BOOK</a></nav>
                 </div>
                 <form class="form-inline" action="{% url 'search' %}" method="GET">
-                    <input type="text" name="q" id="searchbox" autocomplete="off" placeholder="Search">
-                    <button id="search-btn" class="btn btn-primary btn-sm" type="button">SEARCH</button>
+                    <input type="text" name="q" id="searchbox" class="searchbox" autocomplete="off" placeholder="SEARCH">
+                    <button id="search-btn" class="btn btn-primary btn-sm" type="button"><i class="fas fa-search"></i></button>
                 </form>
             </div>
         </header>
@@ -76,14 +142,12 @@
         </main>
 
         <script type="text/javascript">
-            document.getElementById("searchbox").addEventListener("keydown", function(event) {
-                if (event.keyCode === 13) {
-                    event.preventDefault();
-                }
+            document.querySelectorAll(".searchbox").forEach((box) => {
+                box.addEventListener("input", makeClickable);
             });
-            document.getElementById("searchbox").addEventListener("input", makeClickable);
             document.addEventListener("scroll", topButtonScroll);
             document.getElementById("return-to-top").addEventListener("click", returnToTop);
+            document.getElementById("nav-btn").addEventListener("click", displayMobileNav);
         </script>
 
         <footer class="center">
@@ -95,7 +159,7 @@
                     <i class="fab fa-facebook-square"></i>
                     <a href="https://www.facebook.com/Ian-Rodgers-Author-Page-1305156149529437" target="_blank" rel="noreferrer noopener">Facebook</a>
                 </div>
-                <p>-</p>
+                <p id="dash-divider">-</p>
                 <div class="hori">
                     <i class="fab fa-twitter-square"></i>
                     <a href="https://twitter.com/erafore" target="_blank" rel="noreferrer noopener">Twitter</a>
@@ -103,7 +167,7 @@
             </div>
             <div class="hori">
                 <i class="fas fa-envelope"></i>
-                EraforeLLCDev@gmail.com
+                <p>EraforeLLCDev@gmail.com</p>
             </div>
             <p>Website by Spencer Rodgers</p>
             <div class="hori">

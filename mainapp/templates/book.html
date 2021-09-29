@@ -7,8 +7,8 @@
 
 {% block body %}
 <div class="individual-book">
-    <h2>{{ book.title }}</h2>
-    <div class="listing fade-in hori">
+    <h2 class="page-title">{{ book.title }}</h2>
+    <div class="listing hori">
         <div class="book-div vert">
             <picture>
                 <source srcset="{% static book.image %}.avif" type="image/avif">
@@ -32,6 +32,8 @@
             {% if book.on_sale == True %}
                 <h5>On Sale Now!</h5>
             {% endif %}
+
+            <h5><a href="{{ book.amazon_link }}" target="_blank" rel="noreferrer noopener" id="amazon-link">Purchase on Amazon</a></h5>
                 
             {% if user.is_authenticated %}
                 <form action="{% url 'add' book.id %}" method="POST" class="{{ book.id }}" id="wishlist-form-{{ book.id }}">
@@ -44,13 +46,11 @@
                     {% endif %}
                 </form>
             {% endif %}
-
-            <p>Published {{ book.date_released|date:"M d, Y" }}</p>
             
             <div class="hori series-div">
                 <div class="hori">
                     <label for="book-series">Series:</label>
-                    <a href="{% url 'all_books' book.series.id %}" id="book-series">{{ book.series.name }}</a>
+                    <a href="{% url 'all_books/series' book.series.id %}" id="book-series">{{ book.series.name }}</a>
                 </div>
                 {% if user.is_authenticated %}
                     <p id="series-divider">-</p>
@@ -70,14 +70,16 @@
             
             <div class="hori">
                 <label for="book-world">World:</label>
-                <p id="book-world">{{ book.world }}</p>
+                <a href="{% url 'all_books/world' book.world.id %}" id="book-world">{{ book.world.name }}</a>
             </div>
 
             <div>
                 <label for="book-synopsis">Synopsis:</label>
                 <p id="book-synopsis">{{ book.synopsis }}</p>
             </div>
-            <h5><a href="{{ book.amazon_link }}" target="_blank" rel="noreferrer noopener" id="amazon-link">Purchase on Amazon</a></h5>
+
+            <p>Published {{ book.date_released|date:"M d, Y" }}</p>
+            
             {% if book.audio_book == True %}
                 <div class="hori audio">
                     <i class="fas fa-headphones"></i>
