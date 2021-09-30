@@ -183,11 +183,9 @@ select, input {
 }
 
 .spinner-div {
-    position: absolute;
     left: 50%;
     right: 50%;
-    bottom: 50%;
-    top: 50%;
+    margin-bottom: 0.5rem;
 }
 
 .spinner-results {
