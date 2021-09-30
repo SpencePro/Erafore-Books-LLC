@@ -86,11 +86,21 @@ DATABASES = {
         'NAME': os.getenv('DATABASE_NAME'),
         'USER': os.getenv('USER'),
         'PASSWORD': os.getenv('PASSWORD'),
-        'HOST': '127.0.0.1',
+        'HOST': os.getenv('HOST'), 
+        'PORT': '3306'
+    }
+}
+'''
+# local version:
+'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.getenv('LOCAL_DATABASE_NAME'),
+        'USER': os.getenv('LOCAL_USER'),
+        'PASSWORD': os.getenv('LOCAL_PASSWORD'),
+        'HOST': os.getenv('LOCAL_HOST'), #'127.0.0.1',
         'PORT': '3306'
     },
-        
-}
+'''
 ''''default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.getenv('DATABASE_NAME'),
