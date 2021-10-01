@@ -92,12 +92,12 @@ DATABASES = {
 }
 '''
 # local version:
-'default': {
+    'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.getenv('LOCAL_DATABASE_NAME'),
         'USER': os.getenv('LOCAL_USER'),
         'PASSWORD': os.getenv('LOCAL_PASSWORD'),
-        'HOST': os.getenv('LOCAL_HOST'), #'127.0.0.1',
+        'HOST': os.getenv('LOCAL_HOST'),
         'PORT': '3306'
     },
 '''
