@@ -70,7 +70,7 @@ function infiniteScroll() {
         document.getElementById("end-of-results").classList.remove("hidden");
     }
     else {
-        if (window.innerHeight + window.scrollY === document.body.offsetHeight) {
+        if (window.innerHeight + window.scrollY === document.body.offsetHeight - 1) {
             var data = $("#filter-form").serializeArray();
             data[1].value++;
             var currentUrl = window.location.href;
