@@ -1,5 +1,5 @@
 # Secrets and keys
-#.env
+.env
 Procfile
 
 # Unused Database/Storage
