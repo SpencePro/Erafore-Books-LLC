@@ -206,7 +206,7 @@ a img:hover, #book-image:hover {
 }
 
 .page-title {
-    font-family: luminari;
+    font-family: garamond;
 }
 
 /* HEADER */
@@ -219,7 +219,7 @@ header {
     margin-top: 1rem;
     margin-left: 1rem;
     align-content: baseline;
-    font-family: luminari;
+    font-family: garamond;
 }
 
 .navbar {
@@ -255,7 +255,7 @@ main {
 
 .welcome-message h4 {
     margin-bottom: 2rem;
-    font-family: luminari;
+    font-family: garamond;
 }
 
 @keyframes fade-sideways {
@@ -472,7 +472,7 @@ a.btn.btn-primary.btn-sm.more-btn {
 }
 
 .selected-series h2, .selected-world h2 {
-    font-family: luminari;
+    font-family: garamond;
 }
 
 /* Individual Books */
@@ -556,7 +556,6 @@ a.btn.btn-primary.btn-sm.more-btn {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgb(0,0,0); 
     background-color: rgba(0,0,0,0.4); 
 }
 
@@ -813,6 +812,13 @@ footer #dash-divider {
     #logo-img {
         height: 4rem;
     }
+    .return-btn {
+        font-size: medium;
+        padding: 0.5rem;
+        bottom: 10px;
+        right: 10px;
+        box-shadow: 0px 0.2rem 0.2rem 3px rgba(41, 19, 48, 0.5);
+    }
 }
 
 /* Navbar */
@@ -929,6 +935,9 @@ footer #dash-divider {
         margin-top: 0.5rem;
         width: fit-content;
         height: fit-content;
+    }
+    .quotes cite {
+        font-family: Garamond;
     }
     .slideshow {
         justify-content: center;
