@@ -565,6 +565,7 @@ a.btn.btn-primary.btn-sm.more-btn {
     padding: 10px;
     border: 1px solid #888;
     width: fit-content; 
+    width: -moz-fit-content;
 }
 
 .close {
