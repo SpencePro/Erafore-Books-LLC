@@ -29,7 +29,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = (os.getenv('DEBUG_VALUE') == 'True')
 
-ALLOWED_HOSTS = ['eraforebooksllc.herokuapp.com', '127.0.0.1', 'eraforebooks.com']
+ALLOWED_HOSTS = ['eraforebooksllc.herokuapp.com', '127.0.0.1', 'eraforebooks.com', 'www.eraforebooks.com']
 
 # Application definition
 
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -81,7 +82,9 @@ WSGI_APPLICATION = 'erafore.wsgi.application'
 
 
 DATABASES = {
-    'default': {
+
+# local version:
+'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.getenv('DATABASE_NAME'),
         'USER': os.getenv('USER'),
@@ -91,7 +94,6 @@ DATABASES = {
     }
 }
 '''
-# local version:
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.getenv('LOCAL_DATABASE_NAME'),
@@ -167,6 +169,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "mainapp/static"),
 ]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
