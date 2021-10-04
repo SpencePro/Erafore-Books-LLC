@@ -206,7 +206,7 @@ a img:hover, #book-image:hover {
 }
 
 .page-title {
-    font-family: garamond;
+    font-family: Georgia;
 }
 
 /* HEADER */
@@ -219,7 +219,7 @@ header {
     margin-top: 1rem;
     margin-left: 1rem;
     align-content: baseline;
-    font-family: garamond;
+    font-family: Georgia;
 }
 
 .navbar {
@@ -255,7 +255,7 @@ main {
 
 .welcome-message h4 {
     margin-bottom: 2rem;
-    font-family: garamond;
+    font-family: Georgia;
 }
 
 @keyframes fade-sideways {
@@ -472,7 +472,7 @@ a.btn.btn-primary.btn-sm.more-btn {
 }
 
 .selected-series h2, .selected-world h2 {
-    font-family: garamond;
+    font-family: Georgia;
 }
 
 /* Individual Books */
@@ -938,7 +938,7 @@ footer #dash-divider {
         height: fit-content;
     }
     .quotes cite {
-        font-family: Garamond;
+        font-family: Georgia;
     }
     .slideshow {
         justify-content: center;
