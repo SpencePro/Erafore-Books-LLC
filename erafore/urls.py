@@ -16,9 +16,10 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import include, path
+import os
 
 urlpatterns = [
-    path('reach-admin-via-convoluted-route-eraforellc/', admin.site.urls),
+    path(os.getenv('ADMIN_URL'), admin.site.urls),
     path('', include('mainapp.urls')),
     path('user/', include('userapp.urls')),
     path('email/', include('emailapp.urls'))
