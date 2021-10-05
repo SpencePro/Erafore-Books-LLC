@@ -4,6 +4,8 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 from django.views.generic.base import RedirectView
 from django.conf import settings
 
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
 urlpatterns = [
     path('', views.index, name='index'),
     path('all', views.all_books_view, name='all_books'),
@@ -19,3 +21,7 @@ urlpatterns = [
     path('random', views.random_view, name='random'),
     path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url("favicon.ico")))
 ]
+error_404 = 'mainapp.views.error_404'
+error_500 = 'mainapp.views.error_500'
+
+urlpatterns += staticfiles_urlpatterns()

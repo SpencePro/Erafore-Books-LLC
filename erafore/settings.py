@@ -29,7 +29,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = (os.getenv('DEBUG_VALUE') == 'True')
 
-ALLOWED_HOSTS = ['eraforebooksllc.herokuapp.com', '127.0.0.1', 'eraforebooks.com']
+ALLOWED_HOSTS = ['eraforebooksllc.herokuapp.com', '127.0.0.1', 'eraforebooks.com', 'www.eraforebooks.com']
 
 # Application definition
 
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -57,10 +58,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'erafore.urls'
 
+TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATE_DIR, ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -79,7 +82,7 @@ WSGI_APPLICATION = 'erafore.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-
+# deployment version:
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -90,8 +93,8 @@ DATABASES = {
         'PORT': '3306'
     }
 }
-'''
 # local version:
+'''DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.getenv('LOCAL_DATABASE_NAME'),
@@ -99,8 +102,9 @@ DATABASES = {
         'PASSWORD': os.getenv('LOCAL_PASSWORD'),
         'HOST': os.getenv('LOCAL_HOST'),
         'PORT': '3306'
-    },
-'''
+    }
+}'''
+
 ''''default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.getenv('DATABASE_NAME'),
@@ -167,6 +171,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "mainapp/static"),
 ]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 

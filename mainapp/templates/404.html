@@ -6,11 +6,14 @@
 
 {% block body %}
 
-<h2>404 Error</h2>
+<h2>404: Page Not Found</h2>
 <br>
-<h4>That page could not be found</h4>
+<h4>That page could not be found! Sorry about that</h4>
 <p>Please go back to the previous page.</p>
-{{ request.path }}
-<a href="{% url 'back' request.path %}">Back</a>
+<div><button id="back-btn" class="btn btn-primary btn-sm">Go Back</button></div>
+
+<script type="text/javascript">
+    document.getElementById("back-btn").addEventListener("click", goBack);
+</script>
 
 {% endblock %}

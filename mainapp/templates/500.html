@@ -9,7 +9,13 @@
 <h2>500 Error</h2>
 <br>
 <h4>There was an error in the server, we apologize for the inconvenience</h4>
-<p>Please go back to the previous page and try again. If the error persists, please contact us at ____.</p>
-<a href="{% url 'back' request.path %}">Back</a>
+<p>Please go back to the previous page and try again. If the error persists, please contact us at <span id="email-address">EraforeLLCDev@gmail.com</span>.</p>
+<button class="btn btn-sm btn-primary copy-btn"><i class="fas fa-clipboard"></i><span class="tooltip-text">Copy Email to Clipboard</span></button>
+<div><button id="back-btn" class="btn btn-primary btn-sm">Go Back</button></div>
+
+<script type="text/javascript">
+    document.querySelector(".copy-btn").addEventListener("click", copyText);
+    document.getElementById("back-btn").addEventListener("click", goBack);
+</script>
 
 {% endblock %}
