@@ -84,7 +84,9 @@ WSGI_APPLICATION = 'erafore.wsgi.application'
 
 # deployment version:
 DATABASES = {
-    'default': {
+
+# local version:
+'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.getenv('DATABASE_NAME'),
         'USER': os.getenv('USER'),
