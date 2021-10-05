@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('reach-admin-via-convoluted-route-eraforellc/', admin.site.urls),
     path('', include('mainapp.urls')),
     path('user/', include('userapp.urls')),
     path('email/', include('emailapp.urls'))
