@@ -21,7 +21,7 @@ urlpatterns = [
     path('random', views.random_view, name='random'),
     path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url("favicon.ico")))
 ]
-'''error_404 = 'mainapp.views.error_404'
+error_404 = 'mainapp.views.error_404'
 error_500 = 'mainapp.views.error_500'
 
-urlpatterns += staticfiles_urlpatterns()'''
+urlpatterns += staticfiles_urlpatterns()
