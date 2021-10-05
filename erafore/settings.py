@@ -84,17 +84,15 @@ WSGI_APPLICATION = 'erafore.wsgi.application'
 
 # deployment version:
 DATABASES = {
-
-# local version:
-'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('DATABASE_NAME'),
-        'USER': os.getenv('USER'),
-        'PASSWORD': os.getenv('PASSWORD'),
-        'HOST': os.getenv('HOST'), 
-        'PORT': '3306'
+    'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.getenv('DATABASE_NAME'),
+            'USER': os.getenv('USER'),
+            'PASSWORD': os.getenv('PASSWORD'),
+            'HOST': os.getenv('HOST'), 
+            'PORT': '3306'
+        }
     }
-}
 # local version:
 '''DATABASES = {
     'default': {
