@@ -802,6 +802,15 @@ footer #dash-divider {
     margin-left: 0.5rem;
 }
 
+/* Error Pages */
+
+.server-error-message {
+    align-items: baseline;
+}
+
+.server-error-message button {
+    height: fit-content;
+}
 
 /* MEDIA QUERIES */
 
