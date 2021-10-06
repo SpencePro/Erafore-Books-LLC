@@ -275,7 +275,7 @@ main {
 .quotes cite {
     opacity: 0%;
     font-family: Apple Chancery;
-    animation-delay: 2s;
+    animation-delay: 1.5s;
     animation-name: fade-sideways;
     animation-duration: 2s;
     animation-fill-mode: forwards;

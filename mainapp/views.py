@@ -40,24 +40,24 @@ def all_books_view(request, series="", world=""):
         pagenum = 1
         stop_scrolling = False
         if series == "" and world == "":
-            books = Book.objects.all().order_by("-date_released")[0:results_to_show]
+            books = Book.objects.all().order_by("date_released")[0:results_to_show]
             request.session["objects_viewed"] = results_to_show
         else:
             if series != "":
-                books = Book.objects.filter(series=series).order_by("-date_released")
+                books = Book.objects.filter(series=series).order_by("date_released")
                 stop_scrolling = True
                 series_request = True
                 series_name = series_list[int(series)-1].name
                 series_desc = books[0].series.description
             else:
-                books = Book.objects.filter(world=world).order_by("-date_released")
+                books = Book.objects.filter(world=world).order_by("date_released")
                 stop_scrolling = True
                 world_request = True
                 world_name = worlds[int(world)-1].name
                 world_desc = books[0].world.description
     else:
         pagenum = int(request.POST["pagenum"])
-        all_books = Book.objects.all().order_by("-date_released")
+        all_books = Book.objects.all().order_by("date_released")
         books = list(all_books[(pagenum - 1) * results_to_show:pagenum * results_to_show].values())
         
         months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -134,7 +134,7 @@ def filter_books(request):
             return Q(**{k: v for k, v in kwargs.items() if v is not None and v != ""})
 
         book_objects = Book.objects.filter(filter_variable_args(series=series_id, world=world)).order_by(
-            "-date_released")
+            "date_released")
         books = list(book_objects[(pagenum - 1) * results_to_show:pagenum * results_to_show].values())
         
         if len(books) < 1:

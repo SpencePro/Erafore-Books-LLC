@@ -93,8 +93,8 @@ DATABASES = {
             'PORT': '3306'
         }
     }
-# local version:
-'''DATABASES = {
+'''# local version:
+DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.getenv('LOCAL_DATABASE_NAME'),

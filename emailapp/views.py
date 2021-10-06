@@ -33,7 +33,7 @@ def new_book_notification(sender, **kwargs):
     email_arr = []
     already_sent = []
     subject = f"New book released: {book.title}"
-    email_body = f"A new book from Erafore Books has been released: {book.title}\n\n'{book.synopsis}'\n\nClick here to get it on Amazon: {book.amazon_link}\n\nYou have consented to receive notifications of new book releases from Erafore Books, LLC. You can edit email permissions in your account anytime at **link to website**"
+    email_body = f"A new book from Erafore Books has been released: {book.title}\n\n'{book.synopsis}'\n\nClick here to get it on Amazon: {book.amazon_link}\n\nYou have consented to receive notifications of new book releases from Erafore Books, LLC. You can edit email permissions in your account anytime at www.eraforebooks.com"
 
     # send emails to users who are following the updated series
     for user in follow_users:

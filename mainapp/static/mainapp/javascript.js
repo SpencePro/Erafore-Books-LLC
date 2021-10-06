@@ -7,7 +7,7 @@ function goBack() {
         window.history.back();
     }
     catch {
-        window.location.href = "http://127.0.0.1:8000";
+        window.location.href = "http://eraforebooks.com";
     }
 }
 
@@ -60,7 +60,7 @@ function slideshow() {
             slideIndex = 1;
         }
         slides[slideIndex - 1].classList.remove("hidden");
-        setTimeout(showSlides, 3000);
+        setTimeout(showSlides, 6000);
     }
 }
 
