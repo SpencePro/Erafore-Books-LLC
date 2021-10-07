@@ -236,6 +236,35 @@ header {
     height: 7rem;
 }
 
+.newsletter-div {
+    background-color: #2c0069;
+    color: white;
+    height: 30px;
+    align-items: baseline;
+    transition: height 1s linear;
+    overflow: hidden;
+}
+
+.newsletter-link {
+    align-items: baseline;
+    padding-top: 0.2rem;
+    height: 30px;
+}
+
+.fa-newspaper {
+    margin-right: 0.5rem;
+}
+
+#newsletter-close {
+    position: absolute;
+    left: 90%;
+    margin-top: -0.5rem;
+}
+
+#newsletter-close:hover {
+    color: white;
+}
+
 /* BODY */
 
 main {
@@ -810,6 +839,12 @@ footer #dash-divider {
 
 .server-error-message button {
     height: fit-content;
+}
+
+/* Subscribe/unsubscribe pages */
+
+#subscribe-form {
+    margin: 1rem;
 }
 
 /* MEDIA QUERIES */

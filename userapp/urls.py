@@ -15,4 +15,8 @@ urlpatterns = [
     path('profile/<int:id>', views.profile_view, name='profile'),
     path('add/<int:id>', views.add_to_wishlist, name='add'),
     path('follow/<int:id>', views.follow_series, name='follow'),
+    path('subscribe', views.subscribe_view, name='subscribe_page'),
+    path('unsubscribe/<int:id>/<email>/<passcode>', views.unsubscribe_view, name='unsubscribe_page'),
+    path('subscribe_function', views.subscribe_function, name='subscribe_function'),
+    path('unsubscribe_function', views.unsubscribe_function, name='unsubscribe_function'),
 ]

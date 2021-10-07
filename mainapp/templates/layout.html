@@ -134,7 +134,15 @@
                 </form>
             </div>
         </header>
-
+        {% if not user.is_authenticated %}
+            <div class="hori center newsletter-div">
+                <div class="hori newsletter-link">
+                    <i class="far fa-newspaper"></i>
+                    <nav><a href="{% url 'subscribe_page' %}">Sign up for our newsletter!</a></nav>
+                </div>
+                <span id="newsletter-close" class="close">&times;</span>
+            </div>
+        {% endif %}
         <main>
             {% block body %}
             {% endblock %}
@@ -149,6 +157,11 @@
             document.getElementById("return-to-top").addEventListener("click", returnToTop);
             document.getElementById("nav-btn").addEventListener("click", displayMobileNav);
         </script>
+        {% if not user.is_authenticated %}
+        <script type="text/javascript">
+            document.getElementById("newsletter-close").addEventListener("click", closeBanner);
+        </script>
+        {% endif %}
 
         <footer class="center">
             <p>Erafore Books, LLC &copy;2021</p>

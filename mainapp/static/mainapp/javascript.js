@@ -44,6 +44,18 @@ function displayMobileNav() {
     }
 }
 
+// Function to close newletter banner 
+function closeBanner() {
+    let banner = this.parentElement;
+    let link = this.previousElementSibling;
+    console.log(link.offsetHeight);
+    console.log(banner.offsetHeight);
+    banner.style.height = "0px";
+    link.style.height = "0px";
+    this.style.display = "none";
+
+}
+
 // Function for slideshow
 function slideshow() {
     var slideIndex = 0;
@@ -1005,6 +1017,75 @@ function followFunc() {
                         document.getElementById("follow-btn").innerHTML = "Unfollow Series";
                     }
                     document.getElementById("follow-btn").style.opacity = "100%";
+                }
+            }
+        });
+        return false;
+    }
+}
+
+// Function to subscribe to newsletter 
+function subscribeFunction() {
+    var formId = this.form.id;
+    var url = this.form.action;
+    data = $(`#${formId}`).serializeArray();
+    if (data[1].value.length < 6 || data[1].value.split("").includes("@") === false) {
+        document.getElementById("subscribe-message").innerHTML = "Invalid email address";
+        document.getElementById("subscribe-message").parentElement.classList.remove("hidden");
+    }
+    else {
+        document.querySelector(".spinner-div").classList.remove("hidden");
+        subscribeUser(data);
+    }
+    
+
+    function subscribeUser(data) {
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataTyepe: "json",
+            data: data,
+            success: function (data) {
+                document.getElementById("subscribe-message").parentElement.classList.remove("hidden");
+                document.querySelector(".spinner-div").classList.add("hidden");
+                if (data.error) {
+                    document.getElementById("subscribe-message").innerHTML = data.error;
+                }
+                else {
+                    document.getElementById("subscribe-message").innerHTML = "You are subscribed to the newsletter!";
+                    document.getElementById("email").value = "";
+                    console.log(data.password);
+                }
+            }
+        });
+        return false;
+    }
+}
+
+// Function to unsubscribe from newsletter 
+function unsubscribeFunction() {
+    var formId = this.form.id;
+    var url = this.form.action;
+    data = $(`#${formId}`).serializeArray();
+    console.log(data);
+
+    document.querySelector(".spinner-div").classList.remove("hidden");
+    unsubscribeUser(data);
+
+    function unsubscribeUser(data) {
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataTyepe: "json",
+            data: data,
+            success: function (data) {
+                document.getElementById("subscribe-message").parentElement.classList.remove("hidden");
+                document.querySelector(".spinner-div").classList.add("hidden");
+                if (data.error) {
+                    document.getElementById("subscribe-message").innerHTML = data.error;
+                }
+                else {
+                    document.getElementById("subscribe-message").innerHTML = data.message;
                 }
             }
         });

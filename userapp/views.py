@@ -6,6 +6,7 @@ from django.contrib.auth.hashers import make_password
 from django.urls import reverse
 from django.http import HttpResponseRedirect, JsonResponse
 import random
+import secrets
 
 from userapp.models import User, Follow, Wish
 from mainapp.models import Book, Series
@@ -259,3 +260,56 @@ def follow_series(request, id):
             follow = Follow(follower=user, series=series)
             follow.save()
             return JsonResponse({"action": "add"})
+
+
+def subscribe_view(request):
+    #GET request
+    return render(request, "subscribe.html")
+
+
+def subscribe_function(request):
+    #POST request
+    if request.method == "POST":
+        email = request.POST["email"]
+        if len(email) < 6 or "@" not in email:
+            error_message = "Invalid email address"
+            return JsonResponse({"error": error_message})
+        password = secrets.token_urlsafe(8)
+        username = "newsletter-user-" + password
+        try_user = User.objects.filter(username=username)
+        if len(try_user) > 0:
+            error_message = "You are already in our mailing list"
+            return JsonResponse({"error": error_message})
+        
+        user = User.objects.create_user(username=username, email=email, password=password, can_send_sales=False, can_send_updates=False, can_send_wish_sales=False)
+        user.save()
+
+        return JsonResponse({"password": password, "username": username})
+
+
+def unsubscribe_view(request, id, email, passcode):
+    #GET request
+    context = {
+        "user_id": id,
+        "email": email,
+        "passcode": passcode
+    }
+    return render(request, "unsubscribe.html", context)
+
+
+def unsubscribe_function(request):
+    #POST request
+    if request.method == "POST":
+        id = int(request.POST["user-id"])
+        password = request.POST["password"]
+        username = "newsletter-user-" + password
+        
+        authenticated = authenticate(request, username=username, password=password)
+        if authenticated is not None:
+            user = User.objects.get(pk=id)
+            user.delete()
+            message = "You have been successfully unsubscribed from the newsletter."
+        else:
+            message = "Invalid user credentials. You may have gotten here with a bad link. If you think you have reached this message in error, please contact us at EraforeDevLLC@gmail.com"
+        return JsonResponse({"message": message})
+

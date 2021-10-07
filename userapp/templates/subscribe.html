@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+Subscribe
+{% endblock %}
+
+{% block body %}
+
+<div class="vert center subscribe-div">
+    <h4>Subscribe to the newsletter</h4>
+    <p>Enter your email below to get notified when new books are released.</p>
+    <p>If you prefer, you can register for an account to get notifications of series you follow, sales, and other things: <a href="{% url 'register' %}">Register</a></p>
+    <form id="subscribe-form" action="{% url 'subscribe_function' %}" method="POST">
+        {% csrf_token %}
+        <input type="text" name="email" id="email">
+        <button type="button" id="subscribe-btn" class="btn btn-primary btn-sm">Subscribe</button>
+    </form>
+    <div class="subscribe-message-div hidden">
+        <p id="subscribe-message"></p>
+    </div>
+</div>
+
+<div class="spinner-div hidden center">
+    <div class="spinner-border text-light" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+
+<script type="text/javascript">
+    document.getElementById("subscribe-btn").addEventListener("click", subscribeFunction);
+</script>
+
+{% endblock %}
