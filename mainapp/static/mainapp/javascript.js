@@ -709,12 +709,16 @@ function verifyEmailRegister() {
             dataType: "json",
             data: data,
             success: function (data) {
+                document.querySelector(".verify-email").style.opacity = "100%";
+                spinner.parentElement.classList.add("hidden");
                 if (data.success === true) {
-                    window.location.href = data.url;
+                    document.getElementById("error-message").innerHTML = "Success! You will be directed to the login page";
+                    var url = data.url
+                    setTimeout(function () {
+                        window.location.href = url;
+                    }, 5000);
                 }
                 else {
-                    document.querySelector(".verify-email").style.opacity = "100%";
-                    spinner.parentElement.classList.add("hidden");
                     document.getElementById("error-message").innerHTML = data.error_message;
                     // pause, then redirect;
                     var url = data.url

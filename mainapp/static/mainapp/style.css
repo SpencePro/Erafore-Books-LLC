@@ -656,6 +656,7 @@ a.btn.btn-primary.btn-sm.more-btn {
     margin-right: 0.5rem;
 }
 
+
 /* Contact */
 
 .social-media-contact h4 {
@@ -1031,6 +1032,13 @@ footer #dash-divider {
     }
     .registration-instructions {
         margin-left: 0;
+    }
+}
+
+@media (min-width: 671px) {
+    .verify-email {
+        margin-right: 8rem;
+        margin-left: 8rem;
     }
 }
 
