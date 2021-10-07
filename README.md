@@ -30,6 +30,7 @@ The website is a full-featured web application with the following features:
 - Allow users to follow/unfollow series they like, and add/remove books to/from an individualized wishlist
 - Email service set up to send emails to users to verify registration and reset password
 - Email service also sends notifications of marketing (new book releases, books go on sale, series you follow are updated) by email to users who consent to receive them
+- Newsletter sign to send users notifications of new book releases without needing to sign up for an account
 - Allow users to update email settings to opt out of or allow various categories of emails to be sent to them
 - Allow users to delete their account
 - Desktop and mobile responsive for various screen sizes

@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'erafore.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 # deployment version:
-'''DATABASES = {
+DATABASES = {
     'default': {
             'ENGINE': 'django.db.backends.mysql',
             'NAME': os.getenv('DATABASE_NAME'),
@@ -92,9 +92,9 @@ WSGI_APPLICATION = 'erafore.wsgi.application'
             'HOST': os.getenv('HOST'), 
             'PORT': '3306'
         }
-    }'''
+    }
 # local version:
-DATABASES = {
+'''DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.getenv('LOCAL_DATABASE_NAME'),
@@ -103,22 +103,9 @@ DATABASES = {
         'HOST': os.getenv('LOCAL_HOST'),
         'PORT': '3306'
     }
-}
-
-''''default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.getenv('DATABASE_NAME'),
-        'USER': os.getenv('NAME'),
-        'PASSWORD': os.getenv('PASSWORD'),
-        'HEROKU_POSTGRESQL_BRONZE_URL': os.getenv('DATABASE_URL'),
-        'CONN_MAX_AGE': 1000,
-        'HOST': '127.0.0.1',
-        'PORT': '5432'
-    },'''
+}'''
 
 DATABASE_URL = os.getenv('DATABASE_URL')
-'''conn = psycopg2.connect(DATABASE_URL, host="localhost", user='postgres', password=os.getenv('PASSWORD'), dbname=os.getenv('DATABASE_NAME'))
-DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)'''
 
 AUTH_USER_MODEL = "userapp.User"
 

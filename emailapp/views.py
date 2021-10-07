@@ -27,10 +27,9 @@ def new_book_notification(sender, **kwargs):
     series = book.series
     # get all users who are following that series
     series_followers = Follow.objects.filter(series=series)
-    '''if len(series_followers) < 1:
-        return'''
-    follow_users = [follower.follower for follower in series_followers]
-
+    if len(series_followers) > 0:
+        follow_users = [follower.follower for follower in series_followers]
+    
     already_sent = []
     subject = f"New book released: {book.title}"
 
@@ -44,12 +43,13 @@ def new_book_notification(sender, **kwargs):
             already_sent.append(user)
             
     # send emails to users who are following the updated series
-    for user in follow_users:
-        if user.can_send_updates == True:
-            html_message = render_to_string("mail_template.html", {"book_title": book.title, "book_synopsis": book.synopsis, "amazon_link": book.amazon_link, "user_account": True})
-            plain_message = strip_tags(html_message)
-            send_mail(subject, plain_message, "", [user.email], html_message=html_message)
-            already_sent.append(user)
+    if len(series_followers) > 0:
+        for user in follow_users:
+            if user.can_send_updates == True:
+                html_message = render_to_string("mail_template.html", {"book_title": book.title, "book_synopsis": book.synopsis, "amazon_link": book.amazon_link, "user_account": True})
+                plain_message = strip_tags(html_message)
+                send_mail(subject, plain_message, "", [user.email], html_message=html_message)
+                already_sent.append(user)
     # send emails to users who consent to receive all new release notifications, who have not already been emailed
     for user in users:
         if user not in already_sent:
