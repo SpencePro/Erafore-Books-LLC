@@ -204,7 +204,7 @@ function displayFilters() {
                 }
                 else {
                     errorMessage.classList.add("hidden");
-                    if (data.selected_world_name) {
+                    if (data.selected_world_description) {
                         selectedWorld.classList.remove("hidden");
                         document.getElementById("world-name").innerHTML = data.selected_world_name;
                         document.getElementById("world-description").innerHTML = data.selected_world_description;
@@ -212,7 +212,7 @@ function displayFilters() {
                     else {
                         selectedWorld.classList.add("hidden");
                     }
-                    if (data.selected_series_name) {
+                    if (data.selected_series_description) {
                         selectedSeries.classList.remove("hidden");
                         document.getElementById("series-name").innerHTML = data.selected_series_name;
                         document.getElementById("series-description").innerHTML = data.selected_series_description;
@@ -263,6 +263,15 @@ function displayFilters() {
 function buildListing(books, data, currentUrl) {
     const booklistContainer = document.getElementById("booklist-container");
     for (i = 0; i < books.length; i++) {
+        console.log(books);
+        console.log(data);
+        console.log(data.worlds);
+        for (j=0; j < data.worlds.length; j++) {
+            if (data.worlds[j].id == books[i].world_id) {
+                console.log("found:", data.worlds[j].id)
+                console.log(data.worlds[j].name);
+            }
+        }
         // build each book listing, append to booklistContainer
         const bookListingDiv = document.createElement("div");
         bookListingDiv.classList.add("book-listing", "hori", "fade-in");
@@ -314,7 +323,12 @@ function buildListing(books, data, currentUrl) {
         seriesDiv.classList.add("hori");
         const seriesName = document.createElement("a");
         seriesName.id = `book-series-${books[i].title}`;
-        seriesName.innerHTML = data.series_list[parseInt(books[i].series_id) - 1].name;
+        for (j = 0; j < data.series_list.length; j++) {
+            if (data.series_list[j].id === books[i].series_id) {
+                seriesName.innerHTML = data.series_list[j].name;
+            }
+        }
+        // seriesName.innerHTML = data.series_list[parseInt(books[i].series_id) - 1].name;
         seriesName.href = currentUrl + "all/series/" + books[i].series_id;
         const seriesLabel = document.createElement("label");
         seriesLabel.for = seriesName.id;
@@ -326,7 +340,12 @@ function buildListing(books, data, currentUrl) {
         worldDiv.classList.add("hori");
         const worldName = document.createElement("a");
         worldName.id = `book-world-${books[i].title}`;
-        worldName.innerHTML = data.worlds[books[i].world_id - 1].name;
+        for (j=0; j < data.worlds.length; j++) {
+            if (data.worlds[j].id == books[i].world_id) {
+                worldName.innerHTML = data.worlds[j].name;
+            }
+        }
+        // worldName.innerHTML = data.selected_world_name;
         worldName.href = currentUrl + "all/world/" + books[i].world_id;
         const worldLabel = document.createElement("label");
         worldLabel.for = worldName.id;

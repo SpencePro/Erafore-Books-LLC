@@ -1,7 +1,7 @@
 from django import http
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, Http404
 from django.urls import reverse
 from django.db.models import Q
 from django.template import RequestContext
@@ -47,13 +47,19 @@ def all_books_view(request, series="", world=""):
                 books = Book.objects.filter(series=series).order_by("date_released")
                 stop_scrolling = True
                 series_request = True
-                series_name = Series.objects.get(pk=int(series)).name
+                try:
+                    series_name = Series.objects.get(pk=int(series)).name
+                except:
+                    raise Http404
                 series_desc = books[0].series.description
             else:
                 books = Book.objects.filter(world=world).order_by("date_released")
                 stop_scrolling = True
                 world_request = True
-                world_name = World.objects.get(pk=int(world)).name
+                try:
+                    world_name = World.objects.get(pk=int(world)).name
+                except:
+                    raise Http404
                 world_desc = books[0].world.description
     else:
         pagenum = int(request.POST["pagenum"])
