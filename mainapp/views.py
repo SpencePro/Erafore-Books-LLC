@@ -47,13 +47,13 @@ def all_books_view(request, series="", world=""):
                 books = Book.objects.filter(series=series).order_by("date_released")
                 stop_scrolling = True
                 series_request = True
-                series_name = series_list[int(series)-1].name
+                series_name = Series.objects.get(pk=int(series)).name
                 series_desc = books[0].series.description
             else:
                 books = Book.objects.filter(world=world).order_by("date_released")
                 stop_scrolling = True
                 world_request = True
-                world_name = worlds[int(world)-1].name
+                world_name = World.objects.get(pk=int(world)).name
                 world_desc = books[0].world.description
     else:
         pagenum = int(request.POST["pagenum"])
