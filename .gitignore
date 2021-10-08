@@ -7,7 +7,7 @@ Procfile
 *.json
 
 # Image Files
-*.avif
+#*.avif
 *.png
-*.jpg
+#.jpg
 *.webp
