@@ -194,7 +194,10 @@ def filter_books(request):
 
 
 def book_view(request, id):
-    book = Book.objects.get(pk=id)
+    try:
+        book = Book.objects.get(pk=id)
+    except:
+        raise Http404
     series = book.series
     follow = ""
     wishlist = ""
