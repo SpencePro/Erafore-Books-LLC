@@ -7,7 +7,7 @@ function goBack() {
         window.history.back();
     }
     catch {
-        window.location.href = "http://eraforebooks.com";
+        window.location.href = "https://eraforebooks.com";
     }
 }
 
