@@ -1021,10 +1021,10 @@ footer #dash-divider {
 
 /* Login/Register */
 @media (max-width: 670px) {
-    #login-form, #reset-form, .registration-content {
-    flex-direction: column;
+    #login-form, #reset-form, .registration-content, #subscribe-form {
+        flex-direction: column;
     }
-    #login-form input, #reset-form input {
+    #login-form input, #reset-form input, #subscribe-form input {
         margin-right: 0;
     }
     .registration-content, .registration-form-div {
@@ -1034,12 +1034,6 @@ footer #dash-divider {
     }
     .registration-instructions {
         margin-left: 0;
-    }
-    #subscribe-form {
-        flex-direction: column;
-    }
-    #subscribe-form input {
-        margin-right: 0;
     }
 }
 
