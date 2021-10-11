@@ -843,11 +843,6 @@ footer #dash-divider {
     height: fit-content;
 }
 
-/* Subscribe/unsubscribe pages */
-
-#subscribe-form {
-    margin: 1rem;
-}
 
 /* MEDIA QUERIES */
 
@@ -1039,6 +1034,12 @@ footer #dash-divider {
     }
     .registration-instructions {
         margin-left: 0;
+    }
+    #subscribe-form {
+        flex-direction: column;
+    }
+    #subscribe-form input {
+        margin-right: 0;
     }
 }
 
