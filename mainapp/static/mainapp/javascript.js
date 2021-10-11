@@ -48,8 +48,6 @@ function displayMobileNav() {
 function closeBanner() {
     let banner = this.parentElement;
     let link = this.previousElementSibling;
-    console.log(link.offsetHeight);
-    console.log(banner.offsetHeight);
     banner.style.height = "0px";
     link.style.height = "0px";
     this.style.display = "none";
@@ -412,7 +410,6 @@ function clearFilters() {
                     resetBookFilter("series-filter", "world-filter", "");
                     // build new book listings
                     buildListing(data.books, data, currentUrl.slice(0, -3));
-                    console.log(currentUrl);
                     document.getElementById("stop-scrolling").innerHTML = "False";
                 }
                 else {
@@ -421,7 +418,6 @@ function clearFilters() {
                     resetLoreFilter("series-filter", "world-filter", "type-filter", "")
                     //build lore listing
                     buildLoreListing(data.lore_data, data, currentUrl.slice(0, -4));
-                    console.log(currentUrl);
                     document.getElementById("stop-scrolling").innerHTML = "False";
                 }
                 document.querySelector(".fetch-results").classList.add("hidden");
@@ -1076,7 +1072,6 @@ function subscribeFunction() {
                 else {
                     document.getElementById("subscribe-message").innerHTML = "You are subscribed to the newsletter!";
                     document.getElementById("email").value = "";
-                    console.log(data.password);
                 }
             }
         });
@@ -1089,7 +1084,6 @@ function unsubscribeFunction() {
     var formId = this.form.id;
     var url = this.form.action;
     data = $(`#${formId}`).serializeArray();
-    console.log(data);
 
     document.querySelector(".spinner-div").classList.remove("hidden");
     unsubscribeUser(data);
