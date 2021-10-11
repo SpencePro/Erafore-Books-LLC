@@ -28,6 +28,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = (os.getenv('DEBUG_VALUE') == 'True')
+SECURE_SSL_REDIRECT = True
 
 ALLOWED_HOSTS = ['eraforebooksllc.herokuapp.com', '127.0.0.1', 'eraforebooks.com', 'www.eraforebooks.com']
 
