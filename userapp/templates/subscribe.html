@@ -10,7 +10,7 @@ Subscribe
     <h4>Subscribe to the newsletter</h4>
     <p>Enter your email below to get notified when new books are released.</p>
     <p>If you prefer, you can register for an account to get notifications of series you follow, sales, and other things: <a href="{% url 'register' %}">Register</a></p>
-    <form id="subscribe-form" action="{% url 'subscribe_function' %}" method="POST">
+    <form id="subscribe-form" action="{% url 'subscribe_function' %}" method="POST" class="center hori">
         {% csrf_token %}
         <input type="text" name="email" id="email" placeholder="Email Address">
         <button type="button" id="subscribe-btn" class="btn btn-primary btn-sm">Subscribe</button>

@@ -11,7 +11,7 @@ Login
     <h4>Login</h4>
     <form id="login-form" action="{% url 'login' %}" method="POST" class="center hori">
         {% csrf_token %}
-        <input type="text" name="username" id="username" autocomplete="off" placeholder="Username">
+        <input type="text" name="username" id="username" placeholder="Username">
         <input type="password" name="password" id="password" autocomplete="off" placeholder="Password">
         <button type="button" id="login-btn" class="btn btn-primary btn-sm">Log In</button>
     </form>
