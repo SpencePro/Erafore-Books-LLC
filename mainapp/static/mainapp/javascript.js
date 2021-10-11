@@ -422,7 +422,7 @@ function clearFilters() {
                 if (currentUrl.slice(-3) === "all") {
                     resetBookFilter("series-filter", "world-filter", "");
                     // build new book listings
-                    buildListing(data.books, data, currentUrl.slice(0, -4));
+                    buildListing(data.books, data, currentUrl.slice(0, -3));
                     document.getElementById("stop-scrolling").innerHTML = "False";
                 }
                 else {
@@ -430,7 +430,7 @@ function clearFilters() {
                     document.getElementById("selected-type").classList.add("hidden");
                     resetLoreFilter("series-filter", "world-filter", "type-filter", "")
                     //build lore listing
-                    buildLoreListing(data.lore_data, data, currentUrl.slice(0, -4));
+                    buildLoreListing(data.lore_data, data, currentUrl.slice(0, -3));
                     document.getElementById("stop-scrolling").innerHTML = "False";
                 }
                 document.querySelector(".fetch-results").classList.add("hidden");
