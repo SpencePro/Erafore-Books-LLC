@@ -974,6 +974,7 @@ footer #dash-divider {
     }
     .welcome-message h4 {
         font-size: x-large !important;
+        margin-top: 1rem;
     }
     .quotes {
         margin-top: 0.5rem;
