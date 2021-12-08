@@ -148,6 +148,17 @@
             document.addEventListener("scroll", topButtonScroll);
             document.getElementById("return-to-top").addEventListener("click", returnToTop);
             document.getElementById("nav-btn").addEventListener("click", displayMobileNav);
+
+            // fix bug in Chrome where srcset does not work for avif; not sure why, will remove if problem resolves
+            let userAgent = navigator.userAgent;
+
+            if (userAgent.match(/chrome|chromium|crios/i)) {
+                const elements = document.querySelectorAll("source");
+                const elementsArr = Array.from(elements);
+                elementsArr.map((element) => {
+                    element.remove();
+                });
+            }
         </script>
 
         <footer class="center">
@@ -169,11 +180,6 @@
                 <i class="fas fa-envelope"></i>
                 <p>EraforeLLCDev@gmail.com</p>
             </div>
-            <!-- <p>Website by Spencer Rodgers</p>
-            <div class="hori">
-                <i class="fab fa-github-square"></i>
-                <a href="https://github.com/SpencePro" target="_blank" rel="noreferrer noopener">GitHub</a>
-            </div> -->
         </footer>
     </body>
 
