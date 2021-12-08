@@ -813,6 +813,7 @@ footer {
     background-color: #2c0069;
     min-height: 50px;
     margin-top: auto;
+    padding-top: 0.2rem;
 }
 
 footer p {
