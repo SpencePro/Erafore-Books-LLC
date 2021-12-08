@@ -1061,6 +1061,9 @@ footer #dash-divider {
         top: 1.5rem;
         right: 1rem;
     }
+    .search-results ul li:last-child .tooltip-text {
+        top: 1rem;
+    }
     .modal-container {
         flex-direction: row !important;
     }
