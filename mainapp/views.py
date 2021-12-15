@@ -22,7 +22,8 @@ def index(request):
     ]
     for q in quotes:
         quote = quotes[random.randint(0, len(quotes)-1)]
-    return render(request, "index.html", context={"books": books, "sales": sales, "new_release": new_release, "quote": quote})
+    coming_soon = False
+    return render(request, "index.html", context={"books": books, "sales": sales, "new_release": new_release, "quote": quote, "coming_soon": coming_soon})
 
 
 def all_books_view(request, series="", world=""):
