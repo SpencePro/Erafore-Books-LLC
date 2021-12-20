@@ -7,7 +7,7 @@ function goBack() {
         window.history.back();
     }
     catch {
-        window.location.href = "https://eraforebooks.com";
+        window.location.href = "https://www.eraforebooks.com";
     }
 }
 
@@ -44,7 +44,7 @@ function displayMobileNav() {
     }
 }
 
-// Function to close newletter banner 
+// Function to close newsletter banner 
 function closeBanner() {
     let banner = this.parentElement;
     let link = this.previousElementSibling;
@@ -458,14 +458,14 @@ function buildLoreListing(lore, data, currentUrl) {
         const imageDiv = document.createElement("div");
         imageDiv.classList.add("vert", "image-div");
         const picture = document.createElement("picture");
-        const sourceAvif = document.createElement("source");
-        sourceAvif.srcset = "static/placeholder.avif";
-        sourceAvif.type = "image/avif";
+        // const sourceAvif = document.createElement("source");
+        // sourceAvif.srcset = "static/placeholder.avif";
+        // sourceAvif.type = "image/avif";
         const image = document.createElement("img");
         image.src = currentUrl + "static/placeholder.jpg";
         image.alt = lore[i].name;
         image.classList.add("small-img");
-        picture.appendChild(sourceAvif);
+        // picture.appendChild(sourceAvif);
         picture.appendChild(image);
         imageDiv.appendChild(picture);
         bookListingDiv.appendChild(imageDiv);
