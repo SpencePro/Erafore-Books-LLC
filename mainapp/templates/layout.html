@@ -151,14 +151,15 @@
 
             // fix bug in Chrome where srcset does not work for avif; not sure why, will remove if problem resolves
             let userAgent = navigator.userAgent;
-
-            if (userAgent.match(/chrome|chromium|crios/i)) {
-                const elements = document.querySelectorAll("source");
-                const elementsArr = Array.from(elements);
-                elementsArr.map((element) => {
-                    element.remove();
-                });
-            }
+            document.addEventListener("DOMContentLoaded", () => {
+                if (userAgent.match(/chrome|chromium|crios/i)) {
+                    const elements = document.querySelectorAll("source");
+                    const elementsArr = Array.from(elements);
+                    elementsArr.map((element) => {
+                        element.remove();
+                    });
+                }
+            })
         </script>
 
         <footer class="center">
