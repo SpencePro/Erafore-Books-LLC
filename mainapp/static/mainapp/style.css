@@ -779,8 +779,11 @@ a.btn.btn-primary.btn-sm.more-btn {
 }
 
 .search-results ul {
-    width: 50%;
-    margin-left: 25%;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 3.5rem;
+    padding-left: 0;
 }
 
 .search-results li {
