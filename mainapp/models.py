@@ -2,6 +2,8 @@ from django.db import models
 from django.db.models.deletion import CASCADE
 from django.db.models.fields import CharField, TextField, EmailField
 from django.db.models.fields.related import ForeignKey
+import csv
+from django.http import HttpResponse
 
 
 class World(models.Model):
@@ -37,3 +39,15 @@ class LoreObject(models.Model):
     world = models.ForeignKey(World, default=None, on_delete=models.CASCADE)
     image = models.CharField(max_length=255, null=True, blank=True)
 
+
+def export_selected_books(modeladmin, request, queryset):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="books_export.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['id', 'title', 'cover_artist', 'image', 'series', 'world', 'amazon_link', 'date_released', 'synopsis', 'on_sale', 'audio_book'])
+
+    for book in queryset:
+        writer.writerow([book.id, book.title, book.cover_artist, book.image, book.series, book.world, book.amazon_link, book.date_released, book.synopsis, book.on_sale, book.audio_book])
+
+    return response
