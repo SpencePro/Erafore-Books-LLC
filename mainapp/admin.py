@@ -1,5 +1,5 @@
 from django.contrib import admin
-from mainapp.models import Book, Series, LoreObject
+from mainapp.models import Book, Series, LoreObject, World
 import csv
 from django.http import HttpResponse
 
@@ -22,3 +22,4 @@ class BookAdmin(admin.ModelAdmin):
 admin.site.register(Book, BookAdmin)
 admin.site.register(Series)
 admin.site.register(LoreObject)
+admin.site.register(World)
