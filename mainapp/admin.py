@@ -18,8 +18,36 @@ def export_selected_books(modeladmin, request, queryset):
 class BookAdmin(admin.ModelAdmin):
     actions = [export_selected_books]
 
+def export_selected_series(modeladmin, request, queryset):
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = "attachment; filename=series_data.csv"
+
+        writer = csv.writer(response)
+        writer.writerow(["id", "name", "description", "world", "date_started"])
+        for obj in queryset:
+            writer.writerow([obj.id, obj.name, obj.description, obj.world, obj.date_started])
+
+        return response
+
+class SeriesAdmin(admin.ModelAdmin):
+    actions = [export_selected_series]
+
+def export_selected_worlds(modeladmin, request, queryset):
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = "attachment; filename=world_data.csv"
+
+        writer = csv.writer(response)
+        writer.writerow(["id", "name", "description"])
+        for obj in queryset:
+            writer.writerow([obj.id, obj.name, obj.description])
+
+        return response
+
+class WorldAdmin(admin.ModelAdmin):
+    actions = [export_selected_worlds]
+
 # Register your models here.
 admin.site.register(Book, BookAdmin)
-admin.site.register(Series)
+admin.site.register(Series, SeriesAdmin)
 admin.site.register(LoreObject)
-admin.site.register(World)
+admin.site.register(World, WorldAdmin)
